@@ -1,6 +1,7 @@
 \name{datagen}
 \alias{datagen}
 
+
 \title{
 Generate epidemics from distance-based and/or network-based continuous-time ILMs.
 }
