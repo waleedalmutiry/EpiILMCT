@@ -550,7 +550,8 @@ contains
 
 
     CASE (4)
-! Calculating the infectivity rate of including both distance and network-based ILM with spark term and distance kernel = powerlaw.
+! Calculating the infectivity rate of including both distance and network-based ILM with spark term and 
+! distance kernel = powerlaw.
 
 ! defining infectious individuals:
         mg  = size( pack(xx(:,1),xx(:,2).eq. 1.0d0 ) )
@@ -608,7 +609,8 @@ contains
         deallocate(mmg)
 
     CASE (5)
-! Calculating the infectivity rate of including both distance and network-based ILM with spark term and distance kernel = Cauchy.
+! Calculating the infectivity rate of including both distance and network-based ILM with spark term and 
+! distance kernel = Cauchy.
 
 ! defining infectious individuals:
         mg  = size( pack(xx(:,1),xx(:,2).eq. 1.0d0 ) )
