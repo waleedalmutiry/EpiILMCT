@@ -1,0 +1,26 @@
+################################################
+## import name space
+################################################
+import(stats)
+import(graphics)
+import(grDevices)
+import(utils)
+import(tools)
+
+
+################################################
+## useDynLib
+################################################
+
+useDynLib(EpiILMCT, .registration = TRUE)
+
+
+################################################
+## functions
+################################################
+
+export(epiplot)
+export(contactnet)
+export(datagen)
+export(epictmcmc)
+export(loglikelihoodepiILM)

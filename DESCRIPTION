@@ -1,0 +1,10 @@
+Package: EpiILMCT
+Title: Continuous Time Distance-Based and Network-Based Individual Level Models for Epidemics
+Version: 1.0
+Date: 2017-12-05
+Author: Waleed Almutiry, Vineetha Warriyar K. V. and Rob Deardon
+Maintainer: Waleed Almutiry <walmutir@uoguelph.ca>
+Description: Provides tools for simulating from continuous-time individual level models of disease transmission, and carrying out infectious disease data analyses with the same models. The epidemic models considered are distance-based and contact network-based models within Susceptible-Infectious-Removed (SIR) or Susceptible-Infectious-Notified-Removed (SINR) compartmental frameworks.
+Depends: graphics, grDevices, stats, utils, R (>= 3.2.0)
+License: GPL (>=2)
+NeedsCompilation: yes
