@@ -22,14 +22,18 @@ transcov = NULL)
 
 \arguments{
   \item{type}{
- Type of the compartmental framework, with the choice of ``SIR'' for
-Susceptible-Infectious-Removed and ``SINR'' for Susceptible-Infectious-Notified-Removed.
+	Type of the compartmental framework, with the choice of ``SIR'' for
+	Susceptible-Infectious-Removed and ``SINR'' for Susceptible-Infectious-Notified-Removed.
 }
   \item{kerneltype}{
-Type of kernel function with choice of ``distance'' for a distance-based ILM, ``network'' for a contact network-based ILM and ``both'' for a combination of network- and distance-based ILM.
+	Type of kernel function with choice of ``distance'' for a distance-based ILM, ``network'' for a contact 
+	network-based ILM and ``both'' for a combination of network- and distance-based ILM.
 }
   \item{kernelmatrix}{
-A matrix of distances between individuals when \code{kerneltype} is set to ``distance''. A matrix of incidence (0 or 1) or weights [0,\eqn{\infty}) representing contact network when \code{kerneltype} is set to ``network''. A list of two matrices (1: distance matrix, 2: contact network matrix) when \code{kerneltype} is set to ``both''.
+	A matrix of distances between individuals when \code{kerneltype} is set to ``distance''. A matrix of 
+	incidence (0 or 1) or weights [0,\eqn{\infty}) representing contact network when \code{kerneltype} is
+	set to ``network''. A list of two matrices (1: distance matrix, 2: contact network matrix) when 
+	\code{kerneltype} is set to ``both''.
 }
 
   \item{distancekernel}{
@@ -53,8 +57,10 @@ The power parameter(s) of the susceptibility function (>0). Default value(s) is 
   \item{powertrans}{
 The power parameter(s) of the transmissibility function (>0). Default value(s) is 1.
 }
-  \item{kernel.par}{
-A scalar spatial parameter when \code{kerneltype} is set to ``distance'' (>0), or a vector of the spatial and network effect parameters when \code{kerneltype} is set to ``both'' (>0). Default = NULL means that it is not required in the case when the \code{kerneltype} is set to ``network''.
+  \item{kernel.par}{ 
+	  A scalar spatial parameter when \code{kerneltype} is set to ``distance'' (>0), or a vector of the spatial
+	  and network effect parameters when \code{kerneltype} is set to ``both'' (>0). Default = NULL means that it
+	  is not required in the case when the \code{kerneltype} is set to ``network''.
 }
   \item{spark}{
 Spark parameter(>=0), representing random infections that are unexplained by other parts
