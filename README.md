@@ -71,7 +71,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Maintainer* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Waleed Almutiry** - *Maintainer*
+* **Rob Deardon** - *Maintainer*
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
