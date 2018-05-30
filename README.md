@@ -1,8 +1,8 @@
 # EpiILMCT: Continuous Time Distance-Based and Network-Based Individual Level Models for Epidemics
 Provides tools for simulating from continuous-time individual level models of disease transmission, and carrying out infectious disease data analyses with the same models. The epidemic models considered are distance-based and contact network-based models within Susceptible-Infectious-Removed (SIR) or Susceptible-Infectious-Notified-Removed (SINR) compartmental frameworks.
 
-[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/forecast)](https://cran.r-project.org/package=forecast)
-[![Downloads](https://cranlogs.r-pkg.org/badges/forecast)](https://cran.r-project.org/package=forecast)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/EpiILMCT)](https://cran.r-project.org/package=EpiILMCT)
+[![Downloads](https://cranlogs.r-pkg.org/badges/EpiILMCT)](https://cran.r-project.org/package=EpiILMCT)
 
 ## Getting Started
 
