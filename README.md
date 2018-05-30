@@ -2,7 +2,7 @@
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/EpiILMCT)](https://cran.r-project.org/package=EpiILMCT)
 [![Downloads](https://cranlogs.r-pkg.org/badges/EpiILMCT)](https://cran.r-project.org/package=EpiILMCT)
 
-Provides tools for simulating from continuous-time individual level models of disease transmission, and carrying out infectious disease data analyses with the same models. The epidemic models considered are distance-based and contact network-based models within Susceptible-Infectious-Removed (SIR) or Susceptible-Infectious-Notified-Removed (SINR) compartmental frameworks.
+The R package *EpiILMCT* provides tools for simulating from continuous-time individual level models of disease transmission, and carrying out infectious disease data analyses with the same models. The epidemic models considered are distance-based and contact network-based models within Susceptible-Infectious-Removed (SIR) or Susceptible-Infectious-Notified-Removed (SINR) compartmental frameworks.
 
 ## Getting Started
 
@@ -17,22 +17,20 @@ Give examples
 ```
 
 ### Installing
+You can install the **stable** version from
+[CRAN](https://cran.r-project.org/package=EpiILMCT).
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
+```s
+install.packages('EpiILMCT', dependencies = TRUE)
 ```
 
-And repeat
+You can install the **development** version from
+[Github](https://github.com/walee2001d/EpiILMCT-package)
 
+```s
+# install.packages("devtools")
+devtools::install_github("walee2001d/EpiILMCT-package")
 ```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 
