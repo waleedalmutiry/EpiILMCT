@@ -1,7 +1,4 @@
-# EpiILMCT-package
-Continuous Time Distance-Based and Network-Based Individual Level Models for Epidemics
-
-# Project Title
+# EpiILMCT: Continuous Time Distance-Based and Network-Based Individual Level Models for Epidemics
 Provides tools for simulating from continuous-time individual level models of disease transmission, and carrying out infectious disease data analyses with the same models. The epidemic models considered are distance-based and contact network-based models within Susceptible-Infectious-Removed (SIR) or Susceptible-Infectious-Notified-Removed (SINR) compartmental frameworks.
 
 ## Getting Started
@@ -74,7 +71,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Billie Thompson** - *Maintainer* - [PurpleBooth](https://github.com/PurpleBooth)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
