@@ -9,167 +9,253 @@ Runs a Bayesian data augmented MCMC algorithm for fitting specified models (SIR 
 }
 \usage{
 
-epictmcmc(epidat, type, kerneltype, kernelmatrix, distancekernel = NULL, datatype, 
+epictmcmc(object, distancekernel = NULL, datatype, blockupdate = NULL, nsim,
 
-blockupdate = NULL, nsim, sus.par = NULL, trans.par = NULL, power.sus = NULL,
-	
-power.trans = NULL, kernel.par = NULL, spark.par = NULL, delta = NULL, gamma.par = NULL, 
-	
-suscov = NULL, transcov = NULL, periodproposal=NULL )
+nchains = NULL, control.sus = NULL, control.trans = NULL, kernel.par = NULL,
+
+spark.par = NULL, delta = NULL, gamma.par = NULL, periodproposal = NULL,
+
+parallel = FALSE, seedval = NULL)
 
 }
 
 \arguments{
-  \item{epidat}{
-Epidemic data. Output from \code{\link{datagen}} or input a data frame in the same format.
-}
-  \item{type}{
- Type of the compartmental framework, with the choice of ``SIR'' for
-Susceptible-Infectious-Removed and ``SINR'' for Susceptible-Infectious-Notified-Removed.
-}
-  \item{kerneltype}{
-Type of kernel function with choice of ``distance'' for distance-based ILM, ``network'' for contact network-based ILM and ``both'' for a combination of network- and distance-based ILM.
-}
-  \item{kernelmatrix}{
-A matrix of distances between individuals when \code{kerneltype} is set to ``distance''. A matrix of edge incidence (0 or 1) or edge weights [0,\eqn{\infty}) representing the contact network when \code{kerneltype} is set to ``network''. A list of two matrices (1: distance matrix, 2: contact network matrix) when \code{kerneltype} is set to ``both''.
+  \item{object}{
+an object of class ``datagen'' that can be the output of \code{\link{datagen}} or \code{\link{as.epidat}} functions.
 }
   \item{distancekernel}{
-The spatial kernel type when \code{kerneltype} is set to ``distance'' or ``both''. Choices are ``powerlaw'' for a power-law distance kernel or ``Cauchy'' for a Cauchy distance kernel. 
+the spatial kernel type when \code{kerneltype} is set to ``distance'' or ``both''. Choices are ``powerlaw'' for a power-law distance kernel or ``Cauchy'' for a Cauchy distance kernel. 
 }
   \item{datatype}{
-The ILM data set is analyzed based on three possible assumptions. The possible assumptions are ``known epidemic'' for completely observed epidemic; ``known removal'' times for observing only the removal times for SIR model or removal and notified times for SINR model; or ``unknown removal'' times for observing only the notified times which is applicable only to the SINR model.
+the ILM data set is analyzed based on three possible assumptions. The possible assumptions are ``known epidemic'' for a completely observed epidemic; ``known removal'' times for observing only the removal times for the SIR model, or removal and notified times for the SINR model; or ``unknown removal'' times for observing only the notified times which is applicable only when fitting the SINR model.
 }
   \item{blockupdate}{
-A vector of the number of the initially observed infection times and the size of blocks for updating the infection times/infectious periods (SIR model), or infection times/incubation periods and removal times/delay periods (SINR model). The default is observing only the first infection time and performing the MCMC updating infection time parameters via single parameter updates. 
+a vector of the number of initially observed infection times and the size of blocks for updating the infection times/infectious periods (SIR model), or infection times/incubation periods and removal times/delay periods (SINR model). The default is observing only the first infection time and performing the MCMC updating infection time parameters via single parameter updates. 
 }
   \item{nsim}{
-The number of MCMC iterations.
+the number of MCMC iterations to be carried out for a single chain.
 }
-  \item{sus.par}{
-A \eqn{n_{s} \times 5}{n_s by 5} matrix of arguments for updating the parameters of the susceptibility function (>0), where \eqn{n_s} is the number of susceptibility parameters. Default = NULL means the model does not include these parameters. See details for description of required arguments.
+  \item{nchains}{
+the number of MCMC chains to be run. Default is 1 (a single MCMC chain).
 }
-  \item{trans.par}{
-A \eqn{n_{t} \times 5}{n_t by 5} matrix of arguments for updating the parameters of the transmissibility function (>0), where \eqn{n_t} is the number of transmissibility parameters. Default = NULL means the model does not include these parameters. See details for description of required arguments.
+  \item{control.sus}{
+a list of arguments for updating the parameters of the susceptibility function (>0):
+   \describe{
+    \item{1st:}{the susceptibility parameters (list):
+	   \itemize{
+		    \item a vector (of length \eqn{n_{s}}{n_s}) or a \eqn{n_{s} \times \code{nchains}}{n_s by nchains} matrix of initial values of the susceptibility parameters,
+		    \item a \eqn{n_{s} \times 4}{n_s by 4} matrix of the required arguments for updating the susceptibility parameters,
+		  }
+		}    
+	\item{2nd:}{an \eqn{n \times n_{s}}{n by n_s} matrix of the susceptibility covariates.}
+	\item{3rd:}{the power parameters of the susceptibility function (list):
+	   \itemize{
+		    \item a vector (of length \eqn{n_{s}}{n_s}) or a \eqn{n_{s} \times \code{nchains}}{n_s by nchains} matrix of initial values of the power parameters,
+		    \item a \eqn{n_{s} \times 4}{n_s by 4} matrix of the required arguments for updating the power parameters,
+		  }
+		}
+  	}
+
+where \eqn{n} and \eqn{n_s} are the number of individuals and number of susceptibility parameters, respectively. Default = NULL means the model does not include these parameters. See details for a description of required arguments.
 }
-  \item{power.sus}{
-A \eqn{n_{s} \times 5}{n_s by 5} matrix of arguments for updating the power parameters of the susceptibility function (>0), where \eqn{n_s} is the number of susceptibility parameters. Default = NULL means the model does not include these parameters. See details for description of required arguments.
-}
-  \item{power.trans}{
-A \eqn{n_{t} \times 5}{n_t by 5} matrix of arguments for updating the power parameters of the transmissibility function (>0), where \eqn{n_t} is the number of transmissibility parameters. Default = NULL means the model does not include these parameters. See details for description of required arguments.
+
+  \item{control.trans}{
+a list of arguments with the same structure as \code{control.sus}, but for the transmissibility function (>0).
 }
   \item{kernel.par}{
-A vector of arguments for updating the spatial parameter of the distance-based kernel when \code{kerneltype} is set to ``distance'' (>0). A \eqn{2 \times 5}{2 by 5} matrix of arguments for updating the spatial and network effect parameters when \code{kerneltype} is set to ``both'' (>0). Default = NULL means the model does not include these parameters (Network-based ILMs). See details for description of required arguments.
+a list of arguments for updating the spatial parameter of the distance-based kernel. The first argument is a vector of initial values of the spatial parameter when \code{kerneltype} is set to ``distance''  (>0) or a \eqn{2 \times \code{nchains}}{2 by nchains} matrix of initial values of the spatial and network effect parameters when \code{kerneltype} is set to ``both'' (>0). The second argument is a vector of arguments for updating the spatial parameter of the distance-based kernel when \code{kerneltype} is set to ``distance'' or a \eqn{2 \times 4}{2 by 4} matrix of arguments for updating the spatial and network effect parameters when \code{kerneltype} is set to ``both''. Default = NULL means the model does not include these parameters (i.e., we are fitting a network-based ILM). See details for a description of required arguments.
 }
   \item{spark.par}{
-A vector of arguments for updating the spark parameter (>=0). It should be defined if \code{kerneltype} is set to ``network'' with \code{datatype}= ``known removal'' or ``unknown removal''. Default = NULL means the model does not include this parameter. See details for description of required arguments.
+a list of arguments for updating the spark parameter (>=0). The first argument is a vector of the initial values. The second argument is a vector of the required arguments for updating the spark parameter. It should be defined if \code{kerneltype} is set to ``network'' with \code{datatype}= ``known removal'' or ``unknown removal''. Default = NULL means the model does not include this parameter. See details for a description of required arguments.
 }
   \item{delta}{
-A vector of arguments for updating the infectious periods for SIR model, or a \eqn{2\times 4}{2 by 4} matrix of arguments for updating the incubation and delay periods for SINR model (>0). Default = NULL means these parameters do not need to be updated, especially when \code{datatype} is set to ``known epidemic''. Note that when \code{type}=``SINR'' with \code{datatype}=``known removal'', the user should just input a vector of arguments for updating the incubation period. The arguments for updating each rate are the known shape and initial value of the rate of the (infectious, incubation or delay) period distribution, the shape and rate parameters of the gamma prior distribution for the rate parameter. 
+a list of arguments for updating the infectious period rate for an SIR model, or for updating the incubation and delay periods rates for an SINR model (>0). The arguments for updating each rate are a vector of the fixed and known shape parameter(s) for the distribution of the period type, a vector (matrix) of initial values of the rate(s) of the infectious, incubation and/or delay period distributions, and a vector (matrix) of the shape and rate parameters of the gamma prior distribution for the rate parameter(s). Default = NULL means these parameters do not need to be updated, which is the case when \code{datatype} is set to ``known epidemic''. 
 }
   \item{gamma.par}{
-A vector of arguments for updating the notification effect parameter (SINR). The default value(s) is 1, and this means no need to update the parameter. See details for description of required arguments.
-}
-  \item{suscov}{
-Covariate matrix of the susceptibility function, representing each covariate in a column. If intercept exists or in the case of no covariates, the first column is set to unity.
-}
-  \item{transcov}{
-Covariate matrix of the transmissibility function, representing each covariate in a column. If intercept exists or in the case of no covariates, the first column is set to unity.
+a list of arguments for updating the notification effect parameter (SINR) (>=0). The first argument is a vector of initial values. The second argument is a vector of the required arguments for updating the notification effect parameter. Default = NULL means the parameter is not updated and is assigned a value equal to 1. See details for a description of required arguments.
 }
   \item{periodproposal}{
-A vector/matrix of the proposal distribution parameters of the independence sampler for updating the infectious period (SIR model), or the incubation and/or delay periods (SINR model). Here, we set the proposal distribution to gamma distribution. It is required when \code{datatype} is set to ``known removal'' or ``unknown removal''.
+a vector/matrix of the proposal distribution parameters of the independence sampler for updating the infectious period (SIR model), or the incubation and/or delay periods (SINR model). Here, we use a gamma proposal distribution. It is required when \code{datatype} is set to ``known removal'' or ``unknown removal''. Default = NULL means the parameters of the gamma proposal distribution are the known shape and updated rate values based on the argument \code{delta}.
 }
+  \item{parallel}{
+if set to ``TRUE'', multiple MCMC chains are running in parallel. Default is ``FALSE'' means chains (>1) are run sequentially.
+}
+  \item{seedval}{ 
+  	a vector or a single integer initialized seed value to fix the (Fortran) random number generator used in the MCMC procedure. A random seed value(s) is used as a default.
+  	}
 }
 
 
 \details{
 
-Bayesian MCMC is performed to estimate the model parameters and latent variables using data augmentation method. When the \code{datatype} is set to ``known removal'' or ``unknown removal'', we assume the infectious periods (SIR model) or the incubation and/or delay periods (SINR model) to follow a gamma distribution with known shape and unknown rate parameters. We assign a gamma prior distribution for the rate parameter with shape \eqn{a} and rate \eqn{b}. This leads the rate parameter(s) to have a gamma conditional distribution.
+Bayesian MCMC is performed to obtain posterior estimates of the model parameters and latent variables. When the \code{datatype} is set to ``known removal'' or ``unknown removal'', we assume the infectious periods (SIR model) or the incubation and/or delay periods (SINR model) follow gamma distributions with fixed shape and unknown rate parameters. We assign a gamma prior distribution for the rate parameter with shape \eqn{a} and rate \eqn{b}. This leads the rate parameter(s) to have a gamma conditional distribution.
 
-Under the SIR model:
+Under the SIR model, the conditional distribution is:
 
 \deqn{ \delta|\theta,\boldsymbol{I},\boldsymbol{R} \sim \Gamma(m+a_{\delta},M+b_{\delta}), }{\delta|\theta,I,R ~ \Gamma(m + a_\delta, M + b_\delta),}
-where \eqn{\delta}{\delta} is the rate of the infectious period distribution; \eqn{m} is the number of infected individuals; \eqn{M=\sum_{i=1}^{m}{(R_{i}-I_{i})}}{M=\sum_{i=1}^{m}(R_i-I_i)}; and \eqn{a_{\delta}}{a_\delta} and \eqn{b_{\delta}}{b_\delta} are the prior parameters for the infectious period rate.
+where \eqn{\delta}{\delta} is the rate of the infectious period distribution; \eqn{m} is the number of infected individuals; \eqn{M=\sum_{i=1}^{m}{(R_{i}-I_{i})}}{M=\sum_{i=1}^{m}(R_i-I_i)}; and \eqn{a_{\delta}}{a_\delta} and \eqn{b_{\delta}}{b_\delta} are the prior parameters for the infectious period rate, respectively.
 
-Under the SINR model:
-\deqn{ \delta^{(inc)}|\theta,\boldsymbol{I},\boldsymbol{N},\boldsymbol{R} \sim \Gamma(m+a_{\delta^{(inc)}},M_{inc}+b_{\delta^{(inc)}}),}{\delta^(inc)|\theta, I, N, R ~ \Gamma(m + a_{\delta^(inc)},M_inc + b_{\delta^(inc)}),}
-where \eqn{\delta^{(inc)}}{\delta^(inc)} is the rate of the incubation period distribution; \eqn{M_{inc}=\sum_{i=1}^{m}{(N_{i}-I_{i})}}{M_inc=\sum_{i=1}^{m}(N_i-I_i)}; and \eqn{a_{\delta^{(inc)}}}{a_{\delta^(inc)}} and \eqn{b_{\delta^{(inc)}}}{b_{\delta^(inc)}} are the prior parameters for the incubation period rate, and
+Under the SINR model, the conditional distribution is:
+\deqn{ \delta^{(inc)}|\theta,\boldsymbol{I},\boldsymbol{N},\boldsymbol{R} \sim \Gamma(m+a_{\delta^{(inc)}},M_{inc}+b_{\delta^{(inc)}}),}{\delta^(inc)|\theta, I, N, R ~ \Gamma(m + a_{\delta^(inc)},M_inc +
+	b_{\delta^(inc)}),}
+where \eqn{\delta^{(inc)}}{\delta^(inc)} is the rate of the incubation period distribution; \eqn{M_{inc}=\sum_{i=1}^{m}{(N_{i}-I_{i})}}{M_inc=\sum_{i=1}^{m}(N_i-I_i)}; and \eqn{a_{\delta^{(inc)}}}{a_{\delta^(inc)}} and \eqn{b_{\delta^{(inc)}}}{b_{\delta^(inc)}} are the prior parameters for the incubation period rate, respectively; and
 
-\deqn{ \delta^{(delay)}|\theta,\boldsymbol{I},\boldsymbol{N},\boldsymbol{R} \sim \Gamma(m+a_{\delta^{(delay)}},M_{delay}+b_{\delta^{(delay)}}),}{\delta^(delay)|\theta, I, N, R ~ \Gamma(m+a_{\delta^(delay)},M_delay+b_{\delta^(delay)}),}
-where \eqn{\delta^{(delay)}}{\delta^(delay)} is the rate parameter of the delay period distribution; \eqn{M_{delay}=\sum_{i=1}^{m}{(R_{i}-N_{i})}}{M_delay=\sum_{i=1}^{m}(R_i-N_i)}; and \eqn{a_{\delta^{(delay)}}}{a_{\delta^(delay)}} and \eqn{b_{\delta^{(delay)}}}{b_{\delta^(delay)}} are the prior parameters for the delay period rate.
+\deqn{ \delta^{(delay)}|\theta,\boldsymbol{I},\boldsymbol{N},\boldsymbol{R} \sim \Gamma(m+a_{\delta^{(delay)}},M_{delay}+b_{\delta^{(delay)}}),}{\delta^(delay)|\theta, I, N, R ~ \Gamma(m+a_{\delta^(delay)},M_delay+
+	b_{\delta^(delay)}),}
+where \eqn{\delta^{(delay)}}{\delta^(delay)} is the rate parameter of the delay period distribution; \eqn{M_{delay}=\sum_{i=1}^{m}{(R_{i}-N_{i})}}{M_delay=\sum_{i=1}^{m}(R_i-N_i)}; and \eqn{a_{\delta^{(delay)}}}{a_{\delta^(delay)}} and \eqn{b_{\delta^{(delay)}}}{b_{\delta^(delay)}} are the prior parameters for the delay period rate, respectively.
 
-A Gibbs update (i.e., sampling from the conditional posterior distribution) is then used for the infectious period (SIR model) or the incubation and/or delay period rates (SINR model). An independence sampler is used for updating the infection times and infectious periods (SIR model), and the infection and/or removal times, and the incubation and/or delay periods. To do so undr the SIR model, we update each infection time \eqn{I_{i}}{I_i} by proposing infectious period \eqn{D^{*}_{i}}{D^{*}_i} from a proposal distribution with tuning parameter, such that \eqn{D_{i}\sim}{D_i ~} f(.). Then, the new infection time is just the difference between the fixed known removal time and the new infectious period of the \eqn{i^{th}}{ith} individual. Each infection time/infectious period is updated in this way in turn. The same procedure is applied for updating the missing event times and incubation and delay periods for the SINR model, with their corresponding parameters.
+A Gibbs update (i.e., sampling from the conditional posterior distribution) is then used for the infectious period (SIR model) or the incubation and/or delay period rates (SINR model). The required information for each period distribution are entered via the \code{delta} argument. We assume each period type follows a gamma distribution with fixed shape and unknown rate. Thus, to update the rate parameter of each period, \code{delta} is a list containing a vector of the fixed shape value(s), a vector (matrix) of the initial values of the rate(s), and a vector (matrix) of the parameters of the prior distribution of the rate parameter(s). In the case of incubation and delay periods being estimated, the input of the initial values is a \eqn{2 \times \code{nchains}}{2 by nchains} matrix, and the prior parameters are given by a \eqn{2 \times 2}{2 by 2} matrix in which each row contains the required information for each period rate. 
 
-Other model parameters (\code{sus.par}, \code{trans.par}, \code{power.sus}, \code{power.trans}, \code{kernel.par}, \code{spark.par} and \code{gamma.par}) are updated in turn using a random-walk Metropolis Hastings algorithm with normal proposal. The normal proposals must be tuned, via the proposal variance, by the user to achieve good mixing properties. To update each parameter, the user must input the following arguments in order: initial value, prior distribution ("gamma", "half normal" (positive half-normal) or "uniform"), a vector of the prior distribution parameters, and the proposal variance. 
+An independence sampler is used for updating the infection times and infectious periods (SIR model), or the infection and/or removal times, and the incubation and/or delay periods (SINR model). Under the SIR model, we update each infection time \eqn{I_{i}}{I_i} by proposing infectious period \eqn{D^{*}_{i}}{D^{*}_i} from a proposal distribution with tuning parameter, such that \eqn{D_{i}\sim}{D_i ~} f(.). Then, the new infection time is just the difference between the fixed known removal time and the new infectious period of the \eqn{i^{th}}{ith} individual. Each infection time/infectious period is updated in this way in turn. The same procedure is applied for updating the missing event times and incubation and delay periods for the SINR model, with their corresponding parameters. 
+
+The \code{control.sus} and \code{control.trans} arguments provide all the information needed for the susceptibility and transmissibility functions. These arguments must be defined as a list of three objects. The first object is a list of: 1) a vector or matrix of initial values; and 2) a vector or matrix of the following arguments in order: initial value, prior distribution ("gamma", (positive) "half normal" or "uniform"), a vector of the prior distribution parameters, and the proposal variance. The second object is a matrix of the susceptibility or transmissibility risk factors. The third contains the power parameters of the susceptibility or transmissibility functions and has the same structure as the first object. The other model parameters \code{kernel.par}, \code{spark.par} and \code{gamma.par} also have the same structure as the first object. These model parameters, along with the model parameters of the susceptibility and transmissibility functions (\code{control.sus} and \code{control.trans}), are updated in turn using a random-walk Metropolis Hastings algorithm with normal proposals. The normal proposals must be tuned, via the proposal variance, by the user to achieve good mixing properties.
 
 Note that, setting the variance of the normal proposal distribution to zero fixes a parameter at its initial value. This option allows the user to fix such a parameter in the MCMC procedure while updating others.
 
+For faster run of the \code{epictmcmc} function, an option of running multiple chains on parallel can be performed, controlled via the two options \code{nchains} and \code{parallel}. If \code{parallel} is set to TRUE, the number of required cores is set to the minimum of \code{nchains} and the number of available cores on the user's computer. 
 }
 \value{
-
-Returns a list of the MCMC samples as follows:
+Returns an object of class \code{epictmcmc} that contains:
+\if{html}{
    \describe{
-    \item{1}{The MCMC samples of the model parameters.}
-    \item{2}{The MCMC samples of the infection times when \code{datatype} set to ``known removal'' or ``unknown removal''.}
-    \item{3}{The MCMC samples of the removal times when \code{datatype} set to ``unknown removal''.}
+    \item{compart.framework:}{the compartmental framework model used in the analysis.}
+    \item{kernel.type:}{the used \code{kernel.type} in the function.}
+    \item{data.assumption:}{the \code{datatype}.}
+    \item{parameter.samples:}{the MCMC output of the updated model parameters.}
+    \item{log.posterior:}{the log posterior densities.}
+    \item{acceptance.rate:}{the acceptance rates for MCMC updates of each parameter.}
+    \item{number.iteration:}{the number of iterations.}
+    \item{number.parameter:}{the number of the unknown model parameters.}
+    \item{number.chains:}{the number of the MCMC chains.}
+    \item{infection.times.samples:}{the updated infection times when \code{datatype} is set to ``known removal''.}
+    \item{Average.infectious.periods:}{the average infectious period when \code{type} is set to ``SIR'' and \code{datatype} is set to ``known removal''.}
+    \item{removal.times.samples:}{the updated removal times when \code{datatype} is set to ``unknown removal''.}
+    \item{Average.incubation.periods:}{the average incubation period when \code{type} is set to ``SINR'' and \code{datatype} is set to either ``known removal'' or ``unknown removal''.}
+    \item{Average.delay.periods:}{the average delay period when \code{type} is set to ``SINR'' and \code{datatype} is set to ``unknown removal''.}
+    
   }
-
+}
+\if{text}{
+   \describe{
+    \item{compart.framework:}{the compartmental framework model used in the analysis.}
+    \item{kernel.type:}{the used \code{kernel.type} in the function.}
+    \item{data.assumption:}{the \code{datatype}.}
+    \item{parameter.samples:}{the MCMC output of the updated model parameters.}
+    \item{log.posterior:}{the log posterior densities.}
+    \item{acceptance.rate:}{the acceptance rates for MCMC updates of each parameter.}
+    \item{number.iteration:}{the number of iterations.}
+    \item{number.parameter:}{the number of the unknown model parameters.}
+    \item{number.chains:}{the number of the MCMC chains.}
+    \item{infection.times.samples:}{the updated infection times when \code{datatype} is set to ``known removal''.}
+    \item{Average.infectious.periods:}{the average infectious period when \code{type} is set to ``SIR'' and \code{datatype} is set to ``known removal''.}
+    \item{removal.times.samples:}{the updated removal times when \code{datatype} is set to ``unknown removal''.}
+    \item{Average.incubation.periods:}{the average incubation period when \code{type} is set to ``SINR'' and \code{datatype} is set to either ``known removal'' or ``unknown removal''.}
+    \item{Average.delay.periods:}{the average delay period when \code{type} is set to ``SINR'' and \code{datatype} is set to ``unknown removal''.}
+    
+  }
+}
+\if{latex}{
+ \itemize{
+ \item[]
+   \describe{
+    \item{compart.framework:}{the compartmental framework model used in the analysis.}
+    \item{kernel.type:}{the used \code{kernel.type} in the function.}
+    \item{data.assumption:}{the \code{datatype}.}
+    \item{parameter.samples:}{the MCMC output of the updated model parameters.}
+    \item{log.posterior:}{the log posterior densities.}
+    \item{acceptance.rate:}{the acceptance rates for MCMC updates of each parameter.}
+    \item{number.iteration:}{the number of iterations.}
+    \item{number.parameter:}{the number of the unknown model parameters.}
+    \item{number.chains:}{the number of the MCMC chains.}
+    \item{infection.times.samples:}{the updated infection times when \code{datatype} is set to ``known removal''.}
+    \item{Average.infectious.periods:}{the average infectious period when \code{type} is set to ``SIR'' and \code{datatype} is set to ``known removal''.}
+    \item{removal.times.samples:}{the updated removal times when \code{datatype} is set to ``unknown removal''.}
+    \item{Average.incubation.periods:}{the average incubation period when \code{type} is set to ``SINR'' and \code{datatype} is set to either ``known removal'' or ``unknown removal''.}
+    \item{Average.delay.periods:}{the average delay period when \code{type} is set to ``SINR'' and \code{datatype} is set to ``unknown removal''.}
+    
+  }
+}
+}
 }
 
 \seealso{
-  \code{\link{datagen}, \link{loglikelihoodepiILM}}.
+  \code{\link{print.epictmcmc}}, \code{\link{summary.epictmcmc}}, \code{\link{plot.epictmcmc}}, \code{\link{datagen}}, \code{\link{loglikelihoodepiILM}}.
 }
 
 \examples{
-\dontrun{
-	
-library(EpiILMCT)
+## This is for testing; the number of MCMC iterations needs to be 
+## mucher higher in practice.
+
 ## distance-based SIR continuous-time ILMs ##
 data(SpatialData)
+
 ## performing the MCMC-tool for analyzing the fully observed spatial data 
 ## under the SIR distance-based continuous ILM:
-mcmcres2<-epictmcmc(epidat=SpatialData$epi,type="SIR",kerneltype="distance", 
-kernelmatrix=SpatialData$dis,
-distancekernel="powerlaw",datatype="known epidemic",nsim=10000,
-sus.par=matrix(c(0.08,2,"uniform","uniform",0,0,100,100,0.5,0.5),ncol=5,nrow=2),
-kernel.par=c(2,"gamma",1,0.01,0.5),suscov=SpatialData$cov)
 
-## performing the MCMC-tool for analyzing the partially observed spatial data
-## (unknown infection times) under the SIR distance-based continuous ILM:
-mcmcres22<-epictmcmc(epidat=SpatialData$epi,type="SIR",kerneltype="distance",
-kernelmatrix=SpatialData$dis,distancekernel="powerlaw",
-datatype="known removal",nsim=50000,blockupdate=c(1,10),
-sus.par=matrix(c(0.08,2,"gamma","gamma",1,4,1,2,0.5,0.5),ncol=5,nrow=2),
-kernel.par=c(2,"gamma",4,2,0.5),delta=c(1,2,4,2),
-suscov=SpatialData$cov,periodproposal=c(1,1))
+suspar <- list(NULL)
+suspar[[1]] <- list(2, c("gamma", 1, 0.01, 0.5))
+suspar[[2]] <- rep(1, length(SpatialData$epidat[,1]))
+kernel1 <- list(2, c("gamma", 1, 0.01, 0.5))
+
+mcmcres2 <- epictmcmc(object = SpatialData,
+distancekernel = "powerlaw", datatype = "known epidemic", nsim = 50, 
+control.sus = suspar, kernel.par = kernel1,  seedval  =  524837)
+plot(mcmcres2)
+
+## performing the MCMC-tool for analyzing the partially observed spatial
+## data (unknown infection times) under the SIR distance-based 
+## continuous ILM:
+
+suspar <- list(NULL)
+suspar[[1]]<-list(2,c("gamma", 1, 0.01, 0.8))
+suspar[[2]]<- rep(1,length(SpatialData$epidat[,1]))
+kernel1 <- list(2, c("gamma", 1, 0.01, 0.5))
+
+
+mcmcres22 <- epictmcmc(object = SpatialData,
+distancekernel = "powerlaw", datatype = "known removal", nsim = 50, 
+control.sus = suspar, kernel.par = kernel1, delta = list(1,2,c(4,2)),  
+seedval  =  524837)
+plot(mcmcres22)
 
 ## distance-based and network-based SIR ILMs ##
 data(SpatialNetData)
-## performing the MCMC-tool for analyzing the fully observed spatial and network data
+
+## performing the MCMC-tool for analyzing the fully observed spatial and 
+## network data
 ## under the SIR distance-based and network-based continuous-time ILM:
-mcmcres3<-epictmcmc(epidat=SpatialNetData$epi,type="SIR",kerneltype="both",
-kernelmatrix=list(SpatialNetData$dis,SpatialNetData$net),
-distancekernel="powerlaw",datatype="known epidemic",nsim=10000,
-sus.par=matrix(c(0.08,0.2,"gamma","gamma",1,1,0.01,0.01,0.5,0.5),ncol=5,nrow=2),
-kernel.par=matrix(c(5,0.5,"gamma","gamma",1,1,0.01,0.01,0.5,0.5),ncol=5,nrow=2),
-suscov=SpatialNetData$cov)
+
+suspar <- list(NULL)
+suspar[[1]] <- list(NULL)
+suspar[[1]][[1]] <- c(0.08, 0.2)
+suspar[[1]][[2]] <- matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.1, 0.5), 
+ncol = 4, nrow = 2)
+suspar[[2]] <- SpatialNetData[[2]]
+kernel1 <- list(NULL)
+kernel1[[1]] <- c(5, 0.5)
+kernel1[[2]] <- matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.5, 1),
+ncol = 4, nrow = 2)
+
+mcmcres3 <- epictmcmc(object = SpatialNetData[[1]],
+distancekernel = "powerlaw", datatype = "known epidemic", nsim = 50,
+control.sus = suspar, kernel.par = kernel1, seedval  =  524837)
+plot(mcmcres3)
 
 ## network-based SIR ILMs ##
 data(NetworkData)
+
 ## performing the MCMC-tool for analyzing the fully observed network data 
 ## under the SIR network-based continuous-time ILM:
-mcmcres4<-epictmcmc(epidat=NetworkData$epi,type="SIR",kerneltype="network",
-kernelmatrix= NetworkData$net,datatype="known epidemic",nsim=10000,
-sus.par=matrix(c(0.08,0.5,"gamma","gamma",1,1,1,1,0.5,0.1),ncol=5,nrow=2),
-suscov=NetworkData$cov)
 
-## network-based SINR ILMs ##
-data(NetworkDataSINR)
-## performing the MCMC-tool for analyzing the fully observed network data
-## under the SINR network-based continuous-time ILM:
-mcmcres5<-epictmcmc(epidat=NetworkDataSINR$epi,type="SINR",kerneltype="network",
-kernelmatrix=NetworkDataSINR$net,datatype="known epidemic",nsim=10000,
-sus.par=matrix(c(0.08,0.2,"gamma","gamma",1,1,0.01,0.01,0.5,0.5),ncol=5,nrow=2),
-suscov= NetworkDataSINR$cov)
-}
+suspar <- list(NULL)
+suspar[[1]] <- list(NULL)
+suspar[[1]][[1]] <- c(0.08, 0.5)
+suspar[[1]][[2]] <- matrix(c("gamma", "gamma", 1, 1, 1, 1, 0.1, 0.5), 
+ncol = 4, nrow = 2)
+suspar[[2]] <- NetworkData[[2]]
+
+mcmcres4 <- epictmcmc(object = NetworkData[[1]], datatype = "known epidemic", 
+nsim = 50, control.sus = suspar,  seedval  =  524837)
+plot(mcmcres4)
 }
 \keyword{Bayesian Inference}
