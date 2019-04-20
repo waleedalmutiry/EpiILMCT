@@ -105,6 +105,54 @@ control.strtegy <- function(object, inf.time, par.sus, par.ker, delt, cov.sus = 
 list(tss1,cov1)
 
 }
+
+library(future.apply)
+library(EpiILMCT)
+data(tswv)
+
+epi<-tswv$tswvsir
+
+rr<-seq(1, 10)
+inf.time <- seq(2,7,by=0.5)
+par.sus <- 0.01
+par.ker <- 1.3
+delt <- c(9, 3)
+sus.cov <- matrix(rep(1, 520), ncol = 1)
+
+summary.results <- list(NULL)
+
+for(i in 1:length(rr)) {
+
+	mb <- seq(1,32)
+	posterior.pred<-function(x){
+	
+		epi.cont<-control.strtegy(object = epi, inf.time, par.sus, par.ker, delt, cov.sus = sus.cov, radius = rr[i])
+		numb.infected    <- sum(epi.cont[[1]]$epidat[,2]!=Inf)
+		length.infection <- max(epi.cont[[1]]$epidat[1:numb.infected,2])-min(epi.cont[[1]]$epidat[1:numb.infected,4])
+		max.infection    <- max(epi.cont[[1]]$epidat[1:numb.infected,4])
+		ratio            <- apply(epi.cont[[2]], 2, sum)/520
+		
+		result <- c(numb.infected, length.infection, max.infection, ratio)
+
+	}
+	
+	plan(multiprocess, workers = 4) ## Parallelize using 
+	datmcmc <- future_lapply(mb,FUN= posterior.pred, future.seed = TRUE)
+	summary.results[[i]] <-sapply(datmcmc, unlist, simplify=TRUE)
+
+}
+
+
+mu <- matrix(0, ncol = 4, nrow = 10)
+for(j in 1:10){
+mu[j,] <- apply(summary.results[[j]], 1, mean)
+}
+
+par(mfrow = c(2,2))
+plot(rr, mu[,1], type="o", ylab = "Number of infected", xlab = "radius")
+plot(rr, mu[,2], type="o", ylab = "Length of epidemic", xlab = "radius")
+plot(rr, mu[,3], type="o", ylab = "Maximum infection times", xlab = "radius")
+plot(rr, mu[,4], type="o", ylab = "Ratio", xlab = "radius")
 ```
 
 ## Deployment
