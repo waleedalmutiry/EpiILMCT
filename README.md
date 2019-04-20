@@ -51,7 +51,60 @@ Give an example
 Explain what these tests test and why
 
 ```
-Give an example
+control.strtegy <- function(object, inf.time, par.sus, par.ker, delt, cov.sus = NULL, radius = 1){
+	
+	if (class(object) == "datagen") {
+		if (object$kerneltype == "network") {
+			ker.mat <- object$network
+			n       <- length(object$network[,1])
+			des.ker <- NULL
+		} else if (object$kerneltype == "distance") {
+			ker.mat <- as.matrix(object$location)
+			n       <- length(object$location[,1])
+			des.ker <- "powerlaw"
+		} else if (object$kerneltype == "both") {
+			ker.mat <- list(as.matrix(object$location), object$network)		
+			n       <- length(object$location[,1])
+			des.ker <- "powerlaw"
+		}
+	}
+	
+	tss <- object$epidat
+	
+	cov1 <- cov.sus
+	
+	dis <- as.matrix(dist(object$location))
+
+	for (i in 2:length(inf.time)) {
+		
+		mn <- sum(tss[,4] <= inf.time[i-1])
+		
+		initial1<-matrix(tss[1:mn,], ncol = 4, nrow = mn)
+		
+		tss1 <- datagen(type = object$type, kerneltype = object$kerneltype, kernelmatrix = ker.mat, 
+		distancekernel = des.ker, initialepi = initial1, tmax = inf.time[i], 
+		suspar = par.sus, transpar = NULL, kernel.par = par.ker, delta = delt,
+		transcov = NULL, suscov = cov1)
+	
+		tss <- tss1$epidat
+		newlyinfected <- tss[which(tss[,4] > inf.time[i-1] & tss[,4] <= inf.time[i]), 1]
+		num.infected  <- sum(tss[,2] != Inf)
+		uninfected <- tss[(num.infected+1):n,1]
+
+# All individuals in the surrounded circle of a radius (radius) of the newly infected are removed:
+		for (j in 1:length(newlyinfected)) {
+			mk <- as.integer(which(dis[newlyinfected[j], uninfected] < radius))
+			if (length(mk) > 0) {
+				cov1[uninfected[mk],] = 0
+			}
+		}
+
+	
+	}
+
+list(tss1,cov1)
+
+}
 ```
 
 ## Deployment
