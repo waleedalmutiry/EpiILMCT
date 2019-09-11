@@ -8,7 +8,7 @@ The R package *EpiILMCT* provides tools for simulating from continuous-time indi
 
 ## Features
 ### Simulation
-'''s
+```s
 library(EpiILMCT)
 set.seed(22)
 
@@ -32,7 +32,7 @@ plot(net3)  # the default options in igraph package.
 plot(net3, vertex.color = "red", vertex.size = 15, edge.color = "black",
 vertex.label.cex = 1, vertex.label.color = "black") 
 
-'''
+```
 ### Analyzing
 
 
