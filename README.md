@@ -9,7 +9,7 @@ The R package *EpiILMCT* provides tools for simulating from continuous-time indi
 ## Features
 ### Simulation
 #### Contact network
-
+A function (contactnet) is included to generate undirected unweighted contact networks. It can simulate both spatial networks where connections are more likely to occur between individuals closer in space ("spatial contact networks"), as well as random contact networks. The function contactnet has three available options ("powerlaw", "Cauchy", and "random") for the network model, where the first two options simulate spatial contact networks in which the probability of connections between individuals are based on required XY coordinate input.
 ```s
 library(EpiILMCT)
 set.seed(22)
