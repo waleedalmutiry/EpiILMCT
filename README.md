@@ -9,7 +9,8 @@ The R package *EpiILMCT* provides tools for simulating from continuous-time indi
 ## Features
 ### Simulation
 #### Contact network
-A function (contactnet) is included to generate undirected unweighted contact networks. It can simulate both spatial networks where connections are more likely to occur between individuals closer in space ("spatial contact networks"), as well as random contact networks. The function contactnet has three available options ("powerlaw", "Cauchy", and "random") for the network model, where the first two options simulate spatial contact networks in which the probability of connections between individuals are based on required XY coordinate input.
+Different types of undirected unweighted contact networks can be generated through the function "contactnet". This function function has a 'type' option to specify the type of network to be used. It has three available options ("powerlaw", "Cauchy", and "random") for the network model, where the first two options simulate spatial contact networks in which the probability of connections between individuals are based on required XY coordinate input. The output of this function is stored as an object of class 'contactnet'. Also, an S3 method plot function is introduced which uses this object as its input to provide a fancy plot of the contact network.  
+
 ```s
 library(EpiILMCT)
 set.seed(22)
@@ -17,24 +18,26 @@ set.seed(22)
 # to generate the XY coordinates of 50 individuals:
 
 loc<- matrix(cbind(runif(50, 0, 10),runif(50, 0, 10)), ncol = 2, nrow = 50)
-
-# Spatial contact network:
-# power-law model:
+```
+##### power-law spatial contact network
+```s
 net1<- contactnet(type = "powerlaw", location = loc, beta = 1.5, 
 	nu = 0.5)
 plot(net1)
-
-# Cauchy model:
+```
+##### Cauchy spatial contact network
+```s
 net2<- contactnet(type = "Cauchy", location = loc, beta = 0.5)
 plot(net2)
-
-# random contact network:
+```
+##### random contact network
+```s
 net3<- contactnet(type = "random", num.id = 50, beta = 0.08)
 plot(net3)  # the default options in igraph package.
 plot(net3, vertex.color = "red", vertex.size = 15, edge.color = "black",
 vertex.label.cex = 1, vertex.label.color = "black") 
-
 ```
+
 #### Epidemic data:
 ```s
 library(EpiILMCT)
