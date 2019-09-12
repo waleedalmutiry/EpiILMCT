@@ -72,14 +72,17 @@ The output of the **_datagen_** function is stored as an _datagen_ object which 
 2. kerneltype
 3. epidat (event times)
 4. location (XY coordinates of individuals)
-5. network (contact network matrix), in the case of setting the **_kerneltype**_ to _distance_, a zero contact network matrix will be created for the network option. 
+5. network (contact network matrix), in the case of setting the **_kerneltype_** to _distance_, a zero contact network matrix will be created for the network option. 
 
-The package also contains an S3 method **_plot.datagen_** function, which illustrates disease spread through the epidemic timeline. This function can be used for either **_distance-based_** or **_network-based_** ILMs. The object of this function has to be of class _datagen_. The plot S3 function has a **_plottype_** argument that can be set to _"history"_, to produce epidemic curves of infection and removal times, or set to _"propagation"_ to produce plots of the epidemic propagation over time. The following two graphs are for the generated epidemic above.
+The package also contains an S3 method **_plot.datagen_** function, which illustrates disease spread through the epidemic timeline. This function can be used for either **_distance-based_** or **_network-based_** ILMs. The object of this function has to be of class _datagen_. The plot S3 function has a **_plottype_** argument that can be set to _"history"_, to produce epidemic curves of infection and removal times, or set to _"propagation"_ to produce plots of the epidemic propagation over time. The following commands are to produce the below two graphs for the generated epidemic above.
 
+```s
+plot(epi, plottype = "propagation", time.index = seq_len(6))
+plot(epi, plottype = "history")
+```
 <p align="center">
 <img src="https://user-images.githubusercontent.com/18523406/64774791-8c0f5280-d55d-11e9-8375-6e253fb303ac.jpg"></img> 
 </p>
-
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/18523406/64774792-8c0f5280-d55d-11e9-9f51-ddea23907fb4.jpg"></img> 
@@ -89,13 +92,67 @@ The package also contains an S3 method **_plot.datagen_** function, which illust
 
 ### Analyzing
 
+Metropolis-Hastings MCMC is performed to estimate the joint posterior of the model parameters and latent variables (the latter if various event times are assumed unknown). This is achieved using the function **_epictmcmc_**. The below figure illustrates the structure of most arguments of this function. 
+
 <p align="center">
 <img src="https://user-images.githubusercontent.com/18523406/64754037-1a6be000-d52e-11e9-80c0-1864b828591f.jpg"></img> 
 </p>
 
 
-### Plotting
+The output of this function is an object of class _epictmcmc_. There are S3 methods: **_print.epictmcmc_**, **_summary.epictmcmc_** and **_plot.epictmcmc_** that depend on the **coda** package. The latter function produced the trace plots of the posterior distributions of the model parameters with the same options of the **_plot.mcmc_** function in the **coda** package, such as, _start_, _thin_, and _density_. 
 
+In the case of datatype is set to either _"known removal"_ (unknown infection times only) or _"unknown removal"_ (unknown infection and removal times), plots of the average posterior and 95% CI of the unobserved event times can also be produced.
+
+The class _epictmcmc_ contains the MCMC samples of the model parameters and the missing information (in case datatype is not set to _known epidemic_), and other useful information to be used in other functions such as the above S3 methods. For example, when **_datatype_** = _known epidemic_, the class _epictmcmc_ has a list contained the following:
+1. "compart.framework"
+2. "kernel.type"
+3. "data.assumption"
+4. "parameter.samples"
+5. "log.likelihood"
+6. "acceptance.rate"
+7. "number.iteration"
+8. "number.parameter"
+9. "number.chains"
+
+The following commands are to perform the MCMC for analyzing the above epidemic data set using the **_epictmcmc_** function.
+
+```s
+suscov <- list(NULL)
+suscov[[1]] <- list(c(0.01, 0.1), matrix(c("gamma", "gamma", 1, 1, 0.1, 0.1, 0.5, 1), ncol = 4, nrow = 2))
+suscov[[2]] <- NetworkData[[2]]
+mcmc1 <- epictmcmc(object = NetworkData[[1]], datatype = "known epidemic", nsim = 150000, control.sus = suscov, 
+seedval = 524837))
+```
+The estimates of the model parameters can be then obtained either through using S3 **_summary_** function of the **_epictmcmc_** for the _mcmc1_, or using the **_summary_** function of **coda** package for _mcmc1$parameter.samples_, for example. The posterior means and 95% credible intervals of the model parameters using the former **_summary_** can be obtained via the following command:
+
+```s
+summary(mcmc1, start = 10000)
+********************************************************* 
+Model: SIR network-based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic 
+number.chains : 1 chains 
+number.iteration : 140000 iterations 
+number.parameter : 2 parameters 
+********************************************************* 
+ 1. Empirical mean and standard deviation for each variable,
+plus standard error of the mean:
+                Mean        SD    Naive SE Time-series SE
+Alpha_s[1] 0.0973068 0.0325623 8.70262e-05    0.000320181
+Alpha_s[2] 0.5335298 0.1295704 3.46290e-04    0.000986805
+ 2. Quantiles for each variable:
+                2.5%       25%       50%      75%    97.5%
+Alpha_s[1] 0.0445579 0.0735079 0.0936119 0.117225 0.170676
+Alpha_s[2] 0.3020837 0.4428192 0.5257345 0.617407 0.806669
+ 3. Empirical mean, standard deviation, and quantiles for the log likelihood,
+          Mean             SD       Naive SE Time-series SE 
+  -48.45599501     1.02806188     0.00274760     0.00963328 
+    2.5%      25%      50%      75%    97.5% 
+-51.2095 -48.8603 -48.1447 -47.7187 -47.4439 
+ 4. acceptance.rate : 
+Alpha_s[1] Alpha_s[2] 
+  0.131621   0.219375 
+```
 
 ## Getting Started
 
