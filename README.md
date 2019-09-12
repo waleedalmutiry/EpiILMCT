@@ -175,13 +175,6 @@ Alpha_s[1] Alpha_s[2]
 
 * [R](https://cran.r-project.org) - The Comprehensive R Archive Network
 
-## Contributing
-
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/waleedalmutiry/EpiILMCT/tags). 
-
 ## Authors
 
 * **Waleed Almutiry** - *Maintainer*
