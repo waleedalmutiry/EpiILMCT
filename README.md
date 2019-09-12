@@ -11,6 +11,23 @@
 
 The R package *EpiILMCT* provides tools for simulating from continuous-time individual level models of disease transmission, and carrying out infectious disease data analyses with the same models. The epidemic models considered are distance-based and contact network-based models within Susceptible-Infectious-Removed (SIR) or Susceptible-Infectious-Notified-Removed (SINR) compartmental frameworks.
 
+## Installing
+You can install the **EpiILMCT** version from
+[CRAN](https://cran.r-project.org/package=EpiILMCT).
+
+```s
+install.packages('EpiILMCT', dependencies = TRUE)
+```
+
+You can install the **development** version from
+[Github](https://github.com/waleedalmutiry/EpiILMCT-package)
+
+```s
+# install.packages("devtools")
+devtools::install_github("waleedalmutiry/EpiILMCT-package")
+```
+
+
 ## Features
 ### Simulation
 #### Contact network
@@ -154,37 +171,6 @@ Alpha_s[1] Alpha_s[2]
   0.131621   0.219375 
 ```
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
-
-### Installing
-You can install the **EpiILMCT** version from
-[CRAN](https://cran.r-project.org/package=EpiILMCT).
-
-```s
-install.packages('EpiILMCT', dependencies = TRUE)
-```
-
-You can install the **development** version from
-[Github](https://github.com/waleedalmutiry/EpiILMCT-package)
-
-```s
-# install.packages("devtools")
-devtools::install_github("waleedalmutiry/EpiILMCT-package")
-```
-
-## Deployment
-
-
 ## Built With
 
 * [R](https://cran.r-project.org) - The Comprehensive R Archive Network
@@ -204,6 +190,3 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## License
 
 This project is licensed under the GNU General Public License,  version 3 - see the (http://www.r-project.org/Licenses/GPL-3) file for details.
-
-## Acknowledgments
-This project was funded by the Ontario Ministry of Agriculture, Food and Rural Affairs (OMAFRA), the Natural Sciences and Engineering Research Council of Canada (NSERC), Qassim University through the Saudi Arabian Cultural Bureau in Canada, and the University of Calgary Eyes High Post Doctoral Scholarship scheme.
