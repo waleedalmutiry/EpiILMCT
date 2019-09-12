@@ -38,6 +38,10 @@ plot(net3, vertex.color = "red", vertex.size = 15, edge.color = "black",
 vertex.label.cex = 1, vertex.label.color = "black") 
 ```
 
+
+
+
+
 #### Epidemic data:
 ```s
 library(EpiILMCT)
