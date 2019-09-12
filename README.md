@@ -37,7 +37,7 @@ plot(net3)  # the default options in igraph package.
 plot(net3, vertex.color = "red", vertex.size = 15, edge.color = "black",
 vertex.label.cex = 1, vertex.label.color = "black") 
 ```
-<img src="https://github.com/waleedalmutiry/EpiILMCT/issues/2#issuecomment-530659344"></img> 
+<img src="https://user-images.githubusercontent.com/18523406/64754143-ae3dac00-d52e-11e9-81e6-5735046fd877.jpg"></img> 
 
 #### Epidemic data:
 ```s
@@ -181,6 +181,8 @@ netSINR<-as.epidat(type = "SINR", kerneltype = "network", incub.time = NetworkDa
 netSINR<-as.epidat(type = "SINR", kerneltype = "distance", incub.time = NetworkDataSINR$epi[,4], inf.time = NetworkDataSINR$epi[,6], rem.time = NetworkDataSINR$epi[,2], id.individual = NetworkDataSINR$epi[,1], location  = NetworkDataSINR$loc, network = NetworkDataSINR$net, network.type = "Cauchy")
 ```
 ### Analyzing
+
+<img src="https://user-images.githubusercontent.com/18523406/64754037-1a6be000-d52e-11e9-80c0-1864b828591f.jpg"></img> 
 
 
 ### Plotting
