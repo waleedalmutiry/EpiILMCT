@@ -1,6 +1,5 @@
 <p align="center">
-<img src="https://user-images.githubusercontent.com/18523406/64757579-2e6a0e80-d53b-11e9-94ec-473247d05c8a.jpg"width="35%">
-</img>
+<img src="https://user-images.githubusercontent.com/18523406/64757579-2e6a0e80-d53b-11e9-94ec-473247d05c8a.jpg" width="35%"></img>
 </p>
 
 # EpiILMCT: Continuous Time Distance-Based and Network-Based Individual Level Models for Epidemics
