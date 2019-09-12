@@ -171,6 +171,10 @@ Alpha_s[1] Alpha_s[2]
   0.131621   0.219375 
 ```
 
+<p align="center">
+<img src="https://user-images.githubusercontent.com/18523406/64808978-fdbcc000-d5a0-11e9-894a-90cc8ef79ed3.jpg"></img> 
+</p>
+
 ## Built With
 
 * [R](https://cran.r-project.org) - The Comprehensive R Archive Network
