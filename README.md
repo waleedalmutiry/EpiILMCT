@@ -188,8 +188,8 @@ plot(mcmc1, plottype = "parameter", start = 10000, thin = 10, density = FALSE)
 
 ## Authors
 
-* **[Waleed Almutiry](wkmtierie@qu.edu.sa)** - *Author and Maintainer*
-* **Rob Deardon** - *Author*
+* **Waleed Almutiry** - *Author and Maintainer*
+* **[Rob Deardon](http://people.ucalgary.ca/~robert.deardon/)** - *Author*
 * **Vineetha Warriyar K. V.** - *Contributer*
 
 ## License
