@@ -60,7 +60,7 @@ plot(net3, vertex.color = "red", vertex.size = 15, edge.color = "black",
 vertex.label.cex = 1, vertex.label.color = "black") 
 ```
 <p align="center">
-<img src="https://user-images.githubusercontent.com/18523406/64754143-ae3dac00-d52e-11e9-81e6-5735046fd877.jpg"></img> 
+<img src="https://user-images.githubusercontent.com/18523406/64754143-ae3dac00-d52e-11e9-81e6-5735046fd877.jpg"> 
 </p>
 
 #### Epidemic data:
@@ -98,11 +98,11 @@ plot(epi, plottype = "propagation", time.index = seq_len(6))
 plot(epi, plottype = "history")
 ```
 <p align="center">
-<img src="https://user-images.githubusercontent.com/18523406/64774791-8c0f5280-d55d-11e9-8375-6e253fb303ac.jpg"></img> 
+<img src="https://user-images.githubusercontent.com/18523406/64774791-8c0f5280-d55d-11e9-8375-6e253fb303ac.jpg"> 
 </p>
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/18523406/64774792-8c0f5280-d55d-11e9-9f51-ddea23907fb4.jpg"></img> 
+<img src="https://user-images.githubusercontent.com/18523406/64774792-8c0f5280-d55d-11e9-9f51-ddea23907fb4.jpg"> 
 </p>
 
 
@@ -112,7 +112,7 @@ plot(epi, plottype = "history")
 Metropolis-Hastings MCMC is performed to estimate the joint posterior of the model parameters and latent variables (the latter if various event times are assumed unknown). This is achieved using the function **_epictmcmc_**. The below figure illustrates the structure of most arguments of this function. 
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/18523406/64754037-1a6be000-d52e-11e9-80c0-1864b828591f.jpg"></img> 
+<img src="https://user-images.githubusercontent.com/18523406/64754037-1a6be000-d52e-11e9-80c0-1864b828591f.jpg"> 
 </p>
 
 
@@ -178,7 +178,7 @@ plot(mcmc1, plottype = "parameter", start = 10000, thin = 10, density = FALSE)
 ```
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/18523406/64808978-fdbcc000-d5a0-11e9-894a-90cc8ef79ed3.jpg"height="400"width="75%"></img> 
+<img src="https://user-images.githubusercontent.com/18523406/64808978-fdbcc000-d5a0-11e9-894a-90cc8ef79ed3.jpg"height="400"width="75%"> 
 </p>
 
 ## Built With
