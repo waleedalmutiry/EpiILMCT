@@ -1,4 +1,9 @@
+<p align="center">
+	<img src="https://user-images.githubusercontent.com/18523406/64757579-2e6a0e80-d53b-11e9-94ec-473247d05c8a.jpg" width="35%"></img> 
+</p>
+
 # EpiILMCT: Continuous Time Distance-Based and Network-Based Individual Level Models for Epidemics
+
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/EpiILMCT)](https://cran.r-project.org/package=EpiILMCT)
 [![Downloads](https://cranlogs.r-pkg.org/badges/EpiILMCT)](https://cran.r-project.org/package=EpiILMCT)
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
