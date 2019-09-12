@@ -67,31 +67,16 @@ epi <- datagen(type = "SIR", kerneltype = "network", kernelmatrix = net, suspar 
    suscov = cov, seedval =  498643)
 epi
 ```
+The output of the **_datagen_** function is stored as an _datagen_ object which takes a list of:
+1. type
+2. kerneltype
+3. epidat (event times)
+4. location (XY coordinates of individuals)
+5. network (contact network matrix), in the case of setting the **_kerneltype**_ to _distance_, a zero contact network matrix will be created for the network option. 
 
-We dene an object of class \datagen" to take a list of values needed for the use of other
-functions, such as, plot.datagen and epictmcmc. This list contains: type, kerneltype,
-epidat (event times), location (XY coordinates of individuals), and network (contact
-network matrix). In the case of setting the kerneltype to \distance", a zero contact
-network matrix will be created for the network option. The package has also a separate
-function as.epidat that generates an object of class \datagen" for a given epidemic data
-set (See Appendix B that has a brief example of using this function).
-The package also contains an S3 method plot.datagen function, which illustrates disease
-spread through the epidemic timeline. This function can be used for either distancebased
-or network-based ILMs. The object of this function has to be of class \datagen".
-If the plottype argument is set to "history", the function produces epidemic curves of
-infection and removal times. Example plots are shown in Figure 3. Conversely, setting
-this argument to "propagation" produces plots of the epidemic propagation over time.
-With the latter option, exactly which plots are output varies by kernel. With the network
-kernel, the function plots all the connections between individuals and overlays these
-with the epidemic pathway direction over time. This path direction consists of directed
-edges from all infectious individuals connected to a given newly infected individual i with
-infection time Ii (one per plot). Thus, this produces directed networks showing possible
-pathways of the disease propagation. Figure 4 shows a propagation plot for the rst six
-infection events of the simulated network ILM generated epidemic. With the distance
-kernel, the function plots the spatial epidemic dispersion over time. It shows the changes
-in the individual status that related to the chosen compartmental framework. To avoid
-displaying too many plots, the time.index argument allows user to obtain propagation
-plots at specific infection time points rather than at every infection time.
+The package also contains an S3 method **_plot.datagen_** function, which illustrates disease spread through the epidemic timeline. This function can be used for either **_distance-based_** or **_network-based_** ILMs. The object of this function has to be of class _datagen_. The plot S3 function has a **_plottype_** argument that can be set to _"history"_, to produce epidemic curves of infection and removal times, or set to _"propagation"_ to produce plots of the epidemic propagation over time. The following two graphs are for the generated epidemic above.
+
+
 
 ### Analyzing
 
