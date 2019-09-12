@@ -76,6 +76,15 @@ The output of the **_datagen_** function is stored as an _datagen_ object which 
 
 The package also contains an S3 method **_plot.datagen_** function, which illustrates disease spread through the epidemic timeline. This function can be used for either **_distance-based_** or **_network-based_** ILMs. The object of this function has to be of class _datagen_. The plot S3 function has a **_plottype_** argument that can be set to _"history"_, to produce epidemic curves of infection and removal times, or set to _"propagation"_ to produce plots of the epidemic propagation over time. The following two graphs are for the generated epidemic above.
 
+<p align="center">
+<img src="https://user-images.githubusercontent.com/18523406/64774791-8c0f5280-d55d-11e9-8375-6e253fb303ac.jpg"></img> 
+</p>
+
+
+<p align="center">
+<img src="https://user-images.githubusercontent.com/18523406/64774792-8c0f5280-d55d-11e9-9f51-ddea23907fb4.jpg"></img> 
+</p>
+
 
 
 ### Analyzing
