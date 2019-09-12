@@ -116,20 +116,20 @@ Metropolis-Hastings MCMC is performed to estimate the joint posterior of the mod
 </p>
 
 
-The output of this function is an object of class _epictmcmc_. There are S3 methods: **_print.epictmcmc_**, **_summary.epictmcmc_** and **_plot.epictmcmc_** that depend on the **coda** package. The latter function produced the trace plots of the posterior distributions of the model parameters with the same options of the **_plot.mcmc_** function in the **coda** package, such as, _start_, _thin_, and _density_. 
+The output of this function is an object of class _epictmcmc_. There are S3 methods: **_print.epictmcmc_**, **_summary.epictmcmc_** and **_plot.epictmcmc_** that depend on the **coda** package. The latter function produced the trace plots of the posterior distributions of the model parameters with the same options of the **_plot.mcmc_** function in the **coda** package, such as, _start_, _thin_, and _density_. An argument **_plottype_** needs to be specified to _parameter_ in order to get the above trace plots. Also, as the _parameter.samples_ in the object _epictmcmc_ is stored as an _mcmc_ object of the **coda** package, the **_plot.mcmc_** function in the **coda** package can be used directly using the input as the _parameter.samples_.
 
-In the case of datatype is set to either _"known removal"_ (unknown infection times only) or _"unknown removal"_ (unknown infection and removal times), plots of the average posterior and 95% CI of the unobserved event times can also be produced.
+In the case of datatype is set to either _"known removal"_ (unknown infection times only) or _"unknown removal"_ (unknown infection and removal times), plots of the average posterior and 95% CI of the unobserved event times can also be produced through specifying the argument **_plottype_** to _inf.times_ or _rem.times_.
 
 The class _epictmcmc_ contains the MCMC samples of the model parameters and the missing information (in case datatype is not set to _known epidemic_), and other useful information to be used in other functions such as the above S3 methods. For example, when **_datatype_** = _known epidemic_, the class _epictmcmc_ has a list contained the following:
-1. "compart.framework"
-2. "kernel.type"
-3. "data.assumption"
-4. "parameter.samples"
-5. "log.likelihood"
-6. "acceptance.rate"
-7. "number.iteration"
-8. "number.parameter"
-9. "number.chains"
+1. _"compart.framework"_
+2. _"kernel.type"_
+3. _"data.assumption"_
+4. _"parameter.samples"_
+5. _"log.likelihood"_
+6. _"acceptance.rate"_
+7. _"number.iteration"_
+8. _"number.parameter"_
+9. _"number.chains"_
 
 The following commands are to perform the MCMC for analyzing the above epidemic data set using the **_epictmcmc_** function.
 
@@ -171,8 +171,14 @@ Alpha_s[1] Alpha_s[2]
   0.131621   0.219375 
 ```
 
+The MCMC trace plots for the model parameters can be produced using the S3 method **_plot.epictmcmc_** as follows:
+
+```s
+plot(mcmc1, plottype = "parameter", start = 10000, thin = 10, density = FALSE)
+```
+
 <p align="center">
-<img src="https://user-images.githubusercontent.com/18523406/64808978-fdbcc000-d5a0-11e9-894a-90cc8ef79ed3.jpg"></img> 
+<img src="https://user-images.githubusercontent.com/18523406/64808978-fdbcc000-d5a0-11e9-894a-90cc8ef79ed3.jpg"height="400"width="75%"></img> 
 </p>
 
 ## Built With
