@@ -37,10 +37,7 @@ plot(net3)  # the default options in igraph package.
 plot(net3, vertex.color = "red", vertex.size = 15, edge.color = "black",
 vertex.label.cex = 1, vertex.label.color = "black") 
 ```
-
-
-
-
+<img src="https://github.com/waleedalmutiry/EpiILMCT/issues/2#issuecomment-530659344"></img> 
 
 #### Epidemic data:
 ```s
