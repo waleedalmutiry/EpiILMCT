@@ -136,8 +136,8 @@ The following commands are to perform the MCMC for analyzing the above epidemic 
 ```s
 suscov <- list(NULL)
 suscov[[1]] <- list(c(0.01, 0.1), matrix(c("gamma", "gamma", 1, 1, 0.1, 0.1, 0.5, 1), ncol = 4, nrow = 2))
-suscov[[2]] <- NetworkData[[2]]
-mcmc1 <- epictmcmc(object = NetworkData[[1]], datatype = "known epidemic", nsim = 150000, control.sus = suscov, 
+suscov[[2]] <- epi[[2]]
+mcmc1 <- epictmcmc(object = epi, datatype = "known epidemic", nsim = 150000, control.sus = suscov, 
 seedval = 524837))
 ```
 The estimates of the model parameters can be then obtained either through using S3 **_summary_** function of the **_epictmcmc_** for the _mcmc1_, or using the **_summary_** function of **coda** package for _mcmc1$parameter.samples_, for example. The posterior means and 95% credible intervals of the model parameters using the former **_summary_** can be obtained via the following command:
