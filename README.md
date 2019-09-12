@@ -177,8 +177,9 @@ Alpha_s[1] Alpha_s[2]
 
 ## Authors
 
-* **Waleed Almutiry** - *Maintainer*
-* **Rob Deardon** - *Maintainer*
+* **Waleed Almutiry** - *Author and Maintainer*
+* **Rob Deardon** - *Author*
+* **Vineetha Warriyar K. V.** - *Contributer*
 
 ## License
 
