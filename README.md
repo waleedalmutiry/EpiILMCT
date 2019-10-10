@@ -136,7 +136,7 @@ The following commands are to perform the MCMC for analyzing the above epidemic 
 ```s
 suscov <- list(NULL)
 suscov[[1]] <- list(c(0.01, 0.1), matrix(c("gamma", "gamma", 1, 1, 0.1, 0.1, 0.5, 1), ncol = 4, nrow = 2))
-suscov[[2]] <- epi[[2]]
+suscov[[2]] <- cov
 mcmc1 <- epictmcmc(object = epi, datatype = "known epidemic", nsim = 150000, control.sus = suscov, 
 seedval = 524837)
 ```
