@@ -5,12 +5,12 @@
 \description{
   Data extracted from plots in Hughes et al. (1997)
 }
-\usage{tswv}
+\usage{data(tswv)}
 \format{
   A list of two objects of class ``datagen'' as follows:
    \describe{
-    \item{tswvsir}{an object of class ``datagen'' for the ``SIR'' compartmental framework.}
-    \item{tswvsinr}{an object of class ``datagen'' for the ``SINR'' compartmental framework.}
+    \item{tswvsir:}{an object of class ``datagen'' for the ``SIR'' compartmental framework.}
+    \item{tswvsinr:}{an object of class ``datagen'' for the ``SINR'' compartmental framework.}
   }
 }
 \references{  

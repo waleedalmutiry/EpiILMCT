@@ -22,11 +22,11 @@ importFrom("utils", "head")
 ## functions
 ################################################
 
+export(as.epidat)
 export(contactnet)
 export(datagen)
-export(loglikelihoodepiILM)
-export(as.epidat)
 export(epictmcmc)
+export(loglikelihoodepiILM)
 
 ################################################
 ## S3 methods:

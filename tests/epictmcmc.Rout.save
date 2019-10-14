@@ -1,0 +1,1063 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(EpiILMCT)
+Loading required package: coda
+Loading required package: parallel
+> ## distance-based SIR continuous-time ILMs ##
+> data(SpatialData)
+> ## performing the MCMC-tool for analyzing the fully observed spatial data 
+> ## under the SIR distance-based continuous ILM:
+> suspar <- list(NULL)
+> suspar[[1]]<-list(2,c("gamma", 1, 0.01, 0.5))
+> suspar[[2]]<- rep(1,length(SpatialData$epidat[,1]))
+> kernel1 <- list(2, c("gamma", 1, 0.01, 0.5))
+> 
+> mcmcres2 <- epictmcmc(object = SpatialData,
++ distancekernel = "powerlaw", datatype = "known epidemic", nsim = 50, 
++ control.sus = suspar,
++ kernel.par = kernel1,  seedval  =  524837)
+************************************************ 
+* Start performing MCMC for the  known epidemic  SIR ILM for 
+50 iterations 
+************************************************ 
+> #plot(mcmcres2, plottype = "parameter")
+> print(mcmcres2)
+
+********************************************************* 
+Model: SIR distance -based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic
+********************************************************* 
+
+Output: 
+
+ parameter.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     Alpha_s[1] Spatial parameter
+[1,]    2.00000           2.00000
+[2,]    2.00000           2.87844
+[3,]    2.54010           2.87844
+[4,]    2.54010           2.87844
+[5,]    2.09618           3.01184
+[6,]    2.54586           3.01560
+[7,]    2.54586           3.01560
+
+ log.likelihood : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] -3.06312 18.25387 17.12294 17.12294 18.69589 17.68402 17.68402
+
+Available components:
+[1] "compart.framework" "kernel.type"       "data.assumption"  
+[4] "parameter.samples" "log.likelihood"    "acceptance.rate"  
+[7] "number.iteration"  "number.parameter"  "number.chains"    
+> summary(mcmcres2)
+
+********************************************************* 
+Model: SIR distance-based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic 
+number.chains : 1 chains 
+number.iteration : 49 iterations 
+number.parameter : 2 parameters 
+
+********************************************************* 
+
+
+ 1. Empirical mean and standard deviation for each variable,
+plus standard error of the mean:
+                     Mean       SD  Naive SE Time-series SE
+Alpha_s[1]        2.04957 0.322899 0.0456649      0.0762376
+Spatial parameter 3.09454 0.236802 0.0334888      0.0534174
+
+
+
+ 2. Quantiles for each variable:
+                     2.5%     25%     50%     75%   97.5%
+Alpha_s[1]        1.52911 1.76625 2.00000 2.28196 2.54586
+Spatial parameter 2.80974 3.00169 3.07011 3.29199 3.34426
+
+
+
+ 3. Empirical mean, standard deviation, and quantiles for the log likelihood,
+          Mean             SD       Naive SE Time-series SE 
+     17.371167       3.010031       0.425683       0.425683 
+
+   2.5%     25%     50%     75%   97.5% 
+15.7136 17.4485 17.8303 18.1724 18.6901 
+
+
+
+ 4. acceptance.rate : 
+       Alpha_s[1] Spatial parameter 
+         0.673469          0.367347 
+> 
+> suspar <- list(NULL)
+> suspar[[1]]<-list(2,c("gamma", 1, 0.1, 2.5))
+> suspar[[2]]<- matrix(rep(1,length(SpatialData$epidat[,1])),ncol=1)
+> kernel1 <- list(0.2, c("gamma", 1, 0.1, 0.01))
+> 
+> mcmcres22 <- epictmcmc(object = SpatialData,
++ distancekernel = "Cauchy", datatype = "known epidemic", nsim = 50, 
++ control.sus = suspar,
++ kernel.par = kernel1,  seedval  =  524837)
+************************************************ 
+* Start performing MCMC for the  known epidemic  SIR ILM for 
+50 iterations 
+************************************************ 
+> #plot(mcmcres22, plottype = "parameter")
+> print(mcmcres22)
+
+********************************************************* 
+Model: SIR distance -based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic
+********************************************************* 
+
+Output: 
+
+ parameter.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     Alpha_s[1] Spatial parameter
+[1,]    2.00000          0.200000
+[2,]    4.69437          0.217569
+[3,]    7.39486          0.215982
+[4,]    7.39486          0.209002
+[5,]    5.17525          0.211670
+[6,]    7.42365          0.211745
+[7,]    7.42365          0.204863
+
+ log.likelihood : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] -16.30159  -3.10811  -3.77954  -3.29398  -2.62396  -3.51608  -3.05082
+
+Available components:
+[1] "compart.framework" "kernel.type"       "data.assumption"  
+[4] "parameter.samples" "log.likelihood"    "acceptance.rate"  
+[7] "number.iteration"  "number.parameter"  "number.chains"    
+> summary(mcmcres22)
+
+********************************************************* 
+Model: SIR distance-based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic 
+number.chains : 1 chains 
+number.iteration : 49 iterations 
+number.parameter : 2 parameters 
+
+********************************************************* 
+
+
+ 1. Empirical mean and standard deviation for each variable,
+plus standard error of the mean:
+                      Mean        SD   Naive SE Time-series SE
+Alpha_s[1]        6.924086 1.5336654 0.21689304      0.3631277
+Spatial parameter 0.173494 0.0271459 0.00383901      0.0221686
+
+
+
+ 2. Quantiles for each variable:
+                      2.5%      25%      50%     75%    97.5%
+Alpha_s[1]        4.748603 5.714041 6.891913 7.57575 9.620228
+Spatial parameter 0.138923 0.150593 0.168321 0.20248 0.215637
+
+
+
+ 3. Empirical mean, standard deviation, and quantiles for the log likelihood,
+          Mean             SD       Naive SE Time-series SE 
+     -2.426354       2.252807       0.318595       0.394397 
+
+     2.5%       25%       50%       75%     97.5% 
+-3.736298 -3.048748 -2.560123 -1.141995 -0.467701 
+
+
+
+ 4. acceptance.rate : 
+       Alpha_s[1] Spatial parameter 
+         0.551020          0.857143 
+> 
+> #plot(mcmcres2$log.likelihood)
+> #plot(mcmcres22$log.likelihood)
+> 
+> ## performing the MCMC-tool for analyzing the partially observed spatial
+> ## data (unknown infection times) under the SIR distance-based 
+> ## continuous ILM:
+> 
+> suspar <- list(NULL)
+> suspar[[1]]<-list(2,c("gamma", 1, 0.01, 0.8))
+> suspar[[2]]<- matrix(rep(1,length(SpatialData$epidat[,1])),ncol=1)
+> kernel1 <- list(2, c("gamma", 1, 0.01, 0.5))
+> 
+> mcmcres22 <- epictmcmc(object = SpatialData, distancekernel = "powerlaw",
++ datatype = "known removal", nsim = 50,  
++ control.sus = suspar, kernel.par = kernel1, delta = list(1, 2, c(4, 2)),  
++ seedval  =  524837)
+************************************************ 
+* Start performing MCMC for the  known removal  SIR ILM for 
+50 iterations 
+************************************************ 
+> 
+> #plot(mcmcres22, plottype = "parameter")
+> print(mcmcres22)
+
+********************************************************* 
+Model: SIR distance -based continuous-time ILM 
+Method: Data augmented Markov chain Monte Carlo (DA-MCMC) 
+Data assumption: partially observed epidemic (unknown infection times)
+********************************************************* 
+
+Output: 
+
+ parameter.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     Alpha_s[1] Spatial parameter Infectious period rate
+[1,]    2.00000           2.00000                2.00000
+[2,]    2.00000           2.43618                2.25028
+[3,]    1.81307           2.43618                2.89569
+[4,]    1.94405           2.53548                2.06881
+[5,]    1.82816           2.85736                2.24326
+[6,]    2.58579           3.28492                2.05007
+[7,]    2.24835           3.28492                1.63682
+
+ log.likelihood : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] -37.58690 -29.12251 -33.81187 -19.75670 -21.36138 -18.72328  -8.25623
+
+ infection.times.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     [,1]       [,2]     [,3]     [,4]     [,5]     [,6]     [,7]     [,8]
+[1,]    0 0.00205424 0.170259 0.171529 0.229401 0.266345 0.296273 0.305499
+[2,]    0 0.00205424 0.170259 0.171529 0.229401 0.266345 0.296273 0.305499
+[3,]    0 0.00205424 0.170259 0.171529 0.229401 0.266345 0.296273 0.305499
+[4,]    0 0.00205424 0.170259 0.171529 0.229401 0.266345 0.296273 0.305499
+[5,]    0 0.00205424 0.170259 0.171529 0.229401 0.266345 0.296273 0.305499
+[6,]    0 0.00205424 0.170259 0.171529 0.383355 0.288105 0.296273 0.305499
+[7,]    0 0.00205424 0.170259 0.171529 0.383355 0.288105 0.296273 0.305499
+         [,9]    [,10]    [,11]    [,12]    [,13]    [,14]   [,15]   [,16]
+[1,] 0.318990 0.337687 0.362637 0.403727 0.432961 0.591705 2.28403 2.32537
+[2,] 0.318990 0.337687 0.362637 0.403727 0.432961 0.591705 2.38999 2.14657
+[3,] 0.318990 0.337687 0.362637 0.457385 0.432961 0.591705 2.38999 2.41813
+[4,] 0.318990 0.337687 0.362637 0.457385 0.432961 0.591705 2.38029 2.41813
+[5,] 0.318990 0.277494 0.362637 0.457385 0.432961 0.591705 2.38029 2.41813
+[6,] 0.329055 0.277494 0.362637 0.457385 0.432961 0.591705 2.38029 2.41813
+[7,] 0.329055 0.277494 0.362637 0.457385 0.432961 0.591705 2.38029 2.41813
+       [,17]   [,18]   [,19]   [,20]   [,21]   [,22]   [,23]   [,24]  [,25]
+[1,] 2.34818 2.57043 2.57258 2.57268 2.57963 2.59514 2.60761 2.60862 2.6131
+[2,] 2.34818 2.57043 2.57258 2.57268 2.57963 2.59514 2.60761 2.60862 2.6131
+[3,] 2.37538 2.57043 2.57258 2.57268 2.57963 2.59514 2.60761 2.60862 2.6131
+[4,] 2.37538 2.57043 2.57258 2.57268 2.57963 2.59514 2.60761 2.60862 2.6131
+[5,] 2.37538 2.57043 2.57258 2.57268 2.57963 2.51586 2.60761 2.60862 2.6131
+[6,] 2.37538 2.57043 2.57258 2.57268 2.57963 2.51586 2.64181 2.60862 2.6009
+[7,] 2.37538 2.57043 2.57258 2.57268 2.57963 2.51586 2.64181 2.60862 2.6009
+       [,26]   [,27]   [,28]   [,29]   [,30]   [,31]   [,32]   [,33]
+[1,] 2.61327 2.62189 2.75117 2.89072 2.93546 3.15278 3.72520 3.93308
+[2,] 2.60249 2.62189 2.75117 2.89072 2.93546 3.15278 3.48517 4.00794
+[3,] 2.60249 2.62189 2.75117 2.89072 2.73010 3.22200 3.94191 3.98674
+[4,] 2.60249 2.62189 2.31768 2.89072 2.66654 3.22200 3.64611 3.57342
+[5,] 2.60249 2.62189 2.73085 2.89072 2.53802 3.31844 3.98186 3.58995
+[6,] 2.60249 2.62189 2.44706 2.89072 2.52672 3.31844 3.43453 3.52768
+[7,] 2.60249 2.62189 2.44706 2.99170 2.92498 3.20704 3.43453 3.52768
+
+ Average.infectious.periods : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] 0.526360 0.533900 0.514148 0.550993 0.532996 0.554114 0.542361
+
+Available components:
+ [1] "compart.framework"          "kernel.type"               
+ [3] "data.assumption"            "parameter.samples"         
+ [5] "log.likelihood"             "acceptance.rate"           
+ [7] "number.iteration"           "number.parameter"          
+ [9] "number.chains"              "infection.times.samples"   
+[11] "Average.infectious.periods"
+> summary(mcmcres22)
+
+********************************************************* 
+Model:SIR distance-based continuous-time ILM 
+Method: Data augmented Markov chain Monte Carlo (DA-MCMC) 
+Data assumption: partially observed epidemic (unknown infection times) 
+number.chains : 1 chains 
+number.iteration : 49 iterations 
+number.parameter : 3 parameters
+********************************************************* 
+
+
+ 1. Empirical mean and standard deviation for each variable,
+plus standard error of the mean:
+                          Mean       SD  Naive SE Time-series SE
+Alpha_s[1]             1.97936 0.386175 0.0546134      0.1330750
+Spatial parameter      3.20614 0.386397 0.0546447      0.1572195
+Infectious period rate 1.85701 0.315957 0.0446831      0.0446831
+
+
+
+ 2. Quantiles for each variable:
+                          2.5%     25%     50%     75%   97.5%
+Alpha_s[1]             1.45553 1.76622 1.88751 2.16670 2.81287
+Spatial parameter      2.43618 2.95143 3.28492 3.44353 3.84860
+Infectious period rate 1.21550 1.63152 1.86830 2.05765 2.33634
+
+
+
+ 3. Empirical mean, standard deviation, and quantiles for the log likelihood,
+          Mean             SD       Naive SE Time-series SE 
+     -10.92127        8.82236        1.24767        2.62356 
+
+     2.5%       25%       50%       75%     97.5% 
+-32.75676 -15.76212  -9.16595  -4.65063   2.04111 
+
+
+
+ 4. Empirical mean, standard deviation, and quantiles for the average infectious periods,
+          Mean             SD       Naive SE Time-series SE 
+    0.56102782     0.02337329     0.00330548     0.00477133 
+
+    2.5%      25%      50%      75%    97.5% 
+0.523659 0.545607 0.557102 0.580969 0.606786 
+
+
+
+ 5. acceptance.rate : 
+            Alpha_s[1]      Spatial parameter Infectious period rate 
+              0.448980               0.510204               1.000000 
+> 
+> ## distance-based and network-based SIR ILMs ##
+> data(SpatialNetData)
+> ## performing the MCMC-tool for analyzing the fully observed spatial and 
+> ## network data
+> ## under the SIR distance-based and network-based continuous-time ILM:
+> suspar <- list(NULL)
+> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.1, 0.5), 
++ ncol = 4, nrow = 2))
+> suspar[[2]]<- SpatialNetData[[2]]
+> kernel1 <- list(c(5, 0.5), matrix(c("gamma", "gamma", 1, 1,
++ 0.01, 0.01, 0.5, 1), ncol = 4, nrow = 2))
+> 
+> mcmcres3 <- epictmcmc(object = SpatialNetData[[1]], distancekernel = "powerlaw",
++ datatype = "known epidemic", nsim = 50, 
++ control.sus = suspar, kernel.par = kernel1, 
++ seedval  =  524837)
+************************************************ 
+* Start performing MCMC for the  known epidemic  SIR ILM for 
+50 iterations 
+************************************************ 
+> #plot(mcmcres3, plottype = "parameter")
+> print(mcmcres3)
+
+********************************************************* 
+Model: SIR both -based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic
+********************************************************* 
+
+Output: 
+
+ parameter.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     Alpha_s[1] Alpha_s[2] Spatial parameter Network parameter
+[1,]  0.0800000   0.200000           5.00000           0.50000
+[2,]  0.0800000   0.200000           5.00000           0.34128
+[3,]  0.0191013   0.200000           5.00000           0.34128
+[4,]  0.0191013   0.200000           4.63042           0.34128
+[5,]  0.0191013   0.200000           4.31850           0.34128
+[6,]  0.0191013   0.200000           3.88086           0.34128
+[7,]  0.0191013   0.174437           3.54484           0.34128
+
+ log.likelihood : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] -1685.198 -1683.829  -487.536  -286.773  -195.691  -128.116  -100.316
+
+Available components:
+[1] "compart.framework" "kernel.type"       "data.assumption"  
+[4] "parameter.samples" "log.likelihood"    "acceptance.rate"  
+[7] "number.iteration"  "number.parameter"  "number.chains"    
+> summary(mcmcres3)
+
+********************************************************* 
+Model: SIR both-based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic 
+number.chains : 1 chains 
+number.iteration : 49 iterations 
+number.parameter : 4 parameters 
+
+********************************************************* 
+
+
+ 1. Empirical mean and standard deviation for each variable,
+plus standard error of the mean:
+                       Mean        SD   Naive SE Time-series SE
+Alpha_s[1]        0.0158335 0.0142262 0.00201188      0.0043402
+Alpha_s[2]        0.2175532 0.0794455 0.01123529      0.0341382
+Spatial parameter 2.1026282 1.0724222 0.15166340      0.6658431
+Network parameter 0.6965629 0.6864358 0.09707668      0.4391764
+
+
+
+ 2. Quantiles for each variable:
+                        2.5%        25%       50%       75%     97.5%
+Alpha_s[1]        0.00623436 0.00623436 0.0155947 0.0180329 0.0662978
+Alpha_s[2]        0.10476831 0.12520250 0.2513704 0.3028492 0.3095880
+Spatial parameter 0.98141538 1.52045053 1.7739474 2.1565559 5.0000000
+Network parameter 0.07280999 0.22272698 0.3412802 1.0307071 2.4002713
+
+
+
+ 3. Empirical mean, standard deviation, and quantiles for the log likelihood,
+          Mean             SD       Naive SE Time-series SE 
+     -144.9010       325.0565        45.9699        92.7938 
+
+      2.5%        25%        50%        75%      97.5% 
+-1414.6633   -63.0187   -61.8838   -60.5617   -59.4563 
+
+
+
+ 4. acceptance.rate : 
+       Alpha_s[1]        Alpha_s[2] Spatial parameter Network parameter 
+         0.102041          0.224490          0.489796          0.448980 
+> 
+> ## network-based SIR ILMs ##
+> data(NetworkData)
+> ## performing the MCMC-tool for analyzing the fully observed network data 
+> ## under the SIR network-based continuous-time ILM:
+> 
+> suspar <- list(NULL)
+> suspar[[1]]<-list(c(0.08,0.5),matrix(c("gamma", "gamma", 1, 1, 1, 1, 0.1, 0.5), 
++ ncol = 4, nrow = 2))
+> suspar[[2]]<- NetworkData[[2]]
+> 
+> mcmcres4 <- epictmcmc(object = NetworkData[[1]], datatype = "known epidemic",
++ nsim = 50, control.sus = suspar,  seedval  =  524837)
+************************************************ 
+* Start performing MCMC for the  known epidemic  SIR ILM for 
+50 iterations 
+************************************************ 
+> #plot(mcmcres4, plottype = "parameter")
+> print(mcmcres4)
+
+********************************************************* 
+Model: SIR network -based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic
+********************************************************* 
+
+Output: 
+
+ parameter.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     Alpha_s[1] Alpha_s[2]
+[1,]   0.080000    0.50000
+[2,]   0.080000    0.50000
+[3,]   0.080000    0.42064
+[4,]   0.080000    0.42064
+[5,]   0.080000    0.42064
+[6,]   0.132681    0.42064
+[7,]   0.132681    0.42064
+
+ log.likelihood : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] -47.4443 -47.4443 -47.7951 -47.7951 -47.7951 -48.3987 -48.3987
+
+Available components:
+[1] "compart.framework" "kernel.type"       "data.assumption"  
+[4] "parameter.samples" "log.likelihood"    "acceptance.rate"  
+[7] "number.iteration"  "number.parameter"  "number.chains"    
+> summary(mcmcres4)
+
+********************************************************* 
+Model: SIR network-based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic 
+number.chains : 1 chains 
+number.iteration : 49 iterations 
+number.parameter : 2 parameters 
+
+********************************************************* 
+
+
+ 1. Empirical mean and standard deviation for each variable,
+plus standard error of the mean:
+               Mean        SD  Naive SE Time-series SE
+Alpha_s[1] 0.104435 0.0339468 0.0048008      0.0165188
+Alpha_s[2] 0.494415 0.0903850 0.0127824      0.0319294
+
+
+
+ 2. Quantiles for each variable:
+                2.5%      25%       50%      75%    97.5%
+Alpha_s[1] 0.0530957 0.080000 0.0955639 0.142624 0.157655
+Alpha_s[2] 0.3950770 0.422935 0.4573956 0.569069 0.710194
+
+
+
+ 3. Empirical mean, standard deviation, and quantiles for the log likelihood,
+          Mean             SD       Naive SE Time-series SE 
+   -48.2305657      0.6024888      0.0852048      0.2113713 
+
+    2.5%      25%      50%      75%    97.5% 
+-49.3404 -48.7368 -48.0337 -47.7856 -47.4367 
+
+
+
+ 4. acceptance.rate : 
+Alpha_s[1] Alpha_s[2] 
+  0.469388   0.285714 
+> 
+> ## network-based SINR ILMs ##
+> data(NetworkDataSINR)
+> names(NetworkDataSINR)
+[1] "loc" "net" "cov" "epi"
+> 
+> 
+> netSINR<-as.epidat(type = "SINR", kerneltype = "network", incub.time = NetworkDataSINR$epi[,4], inf.time = NetworkDataSINR$epi[,6], rem.time = NetworkDataSINR$epi[,2], id.individual = NetworkDataSINR$epi[,1], location  = NetworkDataSINR$loc, network = NetworkDataSINR$net, network.type = "powerlaw")
+> 
+> ## performing the MCMC-tool for analyzing the fully observed network data
+> ## under the SINR network-based continuous-time ILM:
+> suspar <- list(NULL)
+> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.05, 0.5), 
++ ncol = 4, nrow = 2))
+> suspar[[2]]<- NetworkDataSINR$cov
+> 
+> mcmcres5 <- epictmcmc(object = netSINR, datatype = "known epidemic",
++ nsim = 500, control.sus = suspar, seedval  =  524837)
+************************************************ 
+* Start performing MCMC for the  known epidemic  SINR ILM for 
+500 iterations 
+************************************************ 
+> 
+> mcmcres5
+
+********************************************************* 
+Model: SINR network -based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic
+********************************************************* 
+
+Output: 
+
+ parameter.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     Alpha_s[1] Alpha_s[2]
+[1,]  0.0800000    0.20000
+[2,]  0.1338874    1.07844
+[3,]  0.1878971    1.07844
+[4,]  0.0659928    1.07844
+[5,]  0.0659928    1.21184
+[6,]  0.1109606    1.21560
+[7,]  0.1109606    1.21560
+
+ log.likelihood : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] -57.9014 -37.3736 -39.7569 -38.0929 -37.0774 -35.9855 -35.9855
+
+Available components:
+[1] "compart.framework" "kernel.type"       "data.assumption"  
+[4] "parameter.samples" "log.likelihood"    "acceptance.rate"  
+[7] "number.iteration"  "number.parameter"  "number.chains"    
+> #plot(mcmcres5, plottype = "parameter")
+> print(mcmcres5)
+
+********************************************************* 
+Model: SINR network -based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic
+********************************************************* 
+
+Output: 
+
+ parameter.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     Alpha_s[1] Alpha_s[2]
+[1,]  0.0800000    0.20000
+[2,]  0.1338874    1.07844
+[3,]  0.1878971    1.07844
+[4,]  0.0659928    1.07844
+[5,]  0.0659928    1.21184
+[6,]  0.1109606    1.21560
+[7,]  0.1109606    1.21560
+
+ log.likelihood : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] -57.9014 -37.3736 -39.7569 -38.0929 -37.0774 -35.9855 -35.9855
+
+Available components:
+[1] "compart.framework" "kernel.type"       "data.assumption"  
+[4] "parameter.samples" "log.likelihood"    "acceptance.rate"  
+[7] "number.iteration"  "number.parameter"  "number.chains"    
+> summary(mcmcres5)
+
+********************************************************* 
+Model:SINR network-based continuous-time ILM 
+Method: Markov chain Monte Carlo (MCMC) 
+Data assumption: fully observed epidemic 
+number.chains : 1 chains 
+number.iteration : 499 iterations 
+number.parameter : 2 parameters
+********************************************************* 
+
+
+ 1. Empirical mean and standard deviation for each variable,
+plus standard error of the mean:
+               Mean        SD   Naive SE Time-series SE
+Alpha_s[1] 0.105302 0.0292938 0.00131006      0.0038001
+Alpha_s[2] 2.172038 0.5226053 0.02337162      0.0700345
+
+
+
+ 2. Quantiles for each variable:
+                2.5%       25%      50%      75%    97.5%
+Alpha_s[1] 0.0559572 0.0826821 0.103488 0.122266 0.172071
+Alpha_s[2] 1.2232929 1.7914828 2.156877 2.477779 3.278725
+
+
+
+ 3. Empirical mean, standard deviation, and quantiles for the log likelihood,
+          Mean             SD       Naive SE Time-series SE 
+   -34.6600230      1.4539940      0.0650246      0.1404429 
+
+    2.5%      25%      50%      75%    97.5% 
+-37.2244 -35.0325 -34.2647 -33.8474 -33.5796 
+
+
+
+ 4. acceptance.rate : 
+Alpha_s[1] Alpha_s[2] 
+  0.531062   0.711423 
+> 
+> suspar <- list(NULL)
+> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.05, 0.5), 
++ ncol = 4, nrow = 2))
+> suspar[[2]]<- NetworkDataSINR$cov
+> delta1<-list(1,2,c(4,2))
+> spark<-list(1,matrix(c("gamma", 1, 0.01, 0.05), ncol = 4, nrow = 1))
+> 
+> mcmcres5 <- epictmcmc(object = netSINR, datatype = "known removal",
++ nsim = 500, control.sus = suspar, spark.par = spark, delta = delta1, seedval  =  524837)
+************************************************ 
+* Start performing MCMC for the  known removal  SINR ILM for 
+500 iterations 
+************************************************ 
+> 
+> print(mcmcres5)
+
+********************************************************* 
+Model: SINR network -based continuous-time ILM 
+Method: Data augmented Markov chain Monte Carlo (DA-MCMC) 
+Data assumption: partially observed epidemic (unknown infection times)
+********************************************************* 
+
+Output: 
+
+ parameter.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     Alpha_s[1] Alpha_s[2]    Spark Incubation period rate
+[1,]  0.0800000   0.200000 1.000000               2.000000
+[2,]  0.0800000   0.200000 1.000000               0.642684
+[3,]  0.0690895   0.190890 1.000000               0.555553
+[4,]  0.0690895   0.483876 1.000000               0.606698
+[5,]  0.0690895   0.483876 1.000000               0.367409
+[6,]  0.0305489   0.483876 0.998811               0.421886
+[7,]  0.0300961   0.390110 0.998811               0.451194
+
+ log.likelihood : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] -424.604 -337.873 -331.517 -334.761 -313.155 -311.996 -311.029
+
+ infection.times.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     [,1]    [,2]     [,3]   [,4]    [,5]    [,6]    [,7]    [,8]    [,9]
+[1,]    0 0.79865 0.981407 1.1509 1.18876 1.40445 1.46577 1.55333 1.68081
+[2,]    0 0.79865 0.981407 1.1509 1.18876 1.40445 1.46577 1.55333 2.35438
+[3,]    0 0.79865 0.981407 0.8110 1.18876 1.40445 1.46577 1.55333 1.35497
+[4,]    0 0.79865 0.766807 0.8110 1.18876 1.53012 1.46577 1.55333 1.35497
+[5,]    0 0.79865 0.766807 0.8110 1.18876 1.53012 1.46577 2.38730 1.35497
+[6,]    0 0.79865 0.766807 0.8110 1.18876 1.53012 1.46577 2.38730 2.29052
+[7,]    0 0.79865 0.766807 0.8110 1.79709 1.38102 1.46577 2.38730 2.29052
+       [,10]   [,11]   [,12]    [,13]   [,14]    [,15]    [,16]   [,17]
+[1,] 1.69596 1.71176 1.83651 1.982638 2.34257 2.384676 2.507263 2.57691
+[2,] 3.35901 1.71176 1.13376 1.982638 1.99150 2.384676 2.507263 2.57691
+[3,] 4.18073 1.68879 1.13376 1.982638 1.98806 0.500415 0.913285 2.57691
+[4,] 3.03063 2.24493 1.23437 1.982638 1.98806 0.500415 0.913285 2.57691
+[5,] 2.86364 2.24493 2.18850 1.982638 1.98806 2.447493 0.913285 3.81154
+[6,] 2.86364 2.24493 2.43044 1.231780 1.82614 2.235378 0.913285 5.12998
+[7,] 2.84780 2.48722 2.43044 0.978136 2.50708 2.235378 1.478022 4.46684
+        [,18]   [,19]   [,20]   [,21]   [,22]    [,23]    [,24]   [,25]   [,26]
+[1,] 2.591592 2.67964 2.70830 2.78291 2.88363 3.002485 3.174230 3.56576 3.85920
+[2,] 2.958853 2.67964 1.99332 1.90717 2.88363 1.214710 3.533313 3.56576 3.85920
+[3,] 2.958853 2.67964 1.29432 1.90717 1.61299 2.485413 3.533313 3.56576 5.27562
+[4,] 0.666603 1.82015 1.29432 1.90717 1.61299 0.960069 2.920382 4.66476 3.62953
+[5,] 0.666603 2.46034 1.29432 1.90717 1.61299 0.960069 0.655764 4.77629 2.97222
+[6,] 0.666603 2.46034 1.29432 1.90717 1.26988 0.960069 0.655764 4.77629 2.97222
+[7,] 1.259770 2.46034 1.29432 1.90717 1.26988 0.960069 0.546143 1.76767 2.97222
+       [,27]   [,28]   [,29]   [,30]   [,31]   [,32]   [,33]   [,34]
+[1,] 4.03189 5.14651 5.74088 6.20128 6.39138 6.90974 7.88329 8.46363
+[2,] 4.03189 5.14651 6.30472 6.20128 6.34315 8.14862 7.03590 8.46363
+[3,] 5.05217 5.14651 6.30472 7.20518 6.34315 6.45002 7.03590 7.85724
+[4,] 5.51550 5.14651 4.77398 7.20518 6.34315 7.74865 7.03590 7.85724
+[5,] 4.49326 5.14651 6.06564 7.35551 6.34315 3.51511 7.03590 7.85724
+[6,] 4.47213 5.14651 6.06564 4.42529 7.28671 3.51511 6.20218 7.06210
+[7,] 5.61429 5.14651 6.06564 4.42529 4.96469 3.51511 6.94035 7.06210
+
+ Average.incubation.periods : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] 2.07371 1.91132 2.19276 2.19879 2.40951 2.31025 2.54366
+
+Available components:
+ [1] "compart.framework"          "kernel.type"               
+ [3] "data.assumption"            "parameter.samples"         
+ [5] "log.likelihood"             "acceptance.rate"           
+ [7] "number.iteration"           "number.parameter"          
+ [9] "number.chains"              "infection.times.samples"   
+[11] "Average.incubation.periods"
+> summary(mcmcres5)
+
+********************************************************* 
+Model: SINR network -based continuous-time ILM 
+Method: Data augmented Markov chain Monte Carlo (DA-MCMC) 
+Data assumption: partially observed epidemic (unknown infection times) 
+number.chains : 1 chains 
+number.iteration : 499 iterations 
+number.parameter : 4 parameters 
+
+********************************************************* 
+
+
+ 1. Empirical mean and standard deviation for each variable,
+plus standard error of the mean:
+                            Mean        SD   Naive SE Time-series SE
+Alpha_s[1]             0.1007853 0.0475778 0.00212774     0.00762285
+Alpha_s[2]             1.4173653 0.5347657 0.02391545     0.09056903
+Spark                  0.0659964 0.1869312 0.00835982     0.07108152
+Incubation period rate 0.6910695 0.1830659 0.00818696     0.03810184
+
+
+
+ 2. Quantiles for each variable:
+                              2.5%        25%       50%       75%    97.5%
+Alpha_s[1]             0.000209879 0.07168282 0.1000492 0.1346807 0.192265
+Alpha_s[2]             0.396051745 1.06667928 1.4553177 1.7768639 2.377769
+Spark                  0.001233203 0.00541658 0.0113421 0.0212823 0.762615
+Incubation period rate 0.349034186 0.57961544 0.6819155 0.8029411 1.054176
+
+
+
+ 3. Empirical mean, standard deviation, and quantiles for the log likelihood,
+          Mean             SD       Naive SE Time-series SE 
+      -96.9551        43.0979         1.9274        11.9837 
+
+     2.5%       25%       50%       75%     97.5% 
+-240.2514  -93.3149  -85.8320  -79.9584  -70.1831 
+
+
+
+ 4. Empirical mean, standard deviation, and quantiles for the average incubation periods,
+          Mean             SD       Naive SE Time-series SE 
+     1.6581579      0.4526819      0.0202445      0.1261518 
+
+   2.5%     25%     50%     75%   97.5% 
+1.07412 1.38407 1.56979 1.79580 3.18033 
+
+
+
+ 5. acceptance.rate : 
+            Alpha_s[1]             Alpha_s[2]                  Spark 
+              0.555110               0.609218               0.256513 
+Incubation period rate 
+              1.000000 
+> #plot(mcmcres5, plottype = "parameter")
+> #plot(mcmcres5, plottype = "inf.times")
+> 
+> suspar <- list(NULL)
+> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.05, 0.5), 
++ ncol = 4, nrow = 2))
+> suspar[[2]]<- NetworkDataSINR$cov
+> delta1<-list(NULL)
+> delta1[[1]]<-c(1,1)
+> delta1[[2]]<-c(2,2)
+> delta1[[3]]<-matrix(c(4,4,2,2),ncol=2,nrow=2)
+> spark<-list(1,matrix(c("gamma", 1, 0.01, 0.05), ncol = 4, nrow = 1))
+> 
+> mcmcres5 <- epictmcmc(object = netSINR, datatype = "unknown removal", 
++ nsim = 500, control.sus = suspar, spark.par = spark, delta = delta1,seedval  =  524837)
+************************************************ 
+* Start performing MCMC for the  unknown removal  SINR ILM for 
+500 iterations 
+************************************************ 
+> 
+> print(mcmcres5)
+
+********************************************************* 
+Model: SIR network -based continuous-time ILM 
+Method: Data augmented Markov chain Monte Carlo (DA-MCMC) 
+Data assumption: partially observed epidemic (unknown infection & removal times)
+********************************************************* 
+
+Output: 
+
+ parameter.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     Alpha_s[1] Alpha_s[2]    Spark Incubation period rate Delay period rate
+[1,]  0.0800000 0.20000000 1.000000               2.000000           2.00000
+[2,]  0.0580715 0.03549486 1.000000               0.642684           2.35035
+[3,]  0.0500416 0.00416761 1.000811               0.494247           1.87766
+[4,]  0.0500416 0.00416761 0.964706               0.517611           1.46004
+[5,]  0.0438842 0.00416761 0.964706               0.498878           1.63800
+[6,]  0.0438842 0.06384768 0.964706               0.475524           1.38107
+[7,]  0.0438842 0.06384768 0.964706               0.577423           1.62723
+
+ log.likelihood : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] -462.735 -382.515 -366.724 -342.037 -350.363 -333.784 -347.635
+
+ infection.times.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+     [,1]      [,2]     [,3]     [,4]    [,5]       [,6]     [,7]    [,8]
+[1,]    0 0.7986502 0.981407 1.150897 1.18876 1.40444631 1.465774 1.55333
+[2,]    0 0.3398683 0.981407 0.484628 1.18876 0.00389207 1.465774 1.55333
+[3,]    0 1.7011800 0.981407 0.484628 1.18876 0.00389207 1.465774 1.55333
+[4,]    0 1.8912916 2.407800 0.484628 1.18876 0.00389207 1.465774 1.44179
+[5,]    0 0.0794877 2.407800 0.484628 1.18876 0.02059933 1.396262 1.44179
+[6,]    0 0.0794877 2.407800 1.956827 1.18876 0.02059933 1.396262 1.44179
+[7,]    0 0.8285764 2.584022 0.625039 1.18876 0.02059933 0.571483 1.44179
+         [,9]    [,10]    [,11]    [,12]   [,13]    [,14]    [,15]   [,16]
+[1,] 1.680805 1.695957 1.711758 1.836505 1.98264 2.342569 2.384676 2.50726
+[2,] 1.680805 1.695957 1.711758 1.836505 1.98264 2.342569 2.384676 2.50726
+[3,] 0.129088 0.633513 1.711758 1.641355 2.06318 3.010180 2.384676 3.04187
+[4,] 0.129088 0.633513 1.711758 0.779452 2.06318 0.206794 0.208020 3.59219
+[5,] 0.129088 0.633513 1.118180 0.779452 1.10283 0.458607 0.208020 2.46043
+[6,] 1.107198 0.633513 1.906378 0.779452 1.10283 0.458607 0.151427 3.37739
+[7,] 1.107198 3.667633 0.119399 0.779452 1.10283 1.392759 0.151427 1.95211
+       [,17]    [,18]   [,19]   [,20]   [,21]   [,22]   [,23]   [,24]   [,25]
+[1,] 2.57691 2.591592 2.67964 2.70830 2.78291 2.88363 3.00249 3.17423 3.56576
+[2,] 5.62033 2.357652 2.67964 2.70830 1.21832 2.89010 3.50013 3.32770 3.56576
+[3,] 3.83091 2.357652 2.67964 2.57158 1.21832 2.89010 3.09953 3.32770 4.64685
+[4,] 1.96563 2.966608 1.74481 2.57158 1.21832 3.20844 2.36507 0.97511 4.64685
+[5,] 1.96563 2.966608 1.74481 2.57158 1.21832 2.97615 2.36507 0.97511 4.64685
+[6,] 1.96563 1.471869 1.74481 2.57158 1.56451 3.40857 2.36507 0.97511 4.64685
+[7,] 1.96563 0.922773 1.74481 2.57158 1.56451 2.21860 2.36507 0.97511 5.01696
+       [,26]   [,27]   [,28]   [,29]   [,30]   [,31]   [,32]   [,33]   [,34]
+[1,] 3.85920 4.03189 5.14651 5.74088 6.20128 6.39138 6.90974 7.88329 8.46363
+[2,] 5.14453 4.03189 5.14651 5.74088 6.20128 6.39138 6.90974 6.88489 8.46363
+[3,] 5.84210 4.03189 5.14651 5.74088 2.12442 6.39138 7.11983 7.25992 8.46363
+[4,] 1.28232 4.03189 5.14651 5.74088 2.12442 8.06608 6.64694 7.25992 9.40020
+[5,] 1.28232 3.62122 8.27050 5.74088 2.12442 7.53255 6.95601 7.25992 9.40020
+[6,] 1.28232 4.86582 8.24055 5.74088 2.12442 4.15016 5.42576 6.88110 9.44589
+[7,] 1.28232 4.86582 8.24055 5.74088 2.12442 4.15016 5.42576 7.14785 8.64910
+
+ Average.incubation.periods : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] 2.07371 1.90762 2.20728 2.35976 2.59580 2.43889 2.68470
+
+ removal.times.samples : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+        [,1]    [,2]    [,3]    [,4]    [,5]    [,6]    [,7]    [,8]    [,9]
+[1,] 4.50490 2.29471 3.70100 2.27570 6.94112 3.09950 4.35899 4.00825 4.70701
+[2,] 1.83991 2.42269 3.70100 5.11709 6.94112 2.86840 4.35899 4.00825 4.70701
+[3,] 2.28530 3.39505 3.70100 5.11709 6.94112 2.86840 4.35899 4.00825 4.40265
+[4,] 1.85082 2.92247 3.90926 5.11709 6.94112 2.86840 4.35899 4.04768 4.40265
+[5,] 2.15584 2.52851 3.90926 5.11709 6.94112 4.33995 4.26483 4.04768 4.40265
+[6,] 1.69873 2.52851 3.90926 2.64627 6.94112 4.33995 4.26483 4.04768 4.57942
+[7,] 2.49186 2.96031 3.69154 2.40340 6.94112 4.33995 4.24377 4.04768 4.57942
+       [,10]   [,11]   [,12]   [,13]   [,14]   [,15]   [,16]   [,17]   [,18]
+[1,] 4.74021 3.15956 3.53135 5.08073 4.36785 4.60618 3.63237 6.09532 3.23545
+[2,] 4.74021 3.15956 3.53135 5.08073 4.36785 4.60618 3.63237 6.40330 3.24057
+[3,] 4.74989 3.15956 3.46169 5.74402 3.70137 4.60618 3.77308 5.93708 3.24057
+[4,] 4.74989 3.15956 4.21936 5.74402 3.34913 4.78079 3.78233 5.93938 3.88690
+[5,] 4.74989 4.07565 4.21936 7.38027 3.34273 4.78079 5.04869 5.93938 3.88690
+[6,] 4.74989 3.28944 4.21936 7.38027 3.34273 4.62183 3.90077 5.93938 3.25757
+[7,] 4.88175 3.17678 4.21936 7.38027 4.39962 4.62183 4.27718 5.93938 3.49535
+       [,19]   [,20]   [,21]   [,22]   [,23]   [,24]   [,25]   [,26]   [,27]
+[1,] 4.91063 4.00842 4.16219 5.97581 4.14633 5.40700 6.47184 6.24091 7.59606
+[2,] 4.91063 4.00842 5.15843 4.08160 4.11414 4.90466 6.47184 6.99839 7.59606
+[3,] 4.91063 4.27680 5.15843 4.08160 6.61940 4.90466 6.54379 7.68988 7.59606
+[4,] 4.29043 4.27680 5.15843 4.32877 4.80225 5.10516 6.54379 6.40688 7.59606
+[5,] 4.29043 4.27680 5.15843 4.68549 4.80225 5.10516 6.54379 6.40688 6.70190
+[6,] 4.29043 4.27680 4.32222 6.34221 4.80225 5.10516 6.54379 6.40688 6.76616
+[7,] 4.29043 4.27680 4.32222 4.23926 4.80225 5.10516 6.62941 6.40688 6.76616
+       [,28]   [,29]    [,30]   [,31]   [,32]   [,33]   [,34]
+[1,] 9.85260 9.79913 11.43192 8.28133 9.17592 8.61186 11.4464
+[2,] 9.85260 9.79913 11.43192 8.28133 9.17592 9.08049 11.4464
+[3,] 9.85260 9.79913  8.99639 8.28133 9.29442 9.65360 11.4464
+[4,] 9.85260 9.79913  8.99639 8.66525 8.61376 9.65360 11.4520
+[5,] 9.74410 9.79913  8.99639 8.47408 9.55444 9.65360 11.4520
+[6,] 9.60141 9.79913  8.99639 9.02418 9.02998 8.56719 11.4577
+[7,] 9.60141 9.79913  8.99639 9.02418 9.02998 8.80948 11.4878
+
+ Average.delay.periods : 
+Markov Chain Monte Carlo (MCMC) output:
+Start = 1 
+End = 7 
+Thinning interval = 1 
+[1] 0.472753 0.654030 0.552101 0.640283 0.617368 0.623157 0.467431
+
+Available components:
+ [1] "compart.framework"          "kernel.type"               
+ [3] "data.assumption"            "parameter.samples"         
+ [5] "log.likelihood"             "acceptance.rate"           
+ [7] "number.iteration"           "number.parameter"          
+ [9] "number.chains"              "infection.times.samples"   
+[11] "Average.incubation.periods" "removal.times.samples"     
+[13] "Average.delay.periods"     
+> summary(mcmcres5)
+
+********************************************************* 
+Model:SINR network-based continuous-time ILM 
+Method: Data augmented Markov chain Monte Carlo (DA-MCMC) 
+Data assumption: partially observed epidemic (unknown infection & removal times) 
+number.chains : 1 chains 
+number.iteration : 499 iterations 
+number.parameter : 5 parameters 
+
+********************************************************* 
+
+
+ 1. Empirical mean and standard deviation for each variable,
+plus standard error of the mean:
+                            Mean        SD   Naive SE Time-series SE
+Alpha_s[1]             0.0903732 0.0387532 0.00173310     0.00748029
+Alpha_s[2]             1.7960668 0.8838174 0.03952552     0.28163103
+Spark                  0.0718212 0.1960762 0.00876879     0.07898392
+Incubation period rate 0.7815554 0.2213126 0.00989740     0.04365287
+Delay period rate      1.7540724 1.1498445 0.05142261     0.76090574
+
+
+
+ 2. Quantiles for each variable:
+                              2.5%        25%       50%      75%    97.5%
+Alpha_s[1]             0.010264754 0.06821725 0.0945400 0.115804 0.158331
+Alpha_s[2]             0.099246002 1.17084310 1.8434466 2.511223 3.314815
+Spark                  0.000819373 0.00577558 0.0124955 0.025231 0.851070
+Incubation period rate 0.330868061 0.63914816 0.7849012 0.908065 1.229919
+Delay period rate      0.406014068 0.95464853 1.3853204 2.314959 4.778543
+
+
+
+ 3. Empirical mean, standard deviation, and quantiles for the log likelihood,
+          Mean             SD       Naive SE Time-series SE 
+    -129.56932       46.03720        2.05885       14.50868 
+
+     2.5%       25%       50%       75%     97.5% 
+-290.3544 -126.9515 -117.0445 -108.8746  -98.3852 
+
+
+
+ 4. Empirical mean, standard deviation, and quantiles for the average incubation periods,
+          Mean             SD       Naive SE Time-series SE 
+     1.4904845      0.5313996      0.0237649      0.2167580 
+
+    2.5%      25%      50%      75%    97.5% 
+0.940363 1.192915 1.377392 1.563478 3.234577 
+
+
+
+ 5. Empirical mean, standard deviation, and quantiles for the average delay periods,
+          Mean             SD       Naive SE Time-series SE 
+     0.8681573      0.5871320      0.0262573      0.2200689 
+
+    2.5%      25%      50%      75%    97.5% 
+0.133256 0.446139 0.753013 1.088266 2.545538 
+
+
+
+ 6. acceptance.rate : 
+            Alpha_s[1]             Alpha_s[2]                  Spark 
+              0.595190               0.645291               0.286573 
+Incubation period rate      Delay period rate 
+              1.000000               1.000000 
+> #plot(mcmcres5, plottype = "parameter")
+> #plot(mcmcres5, plottype = "inf.times")
+> #plot(mcmcres5, plottype = "rem.times")
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  2.628   0.103   2.741 

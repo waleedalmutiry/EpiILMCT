@@ -44,25 +44,28 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
             }
         }
 
-        if (length(ss) < 2) {
+        if (length(ss) <= 2) {
             a <- 1
             b <- 2
-        } else if (length(ss) <= 4 & length(ss) >=  2) {
+        } else if (length(ss) <= 4 & length(ss) >  2) {
             a <- 2
             b <- 2
         } else if (length(ss) <= 6 & length(ss) > 4) {
             a <- 2
             b <- 3
-        } else if (length(ss) > 9) {
+        } else if (length(ss) > 6) {
             a <- 3
             b <- 3
         }
 
         if (plottype == "propagation") {
             if (x$kerneltype == "distance") {
+
+                op1 <- par(no.readonly = TRUE)
+
                 if (x$type == "SIR") {
 
-                    op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                    op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
                     on.exit(par(op))
                     
                     plot(x$location[, 1], x$location[, 2], xlim = c(floor(min(x$location[, 1])), ceiling(max(x$location[, 1]))),
@@ -84,21 +87,30 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                         if (any(m == seq.int(9, n, 9)) | (m == length(ss))) {
                             opar <- par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
                             mar = c(0, 0, 0, 0), new = TRUE)
-                            on.exit(par(opar))
+                            on.exit(par(opar), add = TRUE)
                             plot(0, 0, type = 'n', bty = 'n', xaxt = 'n', yaxt = 'n')
-                            legend("bottom", legend = c("susceptible", "newly-infected", "infectious","removed"),
-                            pch = 20, col = c("gray", "blue", "red", "green"),
-                            horiz = TRUE, bty = 'n', cex = 0.9)
-                            
-                            op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                            on.exit(par(op))
+                            if (a+b == 3) {
+                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious","removed"),
+                                pch = 20, col = c("gray", "blue", "red", "green"),
+                                horiz = TRUE, bty = 'n', cex = 0.8)
+                            } else if (a+b == 4) {
+                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious","removed"),
+                                pch = 20, col = c("gray", "blue", "red", "green"),
+                                horiz = TRUE, bty = 'n', cex = 1.0)
+                            } else if (a+b > 4) {
+                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious","removed"),
+                                pch = 20, col = c("gray", "blue", "red", "green"),
+                                horiz = TRUE, bty = 'n', cex = 1.3)
+                            }
+                            op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                            on.exit(par(op), add = TRUE)
                         }
 
                     }
                     
                 } else if (x$type == "SINR") {
 
-                    op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                    op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
                     on.exit(par(op))
                     
                     plot(x$location[, 1], x$location[, 2], xlim = c(floor(min(x$location[, 1])), ceiling(max(x$location[, 1]))),
@@ -121,29 +133,43 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                         if (any(m == seq.int(9, n, 9)) | (m == length(ss))) {
                             opar <- par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
                             mar = c(0, 0, 0, 0), new = TRUE)
-                            on.exit(par(opar))
+                            on.exit(par(opar), add = TRUE)
                             plot(0, 0, type = 'n', bty = 'n', xaxt = 'n', yaxt = 'n')
-                            legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
-                            pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
-                            horiz = TRUE, bty = 'n', cex = 0.9)
-
-                            op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                            on.exit(par(op))
+                            if (a+b == 3) {
+                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                horiz = TRUE, bty = 'n', cex = 0.8)
+                            } else if (a+b == 4) {
+                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                horiz = TRUE, bty = 'n', cex = 1.0)
+                            } else if (a+b > 4) {
+                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                horiz = TRUE, bty = 'n', cex = 1.3)
+                            }
+                            
+                            op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                            on.exit(par(op), add = TRUE)
                         }
 
                     }
                     
                 }
-                
+
+                on.exit(par(op1))
+
             } else if (x$kerneltype == "network") {
 
                 if (is.null(x$network)) {
                     stop("the network matrix is missing", call. = FALSE)
                 } else if (all(x$network %in% 0:1)) {
 
+                    op1 <- par(no.readonly = TRUE)
+
                     if (x$type == "SIR") {
-                    op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                    on.exit(par(op))
+                        op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                        on.exit(par(op))
 
                         plot(x$location[, 1], x$location[, 2], xlim = c(floor(min(x$location[, 1])), ceiling(max(x$location[, 1]))),
                         ylim = c(floor(min(x$location[, 2])), ceiling(max(x$location[, 2]))), panel.first = grid(),
@@ -203,22 +229,32 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                             if (any(m == seq.int(9, n, 9)) | (m == length(ss))) {
                                 opar <- par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
                                 mar = c(0, 0, 0, 0), new = TRUE)
-                                on.exit(par(opar))
+                                on.exit(par(opar), add = TRUE)
                                 plot(0, 0, type = 'n', bty = 'n', xaxt = 'n', yaxt = 'n')
-                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious","removed"),
-                                pch = 20, col = c("gray", "blue", "red", "green"),
-                                horiz = TRUE, bty = 'n', cex = 0.9)
+                                if (a+b == 3) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious","removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 0.8)
+                                } else if (a+b == 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious","removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.0)
+                                } else if (a+b > 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious","removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.3)
+                                }
 
-                                op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                                on.exit(par(op))
+                                op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                                on.exit(par(op), add = TRUE)
                             }
 
                         }
                         
                     } else if (x$type == "SINR") {
 
-                    op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                    on.exit(par(op))
+                        op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                        on.exit(par(op))
 
                         plot(x$location[, 1], x$location[, 2], xlim = c(floor(min(x$location[, 1])), ceiling(max(x$location[, 1]))),
                         ylim = c(floor(min(x$location[, 2])), ceiling(max(x$location[, 2]))), panel.first = grid(),
@@ -284,24 +320,38 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                             if (any(m == seq.int(9, n, 9)) | (m == length(ss))) {
                                 opar <- par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
                                 mar = c(0, 0, 0, 0), new = TRUE)
-                                on.exit(par(opar))
+                                on.exit(par(opar), add = TRUE)
                                 plot(0, 0, type = 'n', bty = 'n', xaxt = 'n', yaxt = 'n')
-                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
-                                pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
-                                horiz = TRUE, bty = 'n', cex = 0.9)
+                                if (a+b == 3) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 0.8)
+                                } else if (a+b == 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.0)
+                                } else if (a+b > 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.3)
+                                }
                                 
-                                op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                                on.exit(par(op))
+                                op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                                on.exit(par(op), add = TRUE)
                             }
 
                         }
                     }
+                    
+                    on.exit(par(op1))
 
                 } else {
 
+                    op1 <- par(no.readonly = TRUE)
+
                     if (x$type == "SIR") {
 
-                    op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                    op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
                     on.exit(par(op))
                     
                         plot(x$location[, 1], x$location[, 2], xlim = c(floor(min(x$location[,1])), ceiling(max(x$location[, 1]))),
@@ -322,21 +372,30 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                             if (any(m == seq.int(9, n, 9)) | (m == length(ss))) {
                                 opar <- par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
                                 mar = c(0, 0, 0, 0), new = TRUE)
-                                on.exit(par(opar))
+                                on.exit(par(opar), add = TRUE)
                                 plot(0, 0, type = 'n', bty = 'n', xaxt = 'n', yaxt = 'n')
-                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
-                                pch = 20, col = c("gray", "blue", "red", "green"),
-                                horiz = TRUE, bty = 'n', cex = 0.9)
-
-                                op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                                on.exit(par(op))
+                                if (a+b == 3) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 0.8)
+                                } else if (a+b == 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.0)
+                                } else if (a+b > 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.3)
+                                }
+                                op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                                on.exit(par(op), add = TRUE)
                             }
 
                         }
                         
                     } else if (x$type == "SINR") {
 
-                        op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                        op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
                         on.exit(par(op))
                 
                         plot(x$location[, 1], x$location[, 2], xlim = c(floor(min(x$location[, 1])), ceiling(max(x$location[, 1]))),
@@ -359,29 +418,42 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                             if (any(m == seq.int(9, n, 9)) | (m == length(ss))) {
                                 opar <- par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
                                 mar = c(0, 0, 0, 0), new = TRUE)
-                                on.exit(par(opar))
+                                on.exit(par(opar), add = TRUE)
                                 plot(0, 0, type = 'n', bty = 'n', xaxt = 'n', yaxt = 'n')
-                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
-                                pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
-                                horiz = TRUE, bty = 'n', cex = 0.9)
-
-                                op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                                on.exit(par(op))
+                                if (a+b == 3) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 0.8)
+                                } else if (a+b == 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.0)
+                                } else if (a+b > 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.3)
+                                }
+                                op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                                on.exit(par(op), add = TRUE)
                             }
 
                         }
                     
                     }
                     
+                    on.exit(par(op1))
+
                 }
             } else if (x$kerneltype == "both") {
                 if (is.null(x$network)) {
                     stop("the network matrix is missing", call. = FALSE)
                 } else if (all(x$network %in% 0:1)) {
-                    
+
+                    op1 <- par(no.readonly = TRUE)
+
                     if (x$type == "SIR") {
 
-                        op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                        op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
                         on.exit(par(op))
 
                         plot(x$location[, 1], x$location[, 2], xlim = c(floor(min(x$location[,1])), ceiling(max(x$location[, 1]))),
@@ -442,21 +514,30 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                             if (any(m == seq.int(9, n, 9)) | (m == length(ss))) {
                                 opar <- par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
                                 mar = c(0, 0, 0, 0), new = TRUE)
-                                on.exit(par(opar))
+                                on.exit(par(opar), add = TRUE)
                                 plot(0, 0, type = 'n', bty = 'n', xaxt = 'n', yaxt = 'n')
-                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
-                                pch = 20, col = c("gray", "blue", "red", "green"),
-                                horiz = TRUE, bty = 'n', cex = 0.9)
-                                
-                                op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                                on.exit(par(op))
+                                if (a+b == 3) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 0.8)
+                                } else if (a+b == 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.0)
+                                } else if (a+b > 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.3)
+                                }
+                                op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                                on.exit(par(op), add = TRUE)
                             }
 
                         }
                         
                     } else if (x$type == "SINR") {
 
-                        op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                        op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
                         on.exit(par(op))
 
                         plot(x$location[, 1], x$location[, 2], xlim = c(floor(min(x$location[, 1])), ceiling(max(x$location[, 1]))),
@@ -517,25 +598,38 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                             if (any(m == seq.int(9, n, 9)) | (m == length(ss))) {
                                 opar <- par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
                                 mar = c(0, 0, 0, 0), new = TRUE)
-                                on.exit(par(opar))
+                                on.exit(par(opar), add = TRUE)
                                 plot(0, 0, type = 'n', bty = 'n', xaxt = 'n', yaxt = 'n')
-                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
-                                pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
-                                horiz = TRUE, bty = 'n', cex = 0.9)
-
-                                op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                                on.exit(par(op))
+                                if (a+b == 3) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 0.8)
+                                } else if (a+b == 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.0)
+                                } else if (a+b > 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.3)
+                                }
+                                op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                                on.exit(par(op), add = TRUE)
                             }
 
                         }
 
                     }
+                    
+                    on.exit(par(op1))
 
                 } else {
 
+                    op1 <- par(no.readonly = TRUE)
+
                     if (x$type == "SIR") {
                         
-                        op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                        op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
                         on.exit(par(op))
                     
                         plot(x$location[, 1], x$location[, 2], xlim = c(floor(min(x$location[, 1])), ceiling(max(x$location[, 1]))),
@@ -556,21 +650,30 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                             if (any(m == seq.int(9, n, 9)) | (m == length(ss))) {
                                 opar <- par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
                                 mar = c(0, 0, 0, 0), new = TRUE)
-                                on.exit(par(opar))
+                                on.exit(par(opar), add = TRUE)
                                 plot(0, 0, type = 'n', bty = 'n', xaxt = 'n', yaxt = 'n')
-                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
-                                pch = 20, col = c("gray", "blue", "red", "green"),
-                                horiz = TRUE, bty = 'n', cex = 0.9)
-                                
-                                op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                                on.exit(par(op))
+                                if (a+b == 3) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 0.8)
+                                } else if (a+b == 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.0)
+                                } else if (a+b > 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.3)
+                                }
+                                op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                                on.exit(par(op), add = TRUE)
                             }
 
                         }
                         
                     } else if (x$type == "SINR") {
 
-                        op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                        op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
                         on.exit(par(op))
                     
                         plot(x$location[, 1], x$location[, 2], xlim = c(floor(min(x$location[, 1])), ceiling(max(x$location[, 1]))),
@@ -593,26 +696,39 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                             if (any(m == seq.int(9, n, 9)) | (m == length(ss))) {
                                 opar <- par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0),
                                 mar = c(0, 0, 0, 0), new = TRUE)
-                                on.exit(par(opar))
+                                on.exit(par(opar), add = TRUE)
                                 plot(0, 0, type = 'n', bty = 'n', xaxt = 'n', yaxt = 'n')
-                                legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
-                                pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
-                                horiz = TRUE, bty = 'n', cex = 0.9)
-                                
-                                op <- par(mar = c(3.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
-                                on.exit(par(op))
+                                if (a+b == 3) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 0.8)
+                                } else if (a+b == 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.0)
+                                } else if (a+b > 4) {
+                                    legend("bottom", legend = c("susceptible", "newly-infected", "infectious", "notified", "removed"),
+                                    pch = 20, col = c("gray", "blue", "red", "yellow", "green"),
+                                    horiz = TRUE, bty = 'n', cex = 1.3)
+                                }
+                                op <- par(mar = c(5.9, 4.0, 1.5, 0.5), omi = c(0.2, 0.05, 0.15, 0.15), mfrow = c(a, b))
+                                on.exit(par(op), add = TRUE)
                             }
 
                         }
                     
                     }
                     
+                    on.exit(par(op1))
+
                 }
             } else {
                 stop("Specify the type of the kernel function as \"distance\", \"network\" or \"both\"", call.  =  FALSE)
             }# type if-condition
 
         } else if (plottype == "history") {
+
+            op1 <- par(no.readonly = TRUE)
 
             if (x$type == "SIR") {
                 op <- par(mar = c(5.1, 4.1, 4.1, 2.1), omi = c(0, 0, 0, 0), mfrow = c(2, 2))
@@ -639,7 +755,9 @@ plot.datagen<- function(x, plottype, time.index = NULL, ...) {
                 polygon(c(seq(1, k1), rev(seq(1, k1))), c(x$epidat[1:k1, 6], rev(x$epidat[1:k1, 4])), col = "red", border = NA)
                 polygon(c(seq(1, k1), rev(seq(1, k1))), c(x$epidat[1:k1, 4], rev(x$epidat[1:k1, 2])), col = "blue", border = NA)
 
-        }
+            }
+            
+            on.exit(par(op1))
 
         }
         

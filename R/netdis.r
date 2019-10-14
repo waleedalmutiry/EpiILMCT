@@ -136,6 +136,7 @@ plot.contactnet <- function(x, ...) {
     
     # Option for producing fancy plot of the contact network:
     if (class(x)== "contactnet") {
+
         if (x$type == "powerlaw" | x$type == "Cauchy"){
             n <- dim(x$contact.network)[1]
             plot(x$location, axes=FALSE, ylab="", xlab="", type="n", ...)
@@ -173,6 +174,7 @@ plot.contactnet <- function(x, ...) {
             graph.random <- igraph::graph(edges = combine.edges, directed = FALSE)
             plot(graph.random, ...)
         }
+                
     } else {
         stop("the input does not have the same class", call.=TRUE)
     }

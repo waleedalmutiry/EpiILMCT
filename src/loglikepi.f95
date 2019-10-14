@@ -32,7 +32,7 @@
 module logliksir
     use ISO_C_BINDING
     implicit none
-    public :: loglikcontilm
+    public :: loglikcontilm_f
 
 contains
 
@@ -44,9 +44,9 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    subroutine loglikcontilm(n, ninfected, num, nsuspar, ntranspar, cc, d333, epidat,  &
+    subroutine loglikcontilm_f(n, ninfected, num, nsuspar, ntranspar, cc, d333, epidat,  &
     & suscov, transcov, suspar, powersus, transpar, powertrans, kernelpar, spark, deltain1, &
-    & deltain2, likk) bind(C,  name="loglikcontilm_")
+    & deltain2, likk) bind(C,  name="loglikcontilm_f_")
 
     external infinity_value
 
@@ -548,7 +548,7 @@ contains
 
     END SELECT
 
-    end subroutine loglikcontilm
+    end subroutine loglikcontilm_f
 
 !##################################################################
 !##################################################################

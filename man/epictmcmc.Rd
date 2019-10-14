@@ -116,7 +116,7 @@ For faster run of the \code{epictmcmc} function, an option of running multiple c
 }
 \value{
 Returns an object of class \code{epictmcmc} that contains:
-\if{html}{
+
    \describe{
     \item{compart.framework:}{the compartmental framework model used in the analysis.}
     \item{kernel.type:}{the used \code{kernel.type} in the function.}
@@ -134,48 +134,6 @@ Returns an object of class \code{epictmcmc} that contains:
     \item{Average.delay.periods:}{the average delay period when \code{type} is set to ``SINR'' and \code{datatype} is set to ``unknown removal''.}
     
   }
-}
-\if{text}{
-   \describe{
-    \item{compart.framework:}{the compartmental framework model used in the analysis.}
-    \item{kernel.type:}{the used \code{kernel.type} in the function.}
-    \item{data.assumption:}{the \code{datatype}.}
-    \item{parameter.samples:}{the MCMC output of the updated model parameters.}
-    \item{log.posterior:}{the log posterior densities.}
-    \item{acceptance.rate:}{the acceptance rates for MCMC updates of each parameter.}
-    \item{number.iteration:}{the number of iterations.}
-    \item{number.parameter:}{the number of the unknown model parameters.}
-    \item{number.chains:}{the number of the MCMC chains.}
-    \item{infection.times.samples:}{the updated infection times when \code{datatype} is set to ``known removal''.}
-    \item{Average.infectious.periods:}{the average infectious period when \code{type} is set to ``SIR'' and \code{datatype} is set to ``known removal''.}
-    \item{removal.times.samples:}{the updated removal times when \code{datatype} is set to ``unknown removal''.}
-    \item{Average.incubation.periods:}{the average incubation period when \code{type} is set to ``SINR'' and \code{datatype} is set to either ``known removal'' or ``unknown removal''.}
-    \item{Average.delay.periods:}{the average delay period when \code{type} is set to ``SINR'' and \code{datatype} is set to ``unknown removal''.}
-    
-  }
-}
-\if{latex}{
- \itemize{
- \item[]
-   \describe{
-    \item{compart.framework:}{the compartmental framework model used in the analysis.}
-    \item{kernel.type:}{the used \code{kernel.type} in the function.}
-    \item{data.assumption:}{the \code{datatype}.}
-    \item{parameter.samples:}{the MCMC output of the updated model parameters.}
-    \item{log.posterior:}{the log posterior densities.}
-    \item{acceptance.rate:}{the acceptance rates for MCMC updates of each parameter.}
-    \item{number.iteration:}{the number of iterations.}
-    \item{number.parameter:}{the number of the unknown model parameters.}
-    \item{number.chains:}{the number of the MCMC chains.}
-    \item{infection.times.samples:}{the updated infection times when \code{datatype} is set to ``known removal''.}
-    \item{Average.infectious.periods:}{the average infectious period when \code{type} is set to ``SIR'' and \code{datatype} is set to ``known removal''.}
-    \item{removal.times.samples:}{the updated removal times when \code{datatype} is set to ``unknown removal''.}
-    \item{Average.incubation.periods:}{the average incubation period when \code{type} is set to ``SINR'' and \code{datatype} is set to either ``known removal'' or ``unknown removal''.}
-    \item{Average.delay.periods:}{the average delay period when \code{type} is set to ``SINR'' and \code{datatype} is set to ``unknown removal''.}
-    
-  }
-}
-}
 }
 
 \seealso{
@@ -188,43 +146,35 @@ Returns an object of class \code{epictmcmc} that contains:
 
 ## distance-based SIR continuous-time ILMs ##
 data(SpatialData)
-
 ## performing the MCMC-tool for analyzing the fully observed spatial data 
 ## under the SIR distance-based continuous ILM:
-
 suspar <- list(NULL)
 suspar[[1]] <- list(2, c("gamma", 1, 0.01, 0.5))
 suspar[[2]] <- rep(1, length(SpatialData$epidat[,1]))
 kernel1 <- list(2, c("gamma", 1, 0.01, 0.5))
-
 mcmcres2 <- epictmcmc(object = SpatialData,
 distancekernel = "powerlaw", datatype = "known epidemic", nsim = 50, 
-control.sus = suspar, kernel.par = kernel1,  seedval  =  524837)
-plot(mcmcres2)
+control.sus = suspar, kernel.par = kernel1,  seedval  =  524836)
+summary(mcmcres2)
 
 ## performing the MCMC-tool for analyzing the partially observed spatial
 ## data (unknown infection times) under the SIR distance-based 
 ## continuous ILM:
-
 suspar <- list(NULL)
 suspar[[1]]<-list(2,c("gamma", 1, 0.01, 0.8))
 suspar[[2]]<- rep(1,length(SpatialData$epidat[,1]))
 kernel1 <- list(2, c("gamma", 1, 0.01, 0.5))
-
-
 mcmcres22 <- epictmcmc(object = SpatialData,
 distancekernel = "powerlaw", datatype = "known removal", nsim = 50, 
 control.sus = suspar, kernel.par = kernel1, delta = list(1,2,c(4,2)),  
 seedval  =  524837)
-plot(mcmcres22)
+summary(mcmcres22)
 
 ## distance-based and network-based SIR ILMs ##
 data(SpatialNetData)
-
 ## performing the MCMC-tool for analyzing the fully observed spatial and 
-## network data
-## under the SIR distance-based and network-based continuous-time ILM:
-
+## network data under the SIR distance-based and network-based 
+## continuous-time ILM:
 suspar <- list(NULL)
 suspar[[1]] <- list(NULL)
 suspar[[1]][[1]] <- c(0.08, 0.2)
@@ -235,27 +185,23 @@ kernel1 <- list(NULL)
 kernel1[[1]] <- c(5, 0.5)
 kernel1[[2]] <- matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.5, 1),
 ncol = 4, nrow = 2)
-
 mcmcres3 <- epictmcmc(object = SpatialNetData[[1]],
 distancekernel = "powerlaw", datatype = "known epidemic", nsim = 50,
 control.sus = suspar, kernel.par = kernel1, seedval  =  524837)
-plot(mcmcres3)
+summary(mcmcres3)
 
 ## network-based SIR ILMs ##
 data(NetworkData)
-
 ## performing the MCMC-tool for analyzing the fully observed network data 
 ## under the SIR network-based continuous-time ILM:
-
 suspar <- list(NULL)
 suspar[[1]] <- list(NULL)
 suspar[[1]][[1]] <- c(0.08, 0.5)
 suspar[[1]][[2]] <- matrix(c("gamma", "gamma", 1, 1, 1, 1, 0.1, 0.5), 
 ncol = 4, nrow = 2)
 suspar[[2]] <- NetworkData[[2]]
-
 mcmcres4 <- epictmcmc(object = NetworkData[[1]], datatype = "known epidemic", 
 nsim = 50, control.sus = suspar,  seedval  =  524837)
-plot(mcmcres4)
+summary(mcmcres4)
 }
 \keyword{Bayesian Inference}

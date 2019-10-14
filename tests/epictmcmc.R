@@ -12,7 +12,7 @@ mcmcres2 <- epictmcmc(object = SpatialData,
 distancekernel = "powerlaw", datatype = "known epidemic", nsim = 50, 
 control.sus = suspar,
 kernel.par = kernel1,  seedval  =  524837)
-plot(mcmcres2)
+#plot(mcmcres2, plottype = "parameter")
 print(mcmcres2)
 summary(mcmcres2)
 
@@ -25,12 +25,12 @@ mcmcres22 <- epictmcmc(object = SpatialData,
 distancekernel = "Cauchy", datatype = "known epidemic", nsim = 50, 
 control.sus = suspar,
 kernel.par = kernel1,  seedval  =  524837)
-plot(mcmcres22)
+#plot(mcmcres22, plottype = "parameter")
 print(mcmcres22)
 summary(mcmcres22)
 
-plot(mcmcres2$log.likelihood)
-plot(mcmcres22$log.likelihood)
+#plot(mcmcres2$log.likelihood)
+#plot(mcmcres22$log.likelihood)
 
 ## performing the MCMC-tool for analyzing the partially observed spatial
 ## data (unknown infection times) under the SIR distance-based 
@@ -46,7 +46,7 @@ datatype = "known removal", nsim = 50,
 control.sus = suspar, kernel.par = kernel1, delta = list(1, 2, c(4, 2)),  
 seedval  =  524837)
 
-plot(mcmcres22)
+#plot(mcmcres22, plottype = "parameter")
 print(mcmcres22)
 summary(mcmcres22)
 
@@ -66,7 +66,7 @@ mcmcres3 <- epictmcmc(object = SpatialNetData[[1]], distancekernel = "powerlaw",
 datatype = "known epidemic", nsim = 50, 
 control.sus = suspar, kernel.par = kernel1, 
 seedval  =  524837)
-plot(mcmcres3)
+#plot(mcmcres3, plottype = "parameter")
 print(mcmcres3)
 summary(mcmcres3)
 
@@ -82,7 +82,7 @@ suspar[[2]]<- NetworkData[[2]]
 
 mcmcres4 <- epictmcmc(object = NetworkData[[1]], datatype = "known epidemic",
 nsim = 50, control.sus = suspar,  seedval  =  524837)
-plot(mcmcres4)
+#plot(mcmcres4, plottype = "parameter")
 print(mcmcres4)
 summary(mcmcres4)
 
@@ -104,7 +104,7 @@ mcmcres5 <- epictmcmc(object = netSINR, datatype = "known epidemic",
 nsim = 500, control.sus = suspar, seedval  =  524837)
 
 mcmcres5
-plot(mcmcres5)
+#plot(mcmcres5, plottype = "parameter")
 print(mcmcres5)
 summary(mcmcres5)
 
@@ -120,7 +120,8 @@ nsim = 500, control.sus = suspar, spark.par = spark, delta = delta1, seedval  = 
 
 print(mcmcres5)
 summary(mcmcres5)
-plot(mcmcres5)
+#plot(mcmcres5, plottype = "parameter")
+#plot(mcmcres5, plottype = "inf.times")
 
 suspar <- list(NULL)
 suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.05, 0.5), 
@@ -137,6 +138,8 @@ nsim = 500, control.sus = suspar, spark.par = spark, delta = delta1,seedval  =  
 
 print(mcmcres5)
 summary(mcmcres5)
-plot(mcmcres5, ask = FALSE)
+#plot(mcmcres5, plottype = "parameter")
+#plot(mcmcres5, plottype = "inf.times")
+#plot(mcmcres5, plottype = "rem.times")
 
 

@@ -5,7 +5,7 @@
   \code{plot.contactnet} is an S3 method that plots the contact network of an S3 object of class \code{contactnet}. 
 }
 \usage{
-  \method{plot}{contactnet}(x, ...)
+\method{plot}{contactnet}(x, ...)
 }
 \arguments{
   \item{x}{an S3 object of class \code{contactnet} (i.e. the output of the \code{contactnet} function).}

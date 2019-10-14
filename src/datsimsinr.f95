@@ -34,7 +34,7 @@
 module datsimsinr
     use ISO_C_BINDING
     implicit none
-    public :: datasimulationsinr
+    public :: datasimulationsinr_f
 
 contains
 
@@ -47,9 +47,9 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    subroutine datasimulationsinr(n, anum, num, observednum, observedepi, tmax, temp, suspar, nsuspar, powersus, &
+    subroutine datasimulationsinr_f(n, anum, num, observednum, observedepi, tmax, temp, suspar, nsuspar, powersus, &
     & transpar, ntranspar, powertrans, kernelpar, spark, gamma, deltain1, deltain2, deltanr1, deltanr2, &
-    & suscov, transcov, cc, d3, epidat)  bind(C,  name="datasimulationsinr_")
+    & suscov, transcov, cc, d3, epidat)  bind(C,  name="datasimulationsinr_f_")
 
     external infinity_value
 
@@ -86,7 +86,7 @@ end if
 
     CASE (1)
 
-! case (1): for contact network or distanse based with spark term.  (SIR)
+! case (1): for contact network or distanse based with spark term.  (SINR)
 !			also for distanse based without spark term.
 
 ! defining auxiliary variable (xx) for the status of each individual:
@@ -234,7 +234,7 @@ end if
 
     CASE (2)
 
-! case (2): for contact without spark term.  (SIR)
+! case (2): for contact without spark term.  (SINR)
 
 ! defining auxiliary variable (xx) for the status of each individual:
 ! 0 : susceptible
@@ -389,7 +389,7 @@ end if
 
     END SELECT
 
-    end subroutine datasimulationsinr
+    end subroutine datasimulationsinr_f
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

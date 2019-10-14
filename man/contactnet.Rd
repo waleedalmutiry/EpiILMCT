@@ -53,30 +53,12 @@ The final option is a random contact network in which the probability of a conne
 
 \value{
 An object of class ``contactnet'' that has a list of:
-\if{html}{
-	\describe{
-		\item{location}{A matrix of the XY coordinates of individuals.}
-		\item{contact.network}{Binary contact network adjacency matrix.}
-		\item{type}{The type of contact network model.}
+
+		\describe{  
+			\item{location:}{A matrix of the XY coordinates of individuals.}  
+			\item{contact.network:}{Binary contact network adjacency matrix.}  
+			\item{type:}{The type of contact network model.}  
 	}
-}
-\if{text}{
-	\describe{
-		\item{location}{A matrix of the XY coordinates of individuals.}
-		\item{contact.network}{Binary contact network adjacency matrix.}
-		\item{type}{The type of contact network model.}
-	}
-}
-\if{latex}{
-	 \itemize{
-		\item[]
-		\describe{
-			\item{location}{A matrix of the XY coordinates of individuals.}
-			\item{contact.network}{Binary contact network adjacency matrix.}
-			\item{type}{The type of contact network model.}
-		}
-	}
-}
 }
 
 \references{

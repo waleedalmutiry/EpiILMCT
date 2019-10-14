@@ -34,7 +34,7 @@
 module datsim
     use ISO_C_BINDING
     implicit none
-    public :: datasimulation
+    public :: datasimulation_f
 
 contains
 
@@ -47,9 +47,9 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    subroutine datasimulation(n, anum, num, observednum, observedepi, tmax, temp, suspar, nsuspar, powersus, &
+    subroutine datasimulation_f(n, anum, num, observednum, observedepi, tmax, temp, suspar, nsuspar, powersus, &
     & transpar, ntranspar, powertrans, kernelpar, spark, delta1, delta2, &
-    & suscov, transcov, cc, d3, epidat)  bind(C,  name="datasimulation_")
+    & suscov, transcov, cc, d3, epidat)  bind(C,  name="datasimulation_f_")
 
     external infinity_value
 
@@ -334,7 +334,7 @@ contains
 
         END SELECT
 
-    end subroutine datasimulation
+    end subroutine datasimulation_f
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

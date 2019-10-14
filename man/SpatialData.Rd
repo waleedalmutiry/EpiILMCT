@@ -14,7 +14,7 @@ The data set file is an object of class "datagen" that has a list of \code{type}
 
 }
 
-\usage{SpatialData}
+\usage{data(SpatialData)}
 \format{
 An object of class ``datagen'' that contains the following:
 \if{html}{
@@ -56,8 +56,6 @@ A zero matrix of contact network.
 }
 }
 \if{latex}{
- \itemize{
- \item[]
    \describe{
   \item{type:}{
 The ``SIR'' compartmental framework.
@@ -74,7 +72,6 @@ A matrix of the XY coordinates of individuals.
   \item{network:}{
 A zero matrix of contact network. 
   }
-}
 }
 }
 }

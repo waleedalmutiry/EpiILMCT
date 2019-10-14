@@ -200,7 +200,7 @@ kernel.par=NULL, spark=NULL, gamma=NULL, delta=NULL) {
 			deltain2 <- delta[2]
 		}
 
-		datloglik1<-.Fortran("loglikcontilm", 
+		datloglik1<-.Fortran("loglikcontilm_f",
 		n=as.integer(n),  ninfected =as.integer(ninfected), num=as.integer(num), 
 		nsuspar=as.integer(nsuspar), ntranspar=as.integer(ntranspar), 
 		cc= matrix(as.double(net), n, n), d333=matrix(as.double(dis), n, n),
@@ -417,7 +417,7 @@ kernel.par=NULL, spark=NULL, gamma=NULL, delta=NULL) {
                 deltanr2 <- delta[2, 2]
             }
 
-            datloglikk2<-.Fortran("loglikcontilmsinr",
+            datloglikk2<-.Fortran("loglikcontilmsinr_f",
             n=as.integer(n), ninfected=as.integer(ninfected), num=as.integer(num),
             nsuspar=as.integer(nsuspar), ntranspar=as.integer(ntranspar),
             cc= as.matrix(as.double(net), n, n), d3=as.matrix(as.double(dis), n, n),

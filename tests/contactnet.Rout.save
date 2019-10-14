@@ -1,0 +1,42 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(EpiILMCT)
+Loading required package: coda
+Loading required package: parallel
+> set.seed(22)
+> 
+> # to generate the XY coordinates of 50 individuals:
+> 
+> loc<- matrix(cbind(runif(50, 0, 10),runif(50, 0, 10)), ncol = 2, nrow = 50)
+> 
+> # Spatial contact network:
+> # power-law model:
+> net1<- contactnet(type = "powerlaw", location = loc, beta = 1.5, 
++ 	nu = 0.5)
+> 
+> # Cauchy model:
+> net2<- contactnet(type = "Cauchy", location = loc, beta = 0.5)
+> 
+> # random contact network:
+> net3<- contactnet(type = "random", num.id = 50, beta = 0.08)
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  0.307   0.068   0.365 

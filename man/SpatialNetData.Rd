@@ -13,7 +13,7 @@ The infectious period is assumed to follow an exponential distribution with rate
 The data set file is a list of an object of class "datagen" that contains of \code{type}, \code{kerneltype}, \code{epidat}, \code{location} and \code{network}, and the covariate matrix.
 }
 
-\usage{SpatialNetData}
+\usage{data(SpatialNetData)}
 \format{
 It is a list of an object of class ``datagen'' that contains the following:
 \if{html}{
@@ -55,8 +55,6 @@ The undirected binary contact network matrix.
 }
 }
 \if{latex}{
- \itemize{
- \item[]
    \describe{
   \item{type:}{
 The ``SIR'' compartmental framework.
@@ -73,7 +71,6 @@ A matrix of the XY coordinates of individuals.
   \item{network:}{
 The undirected binary contact network matrix. 
   }	
-}
 }
 }
 and a \eqn{50 \times 2}{50 by 2} matrix of the covariates represents the unity intercept and the binary covariate z.

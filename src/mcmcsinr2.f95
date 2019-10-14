@@ -36,13 +36,15 @@
 !######################################################################
 
 module sinr2
-use ISO_C_BINDING
-implicit none
-public:: mcmcsinr2
+    use, intrinsic :: iso_c_binding
+!    use ISO_C_BINDING
+    implicit none
+    private
+    public :: mcmcsinr_f
 
 contains
 
-subroutine mcmcsinr2(n, nsim, ni, temp, num, anum2, nsuspar, ntranspar, net, dis, epidat, blockupdate, &
+subroutine mcmcsinr_f(n, nsim, ni, temp, num, anum2, nsuspar, ntranspar, net, dis, epidat, blockupdate, &
 & priordistsuspar, priordisttranspar, priordistkernelparpar, &
 & priordistpowersus, priordistpowertrans, priordistsparkpar, priordistgammapar,&
 & suspar, suscov, powersus, transpar, transcov, powertrans, kernelpar, spark, gamma, &
@@ -57,7 +59,7 @@ subroutine mcmcsinr2(n, nsim, ni, temp, num, anum2, nsuspar, ntranspar, net, dis
 & kernelparprior, sparkprior, gammaprior, &
 & deltain2prior, deltanr2prior, susparop, powersusparop, transparop, powertransparop, &
 & kernelparop, sparkop, gammaop, deltain2op, deltanr2op, &
-& epidatmctim, epidatmcrem, loglik) bind(C, name="mcmcsinr2_")
+& epidatmctim, epidatmcrem, loglik) bind(C, name="mcmcsinr_f_")
 
 external infinity_value
 
@@ -305,7 +307,7 @@ do j = 1 , (nsim-1)
         deltanr1op(j+1, 1) = deltanr1op(j, 1)
         deltanr2op(j+1, 1) = deltanr2op(j, 1)
 
-        if (infperiodproposalin(1) .eq. 0.0d0) then
+        if (infperiodproposalin(1) .eq. 0.0_C_DOUBLE) then
             infperiodproposalin1 = (/ deltain1op(j+1, 1), deltain2op(j+1, 1) /)
         else
             infperiodproposalin1 = infperiodproposalin
@@ -524,7 +526,7 @@ do j = 1 , (nsim-1)
         deltanr2op(j+1, 1) = randgamma2(((dble(ni)*deltanr1op(j+1, 1))+deltanr2prior(1)), &
         & (1.0_C_DOUBLE/(deltanr2prior(2)+sum(epidat3(1:ni, 3)))))
 
-        if (infperiodproposalin(1) .eq. 0.0d0) then
+        if (infperiodproposalin(1) .eq. 0.0_C_DOUBLE) then
             infperiodproposalin1 = (/ deltain1op(j+1, 1), deltain2op(j+1, 1) /)
             infperiodproposalnr1 = (/ deltanr1op(j+1, 1), deltanr2op(j+1, 1) /)
         else
@@ -1434,7 +1436,7 @@ do j = 1 , (nsim-1)
 ! to update the log-likelihood based on the updated parameters:
     if (anum2(6) .eq. 1) then
 
-        incdens = 0.0d0
+        incdens = 0.0_C_DOUBLE
         do i = 1, ni
             if (i .gt. obs_inf_time) then
                 incdens = incdens + gammadensity2(epidat3(i, 5), deltain1op(j+1, 1), deltain2op(j+1, 1))
@@ -1447,8 +1449,8 @@ do j = 1 , (nsim-1)
 
     else if (anum2(6) .eq. 2) then
 
-        incdens = 0.0d0
-        delaydens = 0.0d0
+        incdens = 0.0_C_DOUBLE
+        delaydens = 0.0_C_DOUBLE
         do i = 1, ni
             if (i .gt. obs_inf_time) then
                 incdens = incdens + gammadensity2(epidat3(i, 5), deltain1op(j+1, 1), deltain2op(j+1, 1))
@@ -1465,10 +1467,12 @@ do j = 1 , (nsim-1)
         loglik(j+1, 1) = valuecurrent1
 
     end if
+    
+!    call iter1(nsim, 10)
 
 end do !end loop j (mcmc)
 
-end subroutine mcmcsinr2
+end subroutine mcmcsinr_f
 
 
 
@@ -2277,5 +2281,17 @@ end subroutine mcmcsinr2
             xx(location, :) = TT
         end do
     end subroutine  sort1
+
+
+!    subroutine  iter1(nsim, x)
+!    implicit none
+!    integer, intent(in) :: x, nsim
+!        if (mod(nsim, x) == 0) then
+!            write (6,*) "iteration", x 
+!        end if
+!    end subroutine  iter1
+
+	
+
 
 end module sinr2

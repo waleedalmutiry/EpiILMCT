@@ -215,7 +215,7 @@ datagen <- function(type, kerneltype, kernelmatrix, distancekernel=NULL, initial
         
         # defining the fortran function:
         
-        datgg<-.Fortran("datasimulation",
+        datgg<-.Fortran("datasimulation_f",
         n=as.integer(n),anum=as.integer(anum),num=as.integer(num),observednum=as.integer(observednum),
         observedepi=as.matrix(as.double(observedepi),ncol=4,nrow=observednum),
         tmax=as.double(tmax), temp = as.integer(temp),
@@ -225,10 +225,13 @@ datagen <- function(type, kerneltype, kernelmatrix, distancekernel=NULL, initial
         powertrans=as.vector(powertrans,mode="double"),
         kernelpar=as.vector(kernelpar,mode="double"),spark=as.double(spark),delta1=as.double(deltain1),
         delta2=as.double(deltain2),suscov=as.matrix(as.double(suscov),ncol=nsuspar,nrow=n),
-        transcov=as.matrix(as.double(transcov),ncol=ntranspar,nrow=n),cc=as.matrix(as.double(network),n,n),
+        transcov=as.matrix(as.double(transcov),ncol=ntranspar,nrow=n),
+        cc=as.matrix(as.double(network),n,n),
         d3=as.matrix(as.double(distance),n,n),epidat=matrix(0,ncol=4,nrow=n)
         )
-        
+  
+        colnames(datgg$epidat) <- c("id.individual", "rem.time", "inf.period", "inf.time")
+
         # The output of the fortran function:
         
         #        result3 <- datgg$epidat
@@ -459,7 +462,7 @@ datagen <- function(type, kerneltype, kernelmatrix, distancekernel=NULL, initial
         
         # defining the fortran function:
         
-        datgg<-.Fortran("datasimulationsinr",
+        datgg<-.Fortran("datasimulationsinr_f",
         n=as.integer(n),anum=as.integer(anum),num=as.integer(num),observednum=as.integer(observednum),
         observedepi=as.matrix(as.double(observedepi),ncol=6,nrow=observednum),
         tmax=as.double(tmax), temp = as.integer(temp),
@@ -480,7 +483,9 @@ datagen <- function(type, kerneltype, kernelmatrix, distancekernel=NULL, initial
         
         #        result3 <- datgg$epidat
         #        return(result3)
-        
+
+        colnames(datgg$epidat) <- c("id.individual", "rem.time", "delay.period", "incub.time", "incub.period", "inf.time")
+
     } else {
         stop("Error in specifying the compartmental framework of the model: type", call. = FALSE)
     }

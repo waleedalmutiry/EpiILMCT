@@ -55,8 +55,6 @@ The undirected binary contact network matrix.
 }
 }
 \if{latex}{
- \itemize{
- \item[]
    \describe{
   \item{type:}{
 The ``SIR'' compartmental framework.
@@ -73,7 +71,6 @@ A matrix of the XY coordinates of individuals.
   \item{network:}{
 The undirected binary contact network matrix. 
   }	
-}
 }
 }
 and a \eqn{50 \times 2}{50 by 2} matrix of the covariates represents the unity intercept and the binary covariate z.

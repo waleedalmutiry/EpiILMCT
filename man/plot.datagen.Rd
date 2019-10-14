@@ -6,7 +6,7 @@
 }
 
 \usage{
-  \method{plot}{datagen}(x, plottype, time.index = NULL, ...)
+\method{plot}{datagen}(x, plottype, time.index = NULL, ...)
 }
 
 \arguments{

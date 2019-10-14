@@ -150,12 +150,10 @@ The function \code{datagen} returns objects of class ``datagen'' containing the 
     \item{kerneltype:}{The specified type of the kernel function.}
     \item{epidat:}{Under an SIR ILM, it is a matrix with four columns representing  the id numbers of the individuals, removal times, infectious periods, and infection times, respectively. Under an SINR ILM, it is a matrix with six columns: the id numbers of the individuals, removal times, delay periods, notification times, incubation periods, and infection times. Uninfected individuals are assigned infinity values \eqn{(\infty)} for both their removal and infection times. Note that the rows of \code{epidat} is sorted according to the infection times in ascending order. The id numbers of the individuals is used here to respresnt the corresponding row number of \code{location}, contact \code{network}, and covariate matrices.}
     \item{location:}{A matrix of the XY coordinates of individuals if it is given in the function, otherwise, a zero matrix.}
-    \item{network:}{The contact network matrix if it is given in the function, otherwise, a zero matrix.}
+    \item{network:}{The contact network matrix if it is given in the function.}
   }
 } 
 \if{latex}{
- \itemize{
- \item[]
 	 \describe{
 	    \item{type:}{The specified type of the compartmental framework.}
 	    \item{kerneltype:}{The specified type of the kernel function.}
@@ -163,7 +161,6 @@ The function \code{datagen} returns objects of class ``datagen'' containing the 
 	    \item{location:}{A matrix of the XY coordinates of individuals if it is given in the function, otherwise, a zero matrix.}
 	    \item{network:}{The contact network matrix if it is given in the function, otherwise, a zero matrix.}
 	  }
-  }
 }
 \if{text}{
 	 \describe{
@@ -177,11 +174,26 @@ The function \code{datagen} returns objects of class ``datagen'' containing the 
 }
 
 \references{  
-  Jewell, C. P., Kypraios, T., Neal, P., and Roberts, G. O. (2009). Bayesian analysis for emerging infectious
-diseases. \emph{Bayesian Analysis}, 4(3):465-496.
-  Deardon, R., Brooks, S. P., Grenfell, B. T., Keeling, M. J., Tildesley, M. J., Savill, N. J.,
-Shaw, D. J., and Woolhouse, M. E. (2010). Inference for individual-level models of
-infectious diseases in large populations. \emph{Statistica Sinica}, 20(1):239.
+  Jewell, C. P., Kypraios, T., Neal, P., and Roberts, G. O. (2009). Bayesian analysis for emerging infectious diseases. \emph{Bayesian Analysis}, 4(3):465-496.
+  
+  Deardon, R., Brooks, S. P., Grenfell, B. T., Keeling, M. J., Tildesley, M. J., Savill, N. J., Shaw, D. J., and Woolhouse, M. E. (2010). Inference for individual-level models of infectious diseases in large populations. \emph{Statistica Sinica}, 20(1):239.
+}
+
+\examples{
+set.seed(3245)
+loc<- matrix(cbind(runif(100, 1, 100),runif(100, 1, 100)), ncol = 2, nrow = 100)
+net1<- contactnet(type = "powerlaw", location = loc, beta = 0.9)
+cov <- cbind(rep(1, 100), runif(100, 1, 50))
+#To simulate the epidemic using the network kernel:
+epi.net <- datagen(type = "SIR", kerneltype = "network", 
+               kernelmatrix = net1, suspar = c(0.08, 0.05), 
+               delta = c(4, 2), suscov = cov, seedval =  498643)
+#To simulate the epidemic using the distance kernel:
+epi.dis <- datagen(type = "SIR", kerneltype = "distance", 
+               distancekernel = "powerlaw", kernelmatrix = loc, 
+               suspar = c(0.8, 0.5), kernel.par = 2, 
+               delta = c(4, 2), suscov = cov, 
+               seedval =  498643)
 }
 
 \seealso{

@@ -35,14 +35,16 @@
 !#
 !######################################################################
 module sir11
+!    use, intrinsic :: iso_c_binding
     use ISO_C_BINDING
     implicit none
-    public :: mcmcsir2
+    private
+    public :: mcmcsir_f
 
 contains
 
 
-    subroutine mcmcsir2(n, nsim, ni, num, anum2, temp, nsuspar, ntranspar, net, dis, epidat, blockupdate, &
+    subroutine mcmcsir_f(n, nsim, ni, num, anum2, temp, nsuspar, ntranspar, net, dis, epidat, blockupdate, &
     & priordistsuspar, priordisttranspar, priordistkernelparpar, priordistsparkpar, &
     & priordistpowersus, priordistpowertrans, &
     & suspar, suscov, powersus, transpar, transcov, powertrans, kernelpar, spark, delta1, &
@@ -53,87 +55,87 @@ contains
     & priorpar1trans, priorpar2trans, &
     & priorpar1powertrans, priorpar2powertrans, &
     & kernelparprior, sparkprior, delta2prior, susparop, powersusparop, transparop, powertransparop, &
-    & kernelparop, sparkop, delta1op, &
-    & delta2op, epidatmcper, epidatmctim, epidatmcrem, loglik) bind(C, name="mcmcsir2_")
+    & kernelparop, sparkop, &
+    & delta2op, epidatmctim, epidatmcrem, loglik) bind(C, name="mcmcsir_f_")
 
     external infinity_value
 
     !Declarations
-    integer (C_INT), intent(in) :: n, nsim, ni, nsuspar, ntranspar, num
-    integer (C_INT), intent(in) :: temp
+    integer(kind = C_INT), intent(in) :: n, nsim, ni, nsuspar, ntranspar, num
+    integer(kind = C_INT), intent(in) :: temp
 ! to inndicate the function for updating each parameter or not:
-    integer (C_INT), intent(in), dimension(7) :: anum2
+    integer(kind = C_INT), intent(in), dimension(8) :: anum2
 ! prior distributions:
-    integer (C_INT), intent(in), dimension(ntranspar) :: priordisttranspar, priordistpowertrans
-    integer (C_INT), intent(in), dimension(nsuspar) :: priordistsuspar, priordistpowersus
-    integer (C_INT), intent(in), dimension(2) :: priordistkernelparpar
-    integer (C_INT), intent(in) :: priordistsparkpar
+    integer(kind = C_INT), intent(in), dimension(ntranspar) :: priordisttranspar, priordistpowertrans
+    integer(kind = C_INT), intent(in), dimension(nsuspar) :: priordistsuspar, priordistpowersus
+    integer(kind = C_INT), intent(in), dimension(2) :: priordistkernelparpar
+    integer(kind = C_INT), intent(in) :: priordistsparkpar
 ! for updating infection times/infectious periods in blocks:
-    integer (C_INT), intent(in), dimension(2) :: blockupdate
-    integer (C_INT)  :: obs_inf_time, sizeblock
+    integer(kind = C_INT), intent(in), dimension(2) :: blockupdate
+    integer(kind = C_INT)  :: obs_inf_time, sizeblock
 ! epidemic data:
-    real (C_DOUBLE), intent(in), dimension(n, 4) :: epidat
-    real (C_DOUBLE), dimension(n, 4) :: epidat3current, epidat3update, epidat3
+    real(kind = C_DOUBLE), intent(in), dimension(n, 4) :: epidat
+    real(kind = C_DOUBLE), dimension(n, 4) :: epidat3current, epidat3update, epidat3
 ! distance and network matrices:
-    real (C_DOUBLE), intent(in), dimension(n, n) :: dis, net
+    real(kind = C_DOUBLE), intent(in), dimension(n, n) :: dis, net
 ! susceptibility and transmissibility covariates:
-    real (C_DOUBLE), intent(in), dimension(n, nsuspar) :: suscov
-    real (C_DOUBLE), intent(in), dimension(n, ntranspar) :: transcov
+    real(kind = C_DOUBLE), intent(in), dimension(n, nsuspar) :: suscov
+    real(kind = C_DOUBLE), intent(in), dimension(n, ntranspar) :: transcov
 ! The variance of the normal proposal distributions and the parameters of the prior distributions of the model parameters:
-    real (C_DOUBLE), intent(in), dimension(ntranspar) :: transproposalvar, priorpar1trans, priorpar2trans
-    real (C_DOUBLE), intent(in), dimension(ntranspar) :: powertransproposalvar, priorpar1powertrans, priorpar2powertrans
-    real (C_DOUBLE), intent(in), dimension(nsuspar) :: susproposalvar, priorpar1sus, priorpar2sus
-    real (C_DOUBLE), intent(in), dimension(nsuspar) :: powersusproposalvar, priorpar1powersus, priorpar2powersus
-    real (C_DOUBLE), intent(in), dimension(2) :: sparkprior, kernelparproposalvar
-    real (C_DOUBLE), intent(in)  :: sparkproposalvar
-    real (C_DOUBLE), intent(in), dimension(2, 2) :: kernelparprior
+    real(kind = C_DOUBLE), intent(in), dimension(ntranspar) :: transproposalvar, priorpar1trans, priorpar2trans
+    real(kind = C_DOUBLE), intent(in), dimension(ntranspar) :: powertransproposalvar, priorpar1powertrans, priorpar2powertrans
+    real(kind = C_DOUBLE), intent(in), dimension(nsuspar) :: susproposalvar, priorpar1sus, priorpar2sus
+    real(kind = C_DOUBLE), intent(in), dimension(nsuspar) :: powersusproposalvar, priorpar1powersus, priorpar2powersus
+    real(kind = C_DOUBLE), intent(in), dimension(2) :: sparkprior, kernelparproposalvar
+    real(kind = C_DOUBLE), intent(in)  :: sparkproposalvar
+    real(kind = C_DOUBLE), intent(in), dimension(2, 2) :: kernelparprior
 ! parameters of the prior distribution of the infectious period rate and gamma proposal distribution of the independenc sampler:
-    real (C_DOUBLE), intent(in), dimension(2) :: delta2prior, infperiodproposal
+    real(kind = C_DOUBLE), intent(in), dimension(2) :: delta2prior, infperiodproposal
 ! initial values
-    real (C_DOUBLE), intent(in), dimension(ntranspar) :: transpar, powertrans
-    real (C_DOUBLE), intent(in), dimension(nsuspar) :: suspar, powersus
-    real (C_DOUBLE), intent(in), dimension(2) :: kernelpar
-    real (C_DOUBLE), intent(in) :: spark
-    real (C_DOUBLE), intent(in), dimension(2) :: delta1
+    real(kind = C_DOUBLE), intent(in), dimension(ntranspar) :: transpar, powertrans
+    real(kind = C_DOUBLE), intent(in), dimension(nsuspar) :: suspar, powersus
+    real(kind = C_DOUBLE), intent(in), dimension(2) :: kernelpar
+    real(kind = C_DOUBLE), intent(in) :: spark
+    real(kind = C_DOUBLE), intent(in), dimension(2) :: delta1
 ! OUTPUT:
-    real (C_DOUBLE), dimension(nsim, 1), intent(out) :: delta1op, delta2op
-    real (C_DOUBLE), dimension(nsim, n), intent(out) :: epidatmcper, epidatmctim, epidatmcrem
-    real (C_DOUBLE), dimension(nsim, 1), intent(out) :: sparkop, loglik
-    real (C_DOUBLE), dimension(nsim, 2), intent(out) :: kernelparop
-    real (C_DOUBLE), dimension(nsim, ntranspar), intent(out) :: transparop, powertransparop
-    real (C_DOUBLE), dimension(nsim, nsuspar), intent(out) :: susparop, powersusparop
+    real(kind = C_DOUBLE), dimension(nsim, 1), intent(out) :: delta2op
+    real(kind = C_DOUBLE), dimension(nsim, n), intent(out) :: epidatmctim, epidatmcrem
+    real(kind = C_DOUBLE), dimension(nsim, 1), intent(out) :: sparkop, loglik
+    real(kind = C_DOUBLE), dimension(nsim, 2), intent(out) :: kernelparop
+    real(kind = C_DOUBLE), dimension(nsim, ntranspar), intent(out) :: transparop, powertransparop
+    real(kind = C_DOUBLE), dimension(nsim, nsuspar), intent(out) :: susparop, powersusparop
 
-    real (C_DOUBLE), dimension(nsuspar) :: postparsusupdate, postparsuscurrent
-    real (C_DOUBLE), dimension(ntranspar) :: postpartransupdate, postpartranscurrent
+    real(kind = C_DOUBLE), dimension(nsuspar) :: postparsusupdate, postparsuscurrent
+    real(kind = C_DOUBLE), dimension(ntranspar) :: postpartransupdate, postpartranscurrent
 
-    real (C_DOUBLE) :: postsparkupdate
-    real (C_DOUBLE), dimension(2) :: postkernelparupdate, postkernelparcurrent
-    real (C_doUBLE), dimension(2) :: infperiodproposal1
+    real(kind = C_DOUBLE) :: postsparkupdate
+    real(kind = C_DOUBLE), dimension(2) :: postkernelparupdate, postkernelparcurrent
+    real(kind = C_DOUBLE), dimension(2) :: infperiodproposal1
 
-    real (C_DOUBLE) :: ratio1, ratio2, ratio3, ratio4, ratio5
-    real (C_DOUBLE) :: psi1, psi2, psi3, psi4, psi5
-    real (C_DOUBLE) :: u1, u2, u3, u4, u5
-    real (C_DOUBLE) :: valueupdate1, valuecurrent1
-    real (C_DOUBLE) :: valueupdate2, valuecurrent2
-    real (C_DOUBLE) :: valueupdate3, valuecurrent3
-    real (C_DOUBLE) :: valueupdate4, valuecurrent4
-    real (C_DOUBLE) :: valueupdate5, valuecurrent5
-    real (C_DOUBLE) :: valueffupdate, valueffcurrent
-    real (C_DOUBLE) :: valuefupdate1, valuefcurrent1
-    real (C_DOUBLE) :: valuefupdate2, valuefcurrent2
-    real (C_DOUBLE) :: valuefupdate3, valuefcurrent3
-    real (C_DOUBLE) :: valuefupdate4, valuefcurrent4
-    real (C_DOUBLE) :: valuefupdate5, valuefcurrent5, denupdate, dencurrent
-    real (C_DOUBLE) :: zparsus, zpartrans, zkernelpar, zspark
-    integer (C_INT) :: i, j, r, nblock, m, mn
-    integer (C_INT) :: abs32, abs33, abs34, abs35
-    real (C_DOUBLE) :: Inf, loglik66, infdens
+    real(kind = C_DOUBLE) :: ratio1, ratio2, ratio3, ratio4, ratio5
+    real(kind = C_DOUBLE) :: psi1, psi2, psi3, psi4, psi5
+    real(kind = C_DOUBLE) :: u1, u2, u3, u4, u5
+    real(kind = C_DOUBLE) :: valueupdate1, valuecurrent1
+    real(kind = C_DOUBLE) :: valueupdate2, valuecurrent2
+    real(kind = C_DOUBLE) :: valueupdate3, valuecurrent3
+    real(kind = C_DOUBLE) :: valueupdate4, valuecurrent4
+    real(kind = C_DOUBLE) :: valueupdate5, valuecurrent5
+    real(kind = C_DOUBLE) :: valueffupdate, valueffcurrent
+    real(kind = C_DOUBLE) :: valuefupdate1, valuefcurrent1
+    real(kind = C_DOUBLE) :: valuefupdate2, valuefcurrent2
+    real(kind = C_DOUBLE) :: valuefupdate3, valuefcurrent3
+    real(kind = C_DOUBLE) :: valuefupdate4, valuefcurrent4
+    real(kind = C_DOUBLE) :: valuefupdate5, valuefcurrent5, denupdate, dencurrent
+    real(kind = C_DOUBLE) :: zparsus, zpartrans, zkernelpar, zspark
+    integer(kind = C_INT) :: i, j, r, nblock, m, mn
+    integer(kind = C_INT) :: abs32, abs33, abs34, abs35
+    real(kind = C_DOUBLE) :: Inf, loglik66, infdens
 
-    integer (C_INT), allocatable, dimension(:, :)  :: amcmc
-    integer (C_INT), allocatable, dimension(:)  :: amcmc1
-    integer (C_INT), dimension(ni)  :: it, xxindic
+    integer(kind = C_INT), allocatable, dimension(:, :)  :: amcmc
+    integer(kind = C_INT), allocatable, dimension(:)  :: amcmc1
+    integer(kind = C_INT), dimension(ni)  :: it, xxindic
 
-        call infinity_value(Inf)
+    call infinity_value(Inf)
 
     if(temp .ne. 0) then
        call initrandomseedsir11(temp)
@@ -142,48 +144,46 @@ contains
         obs_inf_time = blockupdate(1)
         sizeblock    = blockupdate(2)
 
-        valuefupdate1 = 0.0_c_double
-        valuefcurrent1 = 0.0_c_double
-        valueupdate1 = 0.0_c_double
-        valuecurrent1 = 0.0_c_double
+        valuefupdate1 = 0.0_C_DOUBLE
+        valuefcurrent1 = 0.0_C_DOUBLE
+        valueupdate1 = 0.0_C_DOUBLE
+        valuecurrent1 = 0.0_C_DOUBLE
 
-        valuefupdate2 = 0.0_c_double
-        valuefcurrent2 = 0.0_c_double
-        valueupdate2 = 0.0_c_double
-        valuecurrent2 = 0.0_c_double
+        valuefupdate2 = 0.0_C_DOUBLE
+        valuefcurrent2 = 0.0_C_DOUBLE
+        valueupdate2 = 0.0_C_DOUBLE
+        valuecurrent2 = 0.0_C_DOUBLE
 
-        valuefupdate3 = 0.0_c_double
-        valuefcurrent3 = 0.0_c_double
-        valueupdate3 = 0.0_c_double
-        valuecurrent3 = 0.0_c_double
+        valuefupdate3 = 0.0_C_DOUBLE
+        valuefcurrent3 = 0.0_C_DOUBLE
+        valueupdate3 = 0.0_C_DOUBLE
+        valuecurrent3 = 0.0_C_DOUBLE
 
-        valuefupdate4 = 0.0_c_double
-        valuefcurrent4 = 0.0_c_double
-        valueupdate4 = 0.0_c_double
-        valuecurrent4 = 0.0_c_double
+        valuefupdate4 = 0.0_C_DOUBLE
+        valuefcurrent4 = 0.0_C_DOUBLE
+        valueupdate4 = 0.0_C_DOUBLE
+        valuecurrent4 = 0.0_C_DOUBLE
 
-        valuefupdate5 = 0.0_c_double
-        valuefcurrent5 = 0.0_c_double
-        valueupdate5 = 0.0_c_double
-        valuecurrent5 = 0.0_c_double
+        valuefupdate5 = 0.0_C_DOUBLE
+        valuefcurrent5 = 0.0_C_DOUBLE
+        valueupdate5 = 0.0_C_DOUBLE
+        valuecurrent5 = 0.0_C_DOUBLE
 
-        ratio1 = 0.0_c_double
-        psi1 = 0.0_c_double
-        ratio2 = 0.0_c_double
-        psi2 = 0.0_c_double
-        ratio3 = 0.0_c_double
-        psi3 = 0.0_c_double
-        ratio4 = 0.0_c_double
-        psi4 = 0.0_c_double
-        ratio5 = 0.0_c_double
-        psi5 = 0.0_c_double
+        ratio1 = 0.0_C_DOUBLE
+        psi1 = 0.0_C_DOUBLE
+        ratio2 = 0.0_C_DOUBLE
+        psi2 = 0.0_C_DOUBLE
+        ratio3 = 0.0_C_DOUBLE
+        psi3 = 0.0_C_DOUBLE
+        ratio4 = 0.0_C_DOUBLE
+        psi4 = 0.0_C_DOUBLE
+        ratio5 = 0.0_C_DOUBLE
+        psi5 = 0.0_C_DOUBLE
 
-        valueffupdate = 0.0_c_double
-        valueffcurrent = 0.0_c_double
+        valueffupdate = 0.0_C_DOUBLE
+        valueffcurrent = 0.0_C_DOUBLE
 
 ! Initial values for the MCMC updates:
-
-        delta1op(1, 1) = delta1(1)
 
         delta2op(1, 1) = delta1(2)
 
@@ -197,7 +197,6 @@ contains
         epidat3 = epidat
         end if
 
-        epidatmcper(1, 1:n) = (/epidat3(1:n, 3)/)
         epidatmctim(1, 1:n) = (/epidat3(1:n, 4)/)
         epidatmcrem(1, 1:n) = (/epidat3(1:n, 2)/)
 
@@ -214,7 +213,7 @@ contains
         infdens = 0.0_C_DOUBLE
         do i = 1, ni
             if (i .gt. obs_inf_time) then
-                infdens = infdens + gammadensity11(epidat3(i, 3), delta1op(1, 1), delta2op(1, 1))
+                infdens = infdens + gammadensity11(epidat3(i, 3), delta1(1), delta2op(1, 1))
             else
                 infdens = infdens
             end if
@@ -258,9 +257,8 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                delta1op(j+1, 1) = delta1op(j, 1)
-                delta2op(j+1, 1) = randgamma11(((dble(ni)*delta1op(j+1, 1))+delta2prior(1)), &
-                & 1.0_c_double/(delta2prior(2)+sum(epidat3(1:ni, 3))))
+                delta2op(j+1, 1) = randgamma11(((dble(ni)*delta1(1))+delta2prior(1)), &
+                & 1.0_C_DOUBLE/(delta2prior(2)+sum(epidat3(1:ni, 3))))
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -269,7 +267,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 if (infperiodproposal(1) .eq. 0.0d0) then
-                    infperiodproposal1 = (/ delta1op(j+1, 1), delta2op(j+1, 1) /)
+                    infperiodproposal1 = (/ delta1(1), delta2op(j+1, 1) /)
                 else
                     infperiodproposal1 = infperiodproposal
                 end if
@@ -312,7 +310,7 @@ contains
                 do r = 1, (nblock)
 
                     do m = 1, sizeblock
-                        epidat3update(amcmc(m, r), 3)  = randgamma11(infperiodproposal1(1), 1.0_c_double/infperiodproposal1(2))
+                        epidat3update(amcmc(m, r), 3)  = randgamma11(infperiodproposal1(1), 1.0_C_DOUBLE/infperiodproposal1(2))
                         epidat3update(amcmc(m, r), 4)  = epidat3update(amcmc(m, r), 2) - epidat3update(amcmc(m, r), 3)
                     end do
 
@@ -322,16 +320,16 @@ contains
                         & suscov, transcov, susparop(j, :), powersusparop(j, :), &
                         & transparop(j, :), powertransparop(j, :), kernelparop(j, :), sparkop(j, 1), valueupdate1)
 
-                    denupdate      = 0.0_c_double
-                    dencurrent     = 0.0_c_double
-                    valuefupdate1  = 0.0_c_double
-                    valuefcurrent1 = 0.0_c_double
+                    denupdate      = 0.0_C_DOUBLE
+                    dencurrent     = 0.0_C_DOUBLE
+                    valuefupdate1  = 0.0_C_DOUBLE
+                    valuefcurrent1 = 0.0_C_DOUBLE
 
                     do m = 1, sizeblock
                         denupdate      = denupdate     + &
-                        & gammadensity11(epidat3update(amcmc(m, r), 3), delta1op(j+1, 1), delta2op(j+1, 1))
+                        & gammadensity11(epidat3update(amcmc(m, r), 3), delta1(1), delta2op(j+1, 1))
                         dencurrent     = dencurrent    + &
-                        & gammadensity11(epidat3current(amcmc(m, r), 3), delta1op(j+1, 1), delta2op(j+1, 1))
+                        & gammadensity11(epidat3current(amcmc(m, r), 3), delta1(1), delta2op(j+1, 1))
                         valuefupdate1  = valuefupdate1 + &
                         & gammadensity11(epidat3update(amcmc(m, r), 3), infperiodproposal1(1), infperiodproposal1(2))
                         valuefcurrent1 = valuefcurrent1+ &
@@ -344,7 +342,7 @@ contains
 !calculating the log acceptance ratio:
                     ratio1    = (valueffupdate+valuefcurrent1)-(valueffcurrent+valuefupdate1)
 
-                    psi1      = min(1.0_c_double, dexp(ratio1))
+                    psi1      = min(1.0_C_DOUBLE, dexp(ratio1))
 
 ! decision: accept/reject the proposed value:
                     call random_number(u1)
@@ -367,7 +365,7 @@ contains
                 if (mn .ne. 0) then
 
                     do m = 1, mn
-                        epidat3update(amcmc1(m), 3)  = randgamma11(infperiodproposal1(1), 1.0_c_double/infperiodproposal1(2))
+                        epidat3update(amcmc1(m), 3)  = randgamma11(infperiodproposal1(1), 1.0_C_DOUBLE/infperiodproposal1(2))
                         epidat3update(amcmc1(m), 4)  = epidat3update(amcmc1(m), 2)- epidat3update(amcmc1(m), 3)
                     end do
 
@@ -375,16 +373,16 @@ contains
                         & suscov, transcov, susparop(j, :), powersusparop(j, :), &
                         & transparop(j, :), powertransparop(j, :), kernelparop(j, :), sparkop(j, 1), valueupdate1)
 
-                    denupdate      = 0.0_c_double
-                    dencurrent     = 0.0_c_double
-                    valuefupdate1  = 0.0_c_double
-                    valuefcurrent1 = 0.0_c_double
+                    denupdate      = 0.0_C_DOUBLE
+                    dencurrent     = 0.0_C_DOUBLE
+                    valuefupdate1  = 0.0_C_DOUBLE
+                    valuefcurrent1 = 0.0_C_DOUBLE
 
                     do m = 1, mn
                         denupdate  = denupdate  + &
-                        & gammadensity11(epidat3update(amcmc1(m), 3), delta1op(j+1, 1), delta2op(j+1, 1))
+                        & gammadensity11(epidat3update(amcmc1(m), 3), delta1(1), delta2op(j+1, 1))
                         dencurrent = dencurrent + &
-                        & gammadensity11(epidat3current(amcmc1(m), 3), delta1op(j+1, 1), delta2op(j+1, 1))
+                        & gammadensity11(epidat3current(amcmc1(m), 3), delta1(1), delta2op(j+1, 1))
                         valuefupdate1  = valuefupdate1 + &
                         & gammadensity11(epidat3update(amcmc1(m), 3), infperiodproposal1(1), infperiodproposal1(2))
                         valuefcurrent1 = valuefcurrent1+ &
@@ -397,7 +395,7 @@ contains
 !calculating the log acceptance ratio:
                     ratio1    = (valueffupdate+valuefcurrent1)-(valueffcurrent+valuefupdate1)
 
-                    psi1      = min(1.0_c_double, dexp(ratio1))
+                    psi1      = min(1.0_C_DOUBLE, dexp(ratio1))
 
 ! decision: accept/reject the proposed value:
                     call random_number(u1)
@@ -420,17 +418,14 @@ contains
 
                 epidat3 = epidat3current
 
-                epidatmcper(j+1, 1:n) = (/epidat3(1:n, 3)/)
                 epidatmctim(j+1, 1:n) = (/epidat3(1:n, 4)/)
                 epidatmcrem(j+1, 1:n) = (/epidat3(1:n, 2)/)
 
 ! if the infection times/infectious period are assumed known:
 
             else if (anum2(1) .eq. 2) then
-                delta1op(j+1, 1) = delta1(1)
                 delta2op(j+1, 1) = delta1(2)
                 epidat3 = epidat
-                epidatmcper(j+1, 1:n) = (/epidat3(:, 3)/)
                 epidatmctim(j+1, 1:n) = (/epidat3(:, 4)/)
                 epidatmcrem(j+1, 1:n) = (/epidat3(:, 2)/)
                 valuecurrent1 = valuecurrent1
@@ -450,11 +445,11 @@ contains
                 do r = 1, nsuspar
 
 ! proposing candidate and making sure is positive:
-                    zparsus = 0.0_c_double
+                    zparsus = 0.0_C_DOUBLE
                     abs32 = 0
                     do while(abs32 .eq. 0)
                         zparsus = randnormal11(postparsuscurrent(r), susproposalvar(r))
-                        if (zparsus .gt. 0.0_c_double) then
+                        if (zparsus .gt. 0.0_C_DOUBLE) then
                             abs32 = 1
                         else
                             abs32 = 0
@@ -492,7 +487,7 @@ contains
 !calculating the log acceptance ratio:
                     ratio2 = (valueupdate2 + valuefupdate2) - (valuecurrent1 + valuefcurrent2)
 
-                    psi2 = min(1.0_c_double, dexp(ratio2))
+                    psi2 = min(1.0_C_DOUBLE, dexp(ratio2))
 
 ! decision: accept/reject the proposed value:
 
@@ -530,11 +525,11 @@ contains
                 do r = 1, nsuspar
 
 ! proposing candidate and making sure is positive:
-                    zparsus = 0.0_c_double
+                    zparsus = 0.0_C_DOUBLE
                     abs32 = 0
                     do while(abs32 .eq. 0)
                         zparsus = randnormal11(postparsuscurrent(r), powersusproposalvar(r))
-                        if (zparsus .gt. 0.0_c_double) then
+                        if (zparsus .gt. 0.0_C_DOUBLE) then
                             abs32 = 1
                         else
                             abs32 = 0
@@ -572,7 +567,7 @@ contains
 !calculating the log acceptance ratio:
                     ratio2 = (valueupdate2 + valuefupdate2) - (valuecurrent1 + valuefcurrent2)
 
-                    psi2 = min(1.0_c_double, dexp(ratio2))
+                    psi2 = min(1.0_C_DOUBLE, dexp(ratio2))
 
 ! decision: accept/reject the proposed value:
 
@@ -611,13 +606,13 @@ contains
             do r = 1, ntranspar
 
 ! proposing candidate:
-                zpartrans = 0.0_c_double
+                zpartrans = 0.0_C_DOUBLE
 
                 abs33 = 0
 
                 do while(abs33 .eq. 0)
                     zpartrans = randnormal11(postpartranscurrent(r), transproposalvar(r))
-                    if (zpartrans .gt. 0.0_c_double) then
+                    if (zpartrans .gt. 0.0_C_DOUBLE) then
                         abs33 = 1
                     else
                         abs33 = 0
@@ -654,7 +649,7 @@ contains
 !calculating the log acceptance ratio:
                 ratio3 = (valueupdate3 + valuefupdate3) - (valuecurrent1 + valuefcurrent3)
 
-                psi3 = min(1.0_c_double, dexp(ratio3))
+                psi3 = min(1.0_C_DOUBLE, dexp(ratio3))
 
 ! decision: accept/reject the proposed value:
 
@@ -695,13 +690,13 @@ contains
             do r = 1, ntranspar
 
 ! proposing candidate:
-                zpartrans = 0.0_c_double
+                zpartrans = 0.0_C_DOUBLE
 
                 abs33 = 0
 
                 do while(abs33 .eq. 0)
                     zpartrans = randnormal11(postpartranscurrent(r), powertransproposalvar(r))
-                    if (zpartrans .gt. 0.0_c_double) then
+                    if (zpartrans .gt. 0.0_C_DOUBLE) then
                         abs33 = 1
                     else
                         abs33 = 0
@@ -738,7 +733,7 @@ contains
 !calculating the log acceptance ratio:
                 ratio3 = (valueupdate3 + valuefupdate3) - (valuecurrent1 + valuefcurrent3)
 
-                psi3 = min(1.0_c_double, dexp(ratio3))
+                psi3 = min(1.0_C_DOUBLE, dexp(ratio3))
 
 ! decision: accept/reject the proposed value:
 
@@ -777,7 +772,7 @@ contains
 
                 do while(abs34 .eq. 0)
                     zspark = randnormal11(sparkop(j, 1), sparkproposalvar)
-                    if (zspark .gt. 0.0_c_double) then
+                    if (zspark .gt. 0.0_C_DOUBLE) then
                         abs34 = 1
                     else
                         abs34 = 0
@@ -811,7 +806,7 @@ contains
 !calculating the log acceptance ratio:
                 ratio4 = (valueupdate4 + valuefupdate4)-(valuecurrent1 + valuefcurrent4)
 
-                psi4 = min(1.0_c_double, dexp(ratio4))
+                psi4 = min(1.0_C_DOUBLE, dexp(ratio4))
 
                 ! decision: accept/reject the proposed value:
 
@@ -845,7 +840,7 @@ contains
                 abs35 = 0
                 do while(abs35 .eq. 0)
                     zkernelpar = randnormal11(kernelparop(j, 1), kernelparproposalvar(1))
-                    if (zkernelpar .gt. 0.0_c_double) then
+                    if (zkernelpar .gt. 0.0_C_DOUBLE) then
                         abs35 = 1
                     else
                         abs35 = 0
@@ -881,7 +876,7 @@ contains
 !calculating the log acceptance ratio:
                 ratio5 = (valueupdate5 + valuefupdate5)-(valuecurrent1 + valuefcurrent5)
 
-                psi5 = min(1.0_c_double, dexp(ratio5))
+                psi5 = min(1.0_C_DOUBLE, dexp(ratio5))
 
 ! decision: accept/reject the proposed value:
 
@@ -905,7 +900,7 @@ contains
                 abs35 = 0
                 do while(abs35 .eq. 0)
                     zkernelpar = randnormal11(kernelparop(j, 1), kernelparproposalvar(1))
-                    if (zkernelpar .gt. 0.0_c_double) then
+                    if (zkernelpar .gt. 0.0_C_DOUBLE) then
                         abs35 = 1
                     else
                         abs35 = 0
@@ -942,7 +937,7 @@ contains
 !calculating the log acceptance ratio:
                 ratio5 = (valueupdate5 + valuefupdate5)-(valuecurrent1 + valuefcurrent5)
 
-                psi5 = min(1.0_c_double, dexp(ratio5))
+                psi5 = min(1.0_C_DOUBLE, dexp(ratio5))
 
 ! decision: accept/reject the proposed value:
 
@@ -964,7 +959,7 @@ contains
                 abs35 = 0
                 do while(abs35 .eq. 0)
                     zkernelpar = randnormal11(kernelparop(j, 2), kernelparproposalvar(2))
-                    if (zkernelpar .gt. 0.0_c_double) then
+                    if (zkernelpar .gt. 0.0_C_DOUBLE) then
                         abs35 = 1
                     else
                         abs35 = 0
@@ -1000,7 +995,7 @@ contains
 !calculating the log acceptance ratio:
                 ratio5 = (valueupdate5 + valuefupdate5)-(valuecurrent1 + valuefcurrent5)
 
-                psi5 = min(1.0_c_double, dexp(ratio5))
+                psi5 = min(1.0_C_DOUBLE, dexp(ratio5))
 
 ! decision: accept/reject the proposed value:
                 call random_number(u5)
@@ -1027,7 +1022,7 @@ contains
                 infdens = 0.0_C_DOUBLE
                 do i = 1, ni
                     if (i .gt. obs_inf_time) then
-                        infdens = infdens + gammadensity11(epidat3(i, 3), delta1op(j+1, 1), &
+                        infdens = infdens + gammadensity11(epidat3(i, 3), delta1(1), &
                                 & delta2op(j+1, 1))
                     else
                         infdens = infdens
@@ -1044,7 +1039,7 @@ contains
 
         end do !end loop j (mcmc)
 
-    end subroutine mcmcsir2
+    end subroutine mcmcsir_f
 
 
 
@@ -1059,7 +1054,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    subroutine likelihoodSIR2(n, ninfected, num, nsuspar, ntranspar, cc, d333, epidat, &
+    subroutine likelihoodSIR2(n, ninfected, num, nsuspar, ntranspar, cc, d3, epidat, &
     & suscov, transcov, suspar, powersus, transpar, powertrans, kernelpar, spark, likk)
 
     external infinity_value
@@ -1068,7 +1063,7 @@ contains
     integer, intent(in) :: n, ninfected, num, nsuspar, ntranspar           !integers
     double precision, intent(in) :: spark                             ! spark parameter
     double precision, intent(in), dimension(2) :: kernelpar            ! parameter of the kernel function
-    double precision, intent(in), dimension(n, n) :: d333, cc             ! distance & network matrices
+    double precision, intent(in), dimension(n, n) :: d3, cc             ! distance & network matrices
     double precision, intent(in), dimension(n, 4) :: epidat              ! epidemic data
     double precision, dimension(n, 4) :: epidat1              ! epidemic data
     double precision, intent(in), dimension(n, nsuspar) :: suscov        ! susceptibility covariates
@@ -1226,7 +1221,7 @@ contains
                     qa1 = qa1 + (suspar(m) * (suscov(int(epidat1(j, 1)), m)**powersus(m)))
                 end do
 
-                rate = qa1 * qa2 * (d333(int(epidat1(i, 1)), int(epidat1(j, 1)))**(-kernelpar(1)))
+                rate = qa1 * qa2 * (d3(int(epidat1(i, 1)), int(epidat1(j, 1)))**(-kernelpar(1)))
 
                 if (j .le. ninfected) then
                     gh(j) = ( min(epidat1(i, 2), epidat1(j, 4)) - min(epidat1(i, 4), epidat1(j, 4)) ) * (rate)
@@ -1265,7 +1260,7 @@ contains
                             qa2 = qa2 + (transpar(m) * (transcov(int(epidat1(i, 1)), m)**powertrans(m)))
                         end do
 
-                        rrate(i) = qa1 * qa2 * (d333(int(epidat1(i, 1)), int(epidat1(j, 1)))**(-kernelpar(1)))
+                        rrate(i) = qa1 * qa2 * (d3(int(epidat1(i, 1)), int(epidat1(j, 1)))**(-kernelpar(1)))
 
                     else
 
@@ -1327,7 +1322,7 @@ contains
                     qa1 = qa1 + (suspar(m) * (suscov(int(epidat1(j, 1)), m)**powersus(m)))
                 end do
 
-                rate = qa1 * qa2 * (kernelpar(1)/((d333(int(epidat1(i, 1)), int(epidat1(j, 1)))**(2.0d0))+ &
+                rate = qa1 * qa2 * (kernelpar(1)/((d3(int(epidat1(i, 1)), int(epidat1(j, 1)))**(2.0d0))+ &
                         & (kernelpar(1)**(2.0d0))))
                         
                 if (j .le. ninfected) then
@@ -1365,7 +1360,7 @@ contains
                             qa2 = qa2 + (transpar(m) * (transcov(int(epidat1(i, 1)), m)**powertrans(m)))
                         end do
 
-                        rrate(i) = qa1 * qa2 * (kernelpar(1)/((d333(int(epidat1(i, 1)), int(epidat1(j, 1)))**(2.0d0))+ &
+                        rrate(i) = qa1 * qa2 * (kernelpar(1)/((d3(int(epidat1(i, 1)), int(epidat1(j, 1)))**(2.0d0))+ &
                         & (kernelpar(1)**(2.0d0))))
                         
                     else
@@ -1428,7 +1423,7 @@ contains
                     qa1 = qa1 + (suspar(m) * (suscov(int(epidat1(j, 1)), m)**powersus(m)))
                 end do
 
-                rate = qa1 * qa2 * ( (d333(int(epidat1(i, 1)), int(epidat1(j, 1)))**(-kernelpar(1))) + &
+                rate = qa1 * qa2 * ( (d3(int(epidat1(i, 1)), int(epidat1(j, 1)))**(-kernelpar(1))) + &
                         &  (kernelpar(2)*cc(int(epidat1(i, 1)), int(epidat1(j, 1)))) )
                         
                 if (j .le. ninfected) then
@@ -1466,7 +1461,7 @@ contains
                             qa2 = qa2 + (transpar(m) * (transcov(int(epidat1(i, 1)), m)**powertrans(m)))
                         end do
 
-                        rrate(i) = qa1 * qa2 * ( (d333(int(epidat1(i, 1)), int(epidat1(j, 1)))**(-kernelpar(1))) + &
+                        rrate(i) = qa1 * qa2 * ( (d3(int(epidat1(i, 1)), int(epidat1(j, 1)))**(-kernelpar(1))) + &
                         &  (kernelpar(2)*cc(int(epidat1(i, 1)), int(epidat1(j, 1)))) )
                         
                     else
@@ -1530,7 +1525,7 @@ contains
                     qa1 = qa1 + (suspar(m) * (suscov(int(epidat1(j, 1)), m)**powersus(m)))
                 end do
 
-                rate = qa1 * qa2 * ( (kernelpar(1)/((d333(int(epidat1(i, 1)), int(epidat1(j, 1)))**(2.0d0))+ &
+                rate = qa1 * qa2 * ( (kernelpar(1)/((d3(int(epidat1(i, 1)), int(epidat1(j, 1)))**(2.0d0))+ &
                         & kernelpar(1)**(2.0d0))) + (kernelpar(2)*cc(int(epidat1(i, 1)), int(epidat1(j, 1)))) )
                         
                 if (j .le. ninfected) then
@@ -1568,7 +1563,7 @@ contains
                             qa2 = qa2 + (transpar(m) * (transcov(int(epidat1(i, 1)), m)**powertrans(m)))
                         end do
 
-                        rrate(i) = qa1 * qa2 * ( (kernelpar(1)/((d333(int(epidat1(i, 1)), int(epidat1(j, 1)))**(2.0d0))+ &
+                        rrate(i) = qa1 * qa2 * ( (kernelpar(1)/((d3(int(epidat1(i, 1)), int(epidat1(j, 1)))**(2.0d0))+ &
                         & kernelpar(1)**(2.0d0))) + (kernelpar(2)*cc(int(epidat1(i, 1)), int(epidat1(j, 1)))) )
                         
                     else

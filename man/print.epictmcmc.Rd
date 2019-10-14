@@ -5,7 +5,7 @@
   \code{print.epictmcmc} is an S3 method that prints the content of an S3 object of class \code{epictmcmc} to the console. 
 }
 \usage{
-  \method{print}{epictmcmc}(x, digits = 6, ...)
+\method{print}{epictmcmc}(x, digits = 6, ...)
 }
 \arguments{
   \item{x}{an S3 object of class \code{epictmcmc} (i.e. the output of the \code{epictmcmc} function).}
