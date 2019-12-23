@@ -1,33 +1,33 @@
 epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nchains, sus, suspower, trans, transpower, kernel, spark, delta, periodproposal, parallel, temp1, n, ni, net, dis, num, nsuspar, ntranspar) {
-            
+
         initial <- list(NULL)
         infperiodproposal  <-  vector(mode="double", length = 2)
         delta2prior  <-  vector(mode="double", length = 2)
         delta1 <-  vector(mode="double", length = 2)
-        
+
         if (datatype == "known removal") {
-            
+
             anum11  <-  1
-            
+
             if (is.null(delta)) {
                 stop("Specify the arguments of the parameters of the infectious period distribution: delta",  call. =FALSE)
             } else {
-                
+
                 if (!is.list(delta)) {
                     stop("The argument \"delta\" must be a list of three:\n1) a fixed shape parameter of the infectious period density.\n2) a vector of initial values of the rate parameter of the infectious period density with size equal to \"nchains\". \n3) a vector of the parameter values of the gamma prior distribution for the rate parameter.",  call.= FALSE)
                 }
-                
+
                 if (length(delta) != 3) {
                     stop("Error in entering the arguments of the delta parameters of the infectious period distribution: delta", call.=FALSE)
                 }
-                
+
                 if ( length(delta[[1]])>1) {
                     stop("Error in entering the arguments of the fixed shape parameter of the infectious period density: delta", call.=FALSE)
                 }
-                
+
                 initial[[1]] <- matrix(0, ncol = nchains, nrow = 2)
                 initial[[1]][1,] <-  rep(delta[[1]], nchains)
-                
+
                 if (is.vector(delta[[2]])) {
                     if (length(delta[[2]]) == nchains) {
                         initial[[1]][2,] <-  delta[[2]]
@@ -39,63 +39,63 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                 } else {
                     stop("Error in entering the initial values of the delta parameter: delta[[2]]",  call.= FALSE)
                 }
-                
+
                 if (length(delta[[3]]) == 2) {
                     delta2prior  <-  delta[[3]]
                 } else {
                     stop("Error in entering the parameter values of the gamma prior distribution of the delta parameter: delta[[3]]",  call.= FALSE)
                 }
-                
+
             }
-            
+
             if (is.null(periodproposal) ) {
                 infperiodproposal  <-  c(0,0)
             } else {
                 if (!is.matrix(periodproposal)) {
                     periodproposal  <-  matrix(periodproposal, ncol = 2, nrow = 1)
                     infperiodproposal  <-  periodproposal[1, ]
-                } else if (dim(periodproposal)[1]!=1 & dim(periodproposal)[2]!=2) {
+                } else if (all(dim(periodproposal)[1]!=1 & dim(periodproposal)[2]!=2) == TRUE) {
                     stop("Error: the parameters of the gamma proposal distribution for updating the infectious periods and infection times should be entered as a 1 by 2 matrix or as a vector: periodproposal", call.=FALSE)
                 } else {
                     infperiodproposal  <-  periodproposal[1, ]
                 }
             }
-            
+
             if (is.null(blockupdate) ) {
                 blockupdate  <-  c(1, 1)
             }
-            
+
         } else if (datatype == "known epidemic") {
-            
+
             blockupdate  <-  vector(mode="integer", length = 2)
-            
+
             if (!is.null(delta)) {
                 warning("The infectious period rate is not updated as the option of datatype = \"known epidemic\".", call. = TRUE)
             }
-            
+
             anum11  <-  2
             infperiodproposal  <-  c(0,0)
             delta2prior  <-  c(0, 0)
             initial[[1]] <-  matrix(rep(0.0,nchains), ncol = nchains, nrow = 2)
             blockupdate  <-  c(1, 1)
-            
+
         } else {
             stop("Specify datatype as \"known removal\" or \"known epidemic\" ",  call. = FALSE)
         }
-        
+
         anum55  <-  kernel[[4]]
         kernelparproposalvar <-  kernel[[1]]
         kernelparprior <-  kernel[[3]]
         priordistkernelparpar  <-  kernel[[2]]
         initial[[5]] <-  kernel[[5]]
-        
+
         initial[[4]] <-  spark[[5]]
         anum44  <-  spark[[4]]
         sparkproposalvar  <-  spark[[1]]
         priordistsparkpar  <-  spark[[2]]
         sparkprior  <-  spark[[3]]
 
-        
+
         anum22  <-  sus[[4]]
         initial[[2]] <- sus[[5]]
         suscov  <-  sus[[6]]
@@ -123,16 +123,16 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
         priordistpowertrans <-  transpower[[2]]
         priorpar1powertrans <-  transpower[[3]][[1]]
         priorpar2powertrans <-  transpower[[3]][[2]]
-        
+
         initial[[8]] <- temp1
-        
+
         anum2  <-  c(anum11, anum22, anum33, anum44, anum55, anum66, anum77)
-    
+
         cat("************************************************","\n")
         cat("* Start performing MCMC for the ", datatype," SIR ILM for","\n")
         cat(nsim, "iterations", "\n")
         cat("************************************************","\n")
-        
+
         if (nchains > 1L) {
 
             n=as.integer(n);
@@ -190,7 +190,7 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
             epidatmctim=matrix(as.double(0), ncol=n, nrow=nsim);
             epidatmcrem=matrix(as.double(0), ncol=n, nrow=nsim);
             loglik=matrix(as.double(0), ncol=1, nrow=nsim)
-            
+
             sirmcmc <- list(n,nsim,ni,num,anum2,temp,nsuspar,ntranspar,net,dis,epidat,blockupdate,priordistsuspar,
             priordisttranspar, priordistkernelparpar, priordistsparkpar, priordistpowersus,
             priordistpowertrans,suspar,suscov,powersus,transpar,transcov,powertrans,kernelpar,spark,delta1,
@@ -199,7 +199,7 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
             priorpar2powersus, priorpar1trans, priorpar2trans, priorpar1powertrans, priorpar2powertrans,
             kernelparprior, sparkprior, delta2prior, susparop, powersusparop, transparop, powertransparop,
             kernelparop, sparkop, delta2op, epidatmctim, epidatmcrem, loglik)
-            
+
             parallel.function <- function(i) {
                 .Fortran("mcmcsir_f",
                 n=  sirmcmc[[1]], nsim = sirmcmc[[2]],
@@ -246,7 +246,7 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                 epidatmcrem=  sirmcmc[[54]],
                 loglik=  sirmcmc[[55]], NAOK = TRUE)
             }
-            
+
             if (parallel) {
                 no_cores <- min(nchains,getOption("cl.cores", detectCores()))
                 cl <- makeCluster(no_cores)
@@ -262,7 +262,7 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                     datmcmc22[[i]] <- parallel.function(i)
                 }
             }
-            
+
         } else if (nchains == 1L) {
             datmcmc22 <- .Fortran("mcmcsir_f",
             n=as.integer(n),
@@ -322,46 +322,46 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
             loglik=matrix(as.double(0), ncol=1, nrow=nsim), NAOK = TRUE)
 
         }
-        
+
         names <- c(paste("Alpha_s[",seq_len(nsuspar),"]", sep = ""))
         namet <- c(paste("Alpha_t[",seq_len(ntranspar),"]", sep = ""))
         namepowers <- c(paste("Psi_s[",seq_len(nsuspar),"]", sep = ""))
         namepowert <- c(paste("Psi_t[",seq_len(ntranspar),"]", sep = ""))
-        
+
         if (nchains > 1L) {
-            
+
             result77   <-  list(NULL)
-            
+
             for (i in seq_len(nchains)){
-                
+
                 result777 <- NULL
                 namecols   <-  NULL
-                
+
                 if (anum2[2]==1) {
                     result777 <- cbind(result777, datmcmc22[[i]]$susparop    )
                     namecols <- c(namecols, names[1:nsuspar])
                 }
-                
+
                 if (anum2[6]==1) {
                     result777 <- cbind(result777, datmcmc22[[i]]$powersusparop)
                     namecols <- c(namecols, namepowers[1:nsuspar])
                 }
-                
+
                 if (anum2[3]==1) {
                     result777 <- cbind(result777, datmcmc22[[i]]$transparop)
                     namecols <- c(namecols, namet[1:ntranspar])
                 }
-                
+
                 if (anum2[7]==1) {
                     result777 <- cbind(result777, datmcmc22[[i]]$powertransparop)
                     namecols <- c(namecols, namepowert[1:ntranspar])
                 }
-                
+
                 if (anum2[4]==1) {
                     result777 <- cbind(result777, datmcmc22[[i]]$sparkop[, 1])
                     namecols <- c(namecols, "Spark")
                 }
-                
+
                 if (anum2[5]==1) {
                     result777 <- cbind(result777, datmcmc22[[i]]$kernelparop[, 1])
                     namecols <- c(namecols, "Spatial parameter")
@@ -369,57 +369,57 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                     result777 <- cbind(result777, datmcmc22[[i]]$kernelparop)
                     namecols <- c(namecols, c("Spatial parameter", "Network parameter"))
                 }
-                
+
                 if (anum2[1]==1) {
                     result777 <- cbind(result777, datmcmc22[[i]]$delta2op[, 1])
                     namecols <- c(namecols, "Infectious period rate")
                 }
-                
+
                 result777 <- cbind(result777, datmcmc22[[i]]$loglik)
                 namecols <- c(namecols, "Log-likelihood")
-                
+
                 result777  <-  data.frame(result777)
                 colnames(result777)  <-  namecols
-                
+
                 if (anum2[1]==2) {
                     result777 <- list(result777)
                 } else if (anum2[1]==1) {
                     result777 <- list(result777, datmcmc22[[i]]$epidatmctim)
                 }
-                
+
                 result77[[i]] <- result777
             }
-            
+
         } else {
-            
+
             result77 <- NULL
             namecols   <-  NULL
-            
+
             if (anum2[2]==1) {
                 result77 <- cbind(result77, datmcmc22$susparop)
                 namecols <- c(namecols, names[1:nsuspar])
             }
-            
+
             if (anum2[6]==1) {
                 result77 <- cbind(result77, datmcmc22$powersusparop)
                 namecols <- c(namecols, namepowers[1:nsuspar])
             }
-            
+
             if (anum2[3]==1) {
                 result77 <- cbind(result77, datmcmc22$transparop)
                 namecols <- c(namecols, namet[1:ntranspar])
             }
-            
+
             if (anum2[7]==1) {
                 result77 <- cbind(result77, datmcmc22$powertransparop)
                 namecols <- c(namecols, namepowert[1:ntranspar])
             }
-            
+
             if (anum2[4]==1) {
                 result77 <- cbind(result77, datmcmc22$sparkop[, 1])
                 namecols <- c(namecols, "Spark")
             }
-            
+
             if (anum2[5]==1) {
                 result77 <- cbind(result77, datmcmc22$kernelparop[, 1])
                 namecols <- c(namecols, "Spatial parameter")
@@ -427,33 +427,33 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                 result77 <- cbind(result77, datmcmc22$kernelparop)
                 namecols <- c(namecols, c("Spatial parameter", "Network parameter"))
             }
-            
+
             if (anum2[1]==1) {
                 result77 <- cbind(result77, datmcmc22$delta2op[, 1])
                 namecols <- c(namecols, "Infectious period rate")
             }
-            
+
             result77 <- cbind(result77, datmcmc22$loglik)
             namecols <- c(namecols, "Log-likelihood")
-            
+
             result77  <-  data.frame(result77)
             colnames(result77)  <-  namecols
-            
+
             if (anum2[1]==2) {
                 result77 <- list(result77)
             } else if (anum2[1]==1) {
                 result77 <- list(result77, datmcmc22$epidatmctim)
             }
-            
-            
+
+
         }
-        
-        
-        
+
+
+
         # Creating an epictmcmc object:
-        
+
         if (nchains == 1){
-            
+
             if (length(result77) == 1) {
                 dim.results <- dim(result77[[1]])
                 mcmcsamp <- as.mcmc(result77[[1]][,-dim.results[2]])
@@ -461,12 +461,12 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                 num.iter <- niter(as.mcmc(mcmcsamp))
                 num.par <- nvar(as.mcmc(mcmcsamp))
                 log.likelihood <- as.mcmc(result77[[1]][,dim.results[2]])
-                
+
                 out <- list(compart.framework = object$type, kernel.type = object$kerneltype, data.assumption = datatype,
                 parameter.samples = mcmcsamp, log.likelihood = log.likelihood,
                 acceptance.rate = accpt, number.iteration = num.iter,
                 number.parameter = num.par, number.chains = nchains)
-                
+
             } else {
                 dim.results <- dim(result77[[1]])
                 mcmcsamp <- as.mcmc(result77[[1]][,-dim.results[2]])
@@ -477,40 +477,40 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                 num.inf <- sum(object$epidat[,2]!=Inf)
                 infection.times.samples <- as.mcmc(result77[[2]][,1:num.inf])
                 Average.infectious.periods <- as.mcmc(apply(object$epidat[1:num.inf,2]-infection.times.samples,1,mean))
-                
+
                 out <- list(compart.framework = object$type, kernel.type = object$kerneltype, data.assumption = datatype,
                 parameter.samples = mcmcsamp, log.likelihood = log.likelihood,
                 acceptance.rate = accpt, number.iteration = num.iter,
                 number.parameter = num.par, number.chains = nchains, infection.times.samples = infection.times.samples,
                 Average.infectious.periods = Average.infectious.periods)
-                
+
             }
-            
+
         } else {
-            
+
             if (length(result77[[1]]) == 1) {
                 dim.results <- dim(result77[[1]][[1]])
                 mcmcsamp <- list(NULL)
                 log.likelihood <- list(NULL)
                 accpt <- list(NULL)
-                
+
                 for(i in seq_len(nchains)){
                     mcmcsamp[[i]] <- as.mcmc(result77[[i]][[1]][,-dim.results[2]])
                     accpt[[i]] <- 1-rejectionRate(as.mcmc(mcmcsamp[[i]]))
                     log.likelihood[[i]] <- as.mcmc(result77[[i]][[1]][,dim.results[2]])
                 }
-                
+
                 num.iter <- niter(as.mcmc(mcmcsamp[[1]]))
                 num.par  <- nvar(as.mcmc(mcmcsamp[[1]]))
-                
+
                 out <- list(compart.framework = object$type, kernel.type = object$kerneltype,
                 data.assumption = datatype, parameter.samples = mcmcsamp,
                 log.likelihood = log.likelihood,
                 acceptance.rate = accpt, number.iteration = num.iter,
                 number.parameter = num.par, number.chains = nchains)
-                
+
             } else {
-                
+
                 dim.results <- dim(result77[[1]][[1]])
                 mcmcsamp <- list(NULL)
                 log.likelihood <- list(NULL)
@@ -518,7 +518,7 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                 num.inf <- sum(object$epidat[,2]!=Inf)
                 infection.times.samples <- list(NULL)
                 Average.infectious.periods <- list(NULL)
-                
+
                 for(i in seq_len(nchains)){
                     mcmcsamp[[i]] <- as.mcmc(result77[[i]][[1]][,-dim.results[2]])
                     accpt[[i]] <- 1-rejectionRate(as.mcmc(mcmcsamp[[i]]))
@@ -526,19 +526,19 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                     infection.times.samples[[i]] <- as.mcmc(result77[[i]][[2]][,seq_len(num.inf)])
                     Average.infectious.periods[[i]] <- as.mcmc(apply(object$epidat[seq_len(num.inf),2]-infection.times.samples[[i]],1,mean))
                 }
-                
+
                 num.iter <- niter(as.mcmc(mcmcsamp[[1]]))
                 num.par  <- nvar(as.mcmc(mcmcsamp[[1]]))
-                
+
                 out <- list(compart.framework = object$type, kernel.type = object$kerneltype,
                 data.assumption = datatype, parameter.samples = mcmcsamp,
                 log.likelihood = log.likelihood,
                 acceptance.rate = accpt, number.iteration = num.iter,
                 number.parameter = num.par, number.chains = nchains, infection.times.samples = infection.times.samples,
                 Average.infectious.periods = Average.infectious.periods)
-                
+
             }
-            
+
         }
-        
+
 }

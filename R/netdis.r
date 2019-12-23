@@ -26,29 +26,29 @@
 ######################################################################
 
 contactnet <- function(type, num.id = NULL, location = NULL, beta, nu = NULL) {
-    
+
     # Specifying the network model:
-    
+
     if (type == "powerlaw") {
         anum  <-  1
         if (is.null(nu)) {
             nu  <-  1
         }
-        
+
     } else if (type == "Cauchy") {
         anum  <-  2
         nu  <-  1
-        
+
     } else if (type == "random") {
         anum  <-  3
         nu  <-  1
     } else {
         stop("Specify type as \"powerlaw\" \"Cauchy\" or \"random\" ",  call. = FALSE)
     }
-    
-    
+
+
     # To calculate the Euclidean distance:
-    
+
     if (!is.null(location)) {
         if (is.null(num.id)){
             n  <-  length(location[, 1])
@@ -59,7 +59,7 @@ contactnet <- function(type, num.id = NULL, location = NULL, beta, nu = NULL) {
             }
             n <- num.id
         }
-    } else if (is.null(location) & type == "random"){
+    } else if (all(is.null(location) & type == "random") == TRUE) {
         if (is.null(num.id)) {
             stop("The option \"num.id\" has to be specified", call. = FALSE)
         }
@@ -68,12 +68,12 @@ contactnet <- function(type, num.id = NULL, location = NULL, beta, nu = NULL) {
     } else {
         stop("Error: the individual locations must be specified", call.=FALSE)
     }
-    
+
     #    n  <-  length(location[, 1])
     net <- matrix(0, ncol=n, nrow=n)
-    
+
     # To generate the contact network:
-    
+
     if (type == "powerlaw") {
         for (i in 1:(n-1)) {
             for (j in (i+1):n) {
@@ -102,30 +102,30 @@ contactnet <- function(type, num.id = NULL, location = NULL, beta, nu = NULL) {
                 }
             }
         }
-        
+
     } else if (type == "random") {
-        
+
         for (i in 1:(n-1)) {
             for (j in (i+1):n) {
                 net[i, j] <- rbinom(1, 1, beta)
                 net[j, i] <- net[i, j]
             }
         }
-        
+
     }
-    
+
     for (i in 1:n) {
         net[i, i] <- 0
     }
-    
+
     outnet <- list(location = location, contact.network = net, type = type)
-    
+
     # Naming the class of the object:
-    
+
     class(outnet) <- "contactnet"
-    
+
     outnet
-    
+
 }
 
 
@@ -133,9 +133,9 @@ contactnet <- function(type, num.id = NULL, location = NULL, beta, nu = NULL) {
 # to plot the contact network:
 
 plot.contactnet <- function(x, ...) {
-    
+
     # Option for producing fancy plot of the contact network:
-    if (class(x)== "contactnet") {
+    if (is(x, "contactnet")) {
 
         if (x$type == "powerlaw" | x$type == "Cauchy"){
             n <- dim(x$contact.network)[1]
@@ -148,11 +148,11 @@ plot.contactnet <- function(x, ...) {
                     }
                 }
             }
-            
+
             mn  <-  max(apply(x$contact.network, 1, sum))/5
             points(x$location, cex=apply(x$contact.network, 1, sum)/mn, col="red", pch=20)
         } else if (x$type == "random"){
-         
+
             n <- dim(x$contact.network)[1]
             edges1 <- list(NULL)
             for (i in 1:(n-1)) {
@@ -164,7 +164,7 @@ plot.contactnet <- function(x, ...) {
                 }
                 edges1[[i]] <- mn
             }
-            
+
             combine.edges <- NULL
             for (i in 1:length(edges1)) {
                 if (length(edges1[[i]]) > 1) {
@@ -174,9 +174,8 @@ plot.contactnet <- function(x, ...) {
             graph.random <- igraph::graph(edges = combine.edges, directed = FALSE)
             plot(graph.random, ...)
         }
-                
+
     } else {
         stop("the input does not have the same class", call.=TRUE)
     }
 }
-
