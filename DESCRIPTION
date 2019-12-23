@@ -1,7 +1,7 @@
 Package: EpiILMCT
 Title: Continuous Time Distance-Based and Network-Based Individual Level Models for Epidemics
-Version: 1.1.4
-Date: 2019-10-13
+Version: 1.1.5
+Date: 2019-12-12
 Authors@R: c(
     person("Waleed", "Almutiry", email = "wkmtierie@qu.edu.sa", role = c("aut", "cre")), 
     person("Rob", "Deardon", role = c("aut", "ths")), 
