@@ -174,9 +174,8 @@ The MCMC trace plots for the model parameters can be produced using the S3 metho
 ```s
 plot(mcmc1, plottype = "parameter", start = 10000, thin = 10, density = FALSE)
 ```
-
 <p align="center">
-<img src="https://user-images.githubusercontent.com/18523406/64808978-fdbcc000-d5a0-11e9-894a-90cc8ef79ed3.jpg" height="400" width="75%"> 
+<img src="https://user-images.githubusercontent.com/18523406/72844861-726ddc80-3cae-11ea-8fd3-577c01b09549.jpeg" height="400" width="75%"> 
 </p>
 
 ## Built With
