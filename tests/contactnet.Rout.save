@@ -39,4 +39,4 @@ Loading required package: parallel
 > 
 > proc.time()
    user  system elapsed 
-  0.307   0.068   0.365 
+  0.324   0.077   0.400 

@@ -196,4 +196,4 @@ attr(,"class")
 > 
 > proc.time()
    user  system elapsed 
-  0.299   0.078   0.357 
+  0.301   0.070   0.357 

@@ -18,9 +18,10 @@ Type 'q()' to quit R.
 > library(EpiILMCT)
 Loading required package: coda
 Loading required package: parallel
+> set.seed(22)
 > ## distance-based SIR continuous-time ILMs ##
 > data(SpatialData)
-> ## performing the MCMC-tool for analyzing the fully observed spatial data 
+> ## performing the MCMC-tool for analyzing the fully observed spatial data
 > ## under the SIR distance-based continuous ILM:
 > suspar <- list(NULL)
 > suspar[[1]]<-list(2,c("gamma", 1, 0.01, 0.5))
@@ -28,11 +29,11 @@ Loading required package: parallel
 > kernel1 <- list(2, c("gamma", 1, 0.01, 0.5))
 > 
 > mcmcres2 <- epictmcmc(object = SpatialData,
-+ distancekernel = "powerlaw", datatype = "known epidemic", nsim = 50, 
++ distancekernel = "powerlaw", datatype = "known epidemic", nsim = 50,
 + control.sus = suspar,
-+ kernel.par = kernel1,  seedval  =  524837)
++ kernel.par = kernel1)
 ************************************************ 
-* Start performing MCMC for the  known epidemic  SIR ILM for 
+Start performing MCMC for the  known epidemic  SIR ILM for 
 50 iterations 
 ************************************************ 
 > #plot(mcmcres2, plottype = "parameter")
@@ -53,19 +54,19 @@ End = 7
 Thinning interval = 1 
      Alpha_s[1] Spatial parameter
 [1,]    2.00000           2.00000
-[2,]    2.00000           2.87844
-[3,]    2.54010           2.87844
-[4,]    2.54010           2.87844
-[5,]    2.09618           3.01184
-[6,]    2.54586           3.01560
-[7,]    2.54586           3.01560
+[2,]    2.00000           2.00000
+[3,]    1.50826           2.00000
+[4,]    1.03277           2.53348
+[5,]    1.38699           2.53348
+[6,]    1.38699           2.57478
+[7,]    2.31436           2.44046
 
  log.likelihood : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] -3.06312 18.25387 17.12294 17.12294 18.69589 17.68402 17.68402
+[1] -3.06312 -3.06312  1.14963 10.59471 13.58724 14.09541 10.90346
 
 Available components:
 [1] "compart.framework" "kernel.type"       "data.assumption"  
@@ -87,30 +88,30 @@ number.parameter : 2 parameters
  1. Empirical mean and standard deviation for each variable,
 plus standard error of the mean:
                      Mean       SD  Naive SE Time-series SE
-Alpha_s[1]        2.04957 0.322899 0.0456649      0.0762376
-Spatial parameter 3.09454 0.236802 0.0334888      0.0534174
+Alpha_s[1]        1.89607 0.306726 0.0433776      0.0673176
+Spatial parameter 2.96792 0.338620 0.0478882      0.1142946
 
 
 
  2. Quantiles for each variable:
                      2.5%     25%     50%     75%   97.5%
-Alpha_s[1]        1.52911 1.76625 2.00000 2.28196 2.54586
-Spatial parameter 2.80974 3.00169 3.07011 3.29199 3.34426
+Alpha_s[1]        1.38699 1.73027 1.95966 2.06507 2.43753
+Spatial parameter 2.00000 2.84056 3.03490 3.22303 3.30094
 
 
 
  3. Empirical mean, standard deviation, and quantiles for the log likelihood,
           Mean             SD       Naive SE Time-series SE 
-     17.371167       3.010031       0.425683       0.425683 
+     16.293955       4.939316       0.698525       1.504505 
 
-   2.5%     25%     50%     75%   97.5% 
-15.7136 17.4485 17.8303 18.1724 18.6901 
+    2.5%      25%      50%      75%    97.5% 
+-2.11525 17.20890 18.01699 18.49467 18.74961 
 
 
 
  4. acceptance.rate : 
        Alpha_s[1] Spatial parameter 
-         0.673469          0.367347 
+         0.612245          0.387755 
 > 
 > suspar <- list(NULL)
 > suspar[[1]]<-list(2,c("gamma", 1, 0.1, 2.5))
@@ -118,11 +119,11 @@ Spatial parameter 2.80974 3.00169 3.07011 3.29199 3.34426
 > kernel1 <- list(0.2, c("gamma", 1, 0.1, 0.01))
 > 
 > mcmcres22 <- epictmcmc(object = SpatialData,
-+ distancekernel = "Cauchy", datatype = "known epidemic", nsim = 50, 
++ distancekernel = "Cauchy", datatype = "known epidemic", nsim = 50,
 + control.sus = suspar,
-+ kernel.par = kernel1,  seedval  =  524837)
++ kernel.par = kernel1)
 ************************************************ 
-* Start performing MCMC for the  known epidemic  SIR ILM for 
+Start performing MCMC for the  known epidemic  SIR ILM for 
 50 iterations 
 ************************************************ 
 > #plot(mcmcres22, plottype = "parameter")
@@ -143,19 +144,19 @@ End = 7
 Thinning interval = 1 
      Alpha_s[1] Spatial parameter
 [1,]    2.00000          0.200000
-[2,]    4.69437          0.217569
-[3,]    7.39486          0.215982
-[4,]    7.39486          0.209002
-[5,]    5.17525          0.211670
-[6,]    7.42365          0.211745
-[7,]    7.42365          0.204863
+[2,]    7.20904          0.200000
+[3,]    7.20904          0.192428
+[4,]    6.61663          0.188696
+[5,]    6.32853          0.188696
+[6,]    6.32853          0.202810
+[7,]    6.32853          0.208162
 
  log.likelihood : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] -16.30159  -3.10811  -3.77954  -3.29398  -2.62396  -3.51608  -3.05082
+[1] -16.30159  -2.55599  -2.14931  -1.77451  -1.77184  -2.21233  -2.41781
 
 Available components:
 [1] "compart.framework" "kernel.type"       "data.assumption"  
@@ -176,37 +177,37 @@ number.parameter : 2 parameters
 
  1. Empirical mean and standard deviation for each variable,
 plus standard error of the mean:
-                      Mean        SD   Naive SE Time-series SE
-Alpha_s[1]        6.924086 1.5336654 0.21689304      0.3631277
-Spatial parameter 0.173494 0.0271459 0.00383901      0.0221686
+                      Mean       SD   Naive SE Time-series SE
+Alpha_s[1]        6.814363 1.730951 0.24479343      0.5314169
+Spatial parameter 0.184182 0.015674 0.00221663      0.0063711
 
 
 
  2. Quantiles for each variable:
-                      2.5%      25%      50%     75%    97.5%
-Alpha_s[1]        4.748603 5.714041 6.891913 7.57575 9.620228
-Spatial parameter 0.138923 0.150593 0.168321 0.20248 0.215637
+                      2.5%      25%      50%      75%     97.5%
+Alpha_s[1]        4.152365 5.891223 6.642539 7.348461 10.360924
+Spatial parameter 0.160209 0.170313 0.186134 0.196272  0.208162
 
 
 
  3. Empirical mean, standard deviation, and quantiles for the log likelihood,
           Mean             SD       Naive SE Time-series SE 
-     -2.426354       2.252807       0.318595       0.394397 
+     -2.660488       2.132398       0.301567       0.301567 
 
-     2.5%       25%       50%       75%     97.5% 
--3.736298 -3.048748 -2.560123 -1.141995 -0.467701 
+    2.5%      25%      50%      75%    97.5% 
+-4.93207 -2.60576 -2.21981 -1.77649 -1.23782 
 
 
 
  4. acceptance.rate : 
        Alpha_s[1] Spatial parameter 
-         0.551020          0.857143 
+         0.530612          0.897959 
 > 
 > #plot(mcmcres2$log.likelihood)
 > #plot(mcmcres22$log.likelihood)
 > 
 > ## performing the MCMC-tool for analyzing the partially observed spatial
-> ## data (unknown infection times) under the SIR distance-based 
+> ## data (unknown infection times) under the SIR distance-based
 > ## continuous ILM:
 > 
 > suspar <- list(NULL)
@@ -215,11 +216,10 @@ Spatial parameter 0.138923 0.150593 0.168321 0.20248 0.215637
 > kernel1 <- list(2, c("gamma", 1, 0.01, 0.5))
 > 
 > mcmcres22 <- epictmcmc(object = SpatialData, distancekernel = "powerlaw",
-+ datatype = "known removal", nsim = 50,  
-+ control.sus = suspar, kernel.par = kernel1, delta = list(1, 2, c(4, 2)),  
-+ seedval  =  524837)
++ datatype = "known removal", nsim = 50,
++ control.sus = suspar, kernel.par = kernel1, delta = list(1, 2, c(4, 2)))
 ************************************************ 
-* Start performing MCMC for the  known removal  SIR ILM for 
+Start performing MCMC for the  known removal  SIR ILM for 
 50 iterations 
 ************************************************ 
 > 
@@ -240,20 +240,20 @@ Start = 1
 End = 7 
 Thinning interval = 1 
      Alpha_s[1] Spatial parameter Infectious period rate
-[1,]    2.00000           2.00000                2.00000
-[2,]    2.00000           2.43618                2.25028
-[3,]    1.81307           2.43618                2.89569
-[4,]    1.94405           2.53548                2.06881
-[5,]    1.82816           2.85736                2.24326
-[6,]    2.58579           3.28492                2.05007
-[7,]    2.24835           3.28492                1.63682
+[1,]   2.000000           2.00000                2.00000
+[2,]   2.000000           2.00000                1.68393
+[3,]   1.468239           2.00000                1.74881
+[4,]   0.769424           2.06189                1.69124
+[5,]   0.769424           2.06189                1.63194
+[6,]   1.058423           2.65603                2.00467
+[7,]   1.979617           3.04849                2.14446
 
  log.likelihood : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] -37.58690 -29.12251 -33.81187 -19.75670 -21.36138 -18.72328  -8.25623
+[1] -37.5869 -30.6891 -30.8283 -31.7703 -32.1660 -27.0975 -31.6516
 
  infection.times.samples : 
 Markov Chain Monte Carlo (MCMC) output:
@@ -264,41 +264,41 @@ Thinning interval = 1
 [1,]    0 0.00205424 0.170259 0.171529 0.229401 0.266345 0.296273 0.305499
 [2,]    0 0.00205424 0.170259 0.171529 0.229401 0.266345 0.296273 0.305499
 [3,]    0 0.00205424 0.170259 0.171529 0.229401 0.266345 0.296273 0.305499
-[4,]    0 0.00205424 0.170259 0.171529 0.229401 0.266345 0.296273 0.305499
-[5,]    0 0.00205424 0.170259 0.171529 0.229401 0.266345 0.296273 0.305499
-[6,]    0 0.00205424 0.170259 0.171529 0.383355 0.288105 0.296273 0.305499
-[7,]    0 0.00205424 0.170259 0.171529 0.383355 0.288105 0.296273 0.305499
-         [,9]    [,10]    [,11]    [,12]    [,13]    [,14]   [,15]   [,16]
-[1,] 0.318990 0.337687 0.362637 0.403727 0.432961 0.591705 2.28403 2.32537
-[2,] 0.318990 0.337687 0.362637 0.403727 0.432961 0.591705 2.38999 2.14657
-[3,] 0.318990 0.337687 0.362637 0.457385 0.432961 0.591705 2.38999 2.41813
-[4,] 0.318990 0.337687 0.362637 0.457385 0.432961 0.591705 2.38029 2.41813
-[5,] 0.318990 0.277494 0.362637 0.457385 0.432961 0.591705 2.38029 2.41813
-[6,] 0.329055 0.277494 0.362637 0.457385 0.432961 0.591705 2.38029 2.41813
-[7,] 0.329055 0.277494 0.362637 0.457385 0.432961 0.591705 2.38029 2.41813
+[4,]    0 0.00205424 0.170259 0.129142 0.229401 0.266345 0.296273 0.305499
+[5,]    0 0.00205424 0.170259 0.126579 0.574683 0.266345 0.296273 0.305499
+[6,]    0 0.00205424 0.170259 0.173654 0.543768 0.384592 0.296273 0.305499
+[7,]    0 0.00205424 0.170259 0.173654 0.118744 0.384592 0.296273 0.305499
+         [,9]     [,10]    [,11]    [,12]    [,13]    [,14]   [,15]   [,16]
+[1,] 0.318990 0.3376868 0.362637 0.403727 0.432961 0.591705 2.28403 2.32537
+[2,] 0.318990 0.3376868 0.360203 0.441448 0.432961 0.591705 2.28403 2.32537
+[3,] 0.318990 0.4806679 0.360203 0.407030 0.432961 0.591705 2.28403 2.32537
+[4,] 0.318990 0.4806679 0.360203 0.407030 0.432961 0.591705 2.28403 2.36253
+[5,] 0.350192 0.4806679 0.360203 0.407030 0.378509 0.591705 2.28403 2.36253
+[6,] 0.350192 0.4405425 0.360203 0.407030 0.378509 0.591705 2.40133 2.28223
+[7,] 0.350192 0.0437945 0.360203 0.368562 0.378509 0.591705 2.46112 2.39644
        [,17]   [,18]   [,19]   [,20]   [,21]   [,22]   [,23]   [,24]  [,25]
 [1,] 2.34818 2.57043 2.57258 2.57268 2.57963 2.59514 2.60761 2.60862 2.6131
 [2,] 2.34818 2.57043 2.57258 2.57268 2.57963 2.59514 2.60761 2.60862 2.6131
-[3,] 2.37538 2.57043 2.57258 2.57268 2.57963 2.59514 2.60761 2.60862 2.6131
-[4,] 2.37538 2.57043 2.57258 2.57268 2.57963 2.59514 2.60761 2.60862 2.6131
-[5,] 2.37538 2.57043 2.57258 2.57268 2.57963 2.51586 2.60761 2.60862 2.6131
-[6,] 2.37538 2.57043 2.57258 2.57268 2.57963 2.51586 2.64181 2.60862 2.6009
-[7,] 2.37538 2.57043 2.57258 2.57268 2.57963 2.51586 2.64181 2.60862 2.6009
+[3,] 2.34818 2.57043 2.57258 2.57268 2.57963 2.59514 2.60761 2.60862 2.6131
+[4,] 2.34818 2.57043 2.57258 2.57268 2.57963 2.59514 2.60761 2.60862 2.6131
+[5,] 2.34818 2.57043 2.57347 2.57268 2.57963 2.57608 2.60761 3.21554 2.6131
+[6,] 2.51273 2.57043 2.57347 2.57268 2.57963 2.57608 2.60761 3.13657 2.6131
+[7,] 2.50495 2.57043 2.57347 2.57268 2.57963 2.60976 2.60761 3.30307 2.6131
        [,26]   [,27]   [,28]   [,29]   [,30]   [,31]   [,32]   [,33]
 [1,] 2.61327 2.62189 2.75117 2.89072 2.93546 3.15278 3.72520 3.93308
-[2,] 2.60249 2.62189 2.75117 2.89072 2.93546 3.15278 3.48517 4.00794
-[3,] 2.60249 2.62189 2.75117 2.89072 2.73010 3.22200 3.94191 3.98674
-[4,] 2.60249 2.62189 2.31768 2.89072 2.66654 3.22200 3.64611 3.57342
-[5,] 2.60249 2.62189 2.73085 2.89072 2.53802 3.31844 3.98186 3.58995
-[6,] 2.60249 2.62189 2.44706 2.89072 2.52672 3.31844 3.43453 3.52768
-[7,] 2.60249 2.62189 2.44706 2.99170 2.92498 3.20704 3.43453 3.52768
+[2,] 2.61327 2.62189 2.75117 2.89072 2.93546 3.15278 3.44762 3.93987
+[3,] 2.61327 2.62189 2.75117 2.89072 2.63114 3.15278 3.44762 2.49516
+[4,] 2.61327 2.62189 2.68837 2.40012 2.63114 2.85644 3.44762 2.49516
+[5,] 2.61327 2.62189 2.53495 4.07396 2.63114 2.87806 3.44762 3.00887
+[6,] 2.61327 2.62189 2.53495 3.18701 2.61734 2.88492 3.44762 4.01186
+[7,] 2.61327 2.62189 2.53495 3.64901 2.61734 3.33963 3.44762 3.60033
 
  Average.infectious.periods : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] 0.526360 0.533900 0.514148 0.550993 0.532996 0.554114 0.542361
+[1] 0.526360 0.533497 0.583209 0.609117 0.519299 0.509422 0.509078
 
 Available components:
  [1] "compart.framework"          "kernel.type"               
@@ -322,60 +322,60 @@ number.parameter : 3 parameters
  1. Empirical mean and standard deviation for each variable,
 plus standard error of the mean:
                           Mean       SD  Naive SE Time-series SE
-Alpha_s[1]             1.97936 0.386175 0.0546134      0.1330750
-Spatial parameter      3.20614 0.386397 0.0546447      0.1572195
-Infectious period rate 1.85701 0.315957 0.0446831      0.0446831
+Alpha_s[1]             1.48846 0.340927 0.0482143      0.0798859
+Spatial parameter      2.72630 0.304536 0.0430679      0.0873640
+Infectious period rate 1.94589 0.300679 0.0425224      0.0425224
 
 
 
  2. Quantiles for each variable:
-                          2.5%     25%     50%     75%   97.5%
-Alpha_s[1]             1.45553 1.76622 1.88751 2.16670 2.81287
-Spatial parameter      2.43618 2.95143 3.28492 3.44353 3.84860
-Infectious period rate 1.21550 1.63152 1.86830 2.05765 2.33634
+                           2.5%     25%     50%     75%   97.5%
+Alpha_s[1]             0.834449 1.26014 1.44916 1.69274 2.08718
+Spatial parameter      2.000000 2.62407 2.75524 2.85487 3.39218
+Infectious period rate 1.332744 1.72543 1.96393 2.13026 2.47657
 
 
 
  3. Empirical mean, standard deviation, and quantiles for the log likelihood,
           Mean             SD       Naive SE Time-series SE 
-     -10.92127        8.82236        1.24767        2.62356 
+     -25.33535        7.12539        1.00768        2.36127 
 
-     2.5%       25%       50%       75%     97.5% 
--32.75676 -15.76212  -9.16595  -4.65063   2.04111 
+    2.5%      25%      50%      75%    97.5% 
+-39.3472 -30.9354 -24.6569 -20.1263 -13.5805 
 
 
 
  4. Empirical mean, standard deviation, and quantiles for the average infectious periods,
           Mean             SD       Naive SE Time-series SE 
-    0.56102782     0.02337329     0.00330548     0.00477133 
+    0.52338927     0.03172609     0.00448675     0.00965965 
 
     2.5%      25%      50%      75%    97.5% 
-0.523659 0.545607 0.557102 0.580969 0.606786 
+0.469662 0.498067 0.526398 0.544215 0.581773 
 
 
 
  5. acceptance.rate : 
             Alpha_s[1]      Spatial parameter Infectious period rate 
-              0.448980               0.510204               1.000000 
+              0.387755               0.387755               1.000000 
 > 
 > ## distance-based and network-based SIR ILMs ##
+> set.seed(22)
 > data(SpatialNetData)
-> ## performing the MCMC-tool for analyzing the fully observed spatial and 
+> ## performing the MCMC-tool for analyzing the fully observed spatial and
 > ## network data
 > ## under the SIR distance-based and network-based continuous-time ILM:
 > suspar <- list(NULL)
-> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.1, 0.5), 
+> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.1, 0.5),
 + ncol = 4, nrow = 2))
 > suspar[[2]]<- SpatialNetData[[2]]
 > kernel1 <- list(c(5, 0.5), matrix(c("gamma", "gamma", 1, 1,
 + 0.01, 0.01, 0.5, 1), ncol = 4, nrow = 2))
 > 
 > mcmcres3 <- epictmcmc(object = SpatialNetData[[1]], distancekernel = "powerlaw",
-+ datatype = "known epidemic", nsim = 50, 
-+ control.sus = suspar, kernel.par = kernel1, 
-+ seedval  =  524837)
++ datatype = "known epidemic", nsim = 50,
++ control.sus = suspar, kernel.par = kernel1)
 ************************************************ 
-* Start performing MCMC for the  known epidemic  SIR ILM for 
+Start performing MCMC for the  known epidemic  SIR ILM for 
 50 iterations 
 ************************************************ 
 > #plot(mcmcres3, plottype = "parameter")
@@ -395,20 +395,20 @@ Start = 1
 End = 7 
 Thinning interval = 1 
      Alpha_s[1] Alpha_s[2] Spatial parameter Network parameter
-[1,]  0.0800000   0.200000           5.00000           0.50000
-[2,]  0.0800000   0.200000           5.00000           0.34128
-[3,]  0.0191013   0.200000           5.00000           0.34128
-[4,]  0.0191013   0.200000           4.63042           0.34128
-[5,]  0.0191013   0.200000           4.31850           0.34128
-[6,]  0.0191013   0.200000           3.88086           0.34128
-[7,]  0.0191013   0.174437           3.54484           0.34128
+[1,]       0.08  0.2000000           5.00000          0.500000
+[2,]       0.08  0.2000000           4.92086          0.500000
+[3,]       0.08  0.2000000           4.38342          0.500000
+[4,]       0.08  0.0656835           4.38342          0.500000
+[5,]       0.08  0.0656835           4.38342          0.500000
+[6,]       0.08  0.0656835           4.15239          0.500000
+[7,]       0.08  0.0656835           4.15239          0.373708
 
  log.likelihood : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] -1685.198 -1683.829  -487.536  -286.773  -195.691  -128.116  -100.316
+[1] -1685.198 -1465.431  -596.536  -583.809  -583.809  -410.641  -410.011
 
 Available components:
 [1] "compart.framework" "kernel.type"       "data.assumption"  
@@ -430,49 +430,50 @@ number.parameter : 4 parameters
  1. Empirical mean and standard deviation for each variable,
 plus standard error of the mean:
                        Mean        SD   Naive SE Time-series SE
-Alpha_s[1]        0.0158335 0.0142262 0.00201188      0.0043402
-Alpha_s[2]        0.2175532 0.0794455 0.01123529      0.0341382
-Spatial parameter 2.1026282 1.0724222 0.15166340      0.6658431
-Network parameter 0.6965629 0.6864358 0.09707668      0.4391764
+Alpha_s[1]        0.0231832 0.0260979 0.00369080      0.0160319
+Alpha_s[2]        0.1272768 0.0476480 0.00673845      0.0217451
+Spatial parameter 2.1158366 1.1783617 0.16664551      0.7689205
+Network parameter 1.1630018 0.6721603 0.09505782      0.2556254
 
 
 
  2. Quantiles for each variable:
-                        2.5%        25%       50%       75%     97.5%
-Alpha_s[1]        0.00623436 0.00623436 0.0155947 0.0180329 0.0662978
-Alpha_s[2]        0.10476831 0.12520250 0.2513704 0.3028492 0.3095880
-Spatial parameter 0.98141538 1.52045053 1.7739474 2.1565559 5.0000000
-Network parameter 0.07280999 0.22272698 0.3412802 1.0307071 2.4002713
+                        2.5%        25%       50%       75%   97.5%
+Alpha_s[1]        0.00433566 0.00433566 0.0132278 0.0247037 0.08000
+Alpha_s[2]        0.06568355 0.07981772 0.1185407 0.1796567 0.20000
+Spatial parameter 0.98367282 1.33422426 1.5163194 2.4045377 4.79994
+Network parameter 0.14692978 0.52418031 1.2013297 1.7832496 2.39566
 
 
 
  3. Empirical mean, standard deviation, and quantiles for the log likelihood,
           Mean             SD       Naive SE Time-series SE 
-     -144.9010       325.0565        45.9699        92.7938 
+     -175.8228       321.9825        45.5352       126.3105 
 
       2.5%        25%        50%        75%      97.5% 
--1414.6633   -63.0187   -61.8838   -60.5617   -59.4563 
+-1269.9296   -71.7511   -62.1213   -60.9960   -59.5622 
 
 
 
  4. acceptance.rate : 
        Alpha_s[1]        Alpha_s[2] Spatial parameter Network parameter 
-         0.102041          0.224490          0.489796          0.448980 
+        0.0612245         0.1836735         0.4897959         0.4489796 
 > 
 > ## network-based SIR ILMs ##
+> set.seed(22)
 > data(NetworkData)
-> ## performing the MCMC-tool for analyzing the fully observed network data 
+> ## performing the MCMC-tool for analyzing the fully observed network data
 > ## under the SIR network-based continuous-time ILM:
 > 
 > suspar <- list(NULL)
-> suspar[[1]]<-list(c(0.08,0.5),matrix(c("gamma", "gamma", 1, 1, 1, 1, 0.1, 0.5), 
+> suspar[[1]]<-list(c(0.08,0.5),matrix(c("gamma", "gamma", 1, 1, 1, 1, 0.1, 0.5),
 + ncol = 4, nrow = 2))
 > suspar[[2]]<- NetworkData[[2]]
 > 
 > mcmcres4 <- epictmcmc(object = NetworkData[[1]], datatype = "known epidemic",
-+ nsim = 50, control.sus = suspar,  seedval  =  524837)
++ nsim = 50, control.sus = suspar)
 ************************************************ 
-* Start performing MCMC for the  known epidemic  SIR ILM for 
+Start performing MCMC for the  known epidemic  SIR ILM for 
 50 iterations 
 ************************************************ 
 > #plot(mcmcres4, plottype = "parameter")
@@ -492,20 +493,20 @@ Start = 1
 End = 7 
 Thinning interval = 1 
      Alpha_s[1] Alpha_s[2]
-[1,]   0.080000    0.50000
-[2,]   0.080000    0.50000
-[3,]   0.080000    0.42064
-[4,]   0.080000    0.42064
-[5,]   0.080000    0.42064
-[6,]   0.132681    0.42064
-[7,]   0.132681    0.42064
+[1,]  0.0800000   0.500000
+[2,]  0.0800000   0.500000
+[3,]  0.0800000   0.500000
+[4,]  0.0800000   0.500000
+[5,]  0.0800000   0.541302
+[6,]  0.0800000   0.406985
+[7,]  0.0958326   0.406985
 
  log.likelihood : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] -47.4443 -47.4443 -47.7951 -47.7951 -47.7951 -48.3987 -48.3987
+[1] -54.8056 -54.8056 -54.8056 -54.8056 -54.9080 -54.9925 -55.1539
 
 Available components:
 [1] "compart.framework" "kernel.type"       "data.assumption"  
@@ -526,51 +527,51 @@ number.parameter : 2 parameters
 
  1. Empirical mean and standard deviation for each variable,
 plus standard error of the mean:
-               Mean        SD  Naive SE Time-series SE
-Alpha_s[1] 0.104435 0.0339468 0.0048008      0.0165188
-Alpha_s[2] 0.494415 0.0903850 0.0127824      0.0319294
+                Mean        SD   Naive SE Time-series SE
+Alpha_s[1] 0.0799349 0.0255693 0.00361605     0.00603613
+Alpha_s[2] 0.5244400 0.1211571 0.01713420     0.02085079
 
 
 
  2. Quantiles for each variable:
-                2.5%      25%       50%      75%    97.5%
-Alpha_s[1] 0.0530957 0.080000 0.0955639 0.142624 0.157655
-Alpha_s[2] 0.3950770 0.422935 0.4573956 0.569069 0.710194
+                2.5%       25%      50%      75%    97.5%
+Alpha_s[1] 0.0378314 0.0623953 0.078657 0.101391 0.123595
+Alpha_s[2] 0.2927052 0.4208295 0.500000 0.645876 0.686824
 
 
 
  3. Empirical mean, standard deviation, and quantiles for the log likelihood,
           Mean             SD       Naive SE Time-series SE 
-   -48.2305657      0.6024888      0.0852048      0.2113713 
+   -55.7300414      0.6170862      0.0872692      0.1980547 
 
     2.5%      25%      50%      75%    97.5% 
--49.3404 -48.7368 -48.0337 -47.7856 -47.4367 
+-56.8526 -56.1493 -55.7465 -55.2689 -54.8056 
 
 
 
  4. acceptance.rate : 
 Alpha_s[1] Alpha_s[2] 
-  0.469388   0.285714 
+  0.367347   0.306122 
 > 
 > ## network-based SINR ILMs ##
+> set.seed(22)
 > data(NetworkDataSINR)
 > names(NetworkDataSINR)
 [1] "loc" "net" "cov" "epi"
-> 
 > 
 > netSINR<-as.epidat(type = "SINR", kerneltype = "network", incub.time = NetworkDataSINR$epi[,4], inf.time = NetworkDataSINR$epi[,6], rem.time = NetworkDataSINR$epi[,2], id.individual = NetworkDataSINR$epi[,1], location  = NetworkDataSINR$loc, network = NetworkDataSINR$net, network.type = "powerlaw")
 > 
 > ## performing the MCMC-tool for analyzing the fully observed network data
 > ## under the SINR network-based continuous-time ILM:
 > suspar <- list(NULL)
-> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.05, 0.5), 
+> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.05, 0.5),
 + ncol = 4, nrow = 2))
 > suspar[[2]]<- NetworkDataSINR$cov
 > 
 > mcmcres5 <- epictmcmc(object = netSINR, datatype = "known epidemic",
-+ nsim = 500, control.sus = suspar, seedval  =  524837)
++ nsim = 500, control.sus = suspar)
 ************************************************ 
-* Start performing MCMC for the  known epidemic  SINR ILM for 
+Start performing MCMC for the  known epidemic  SINR ILM for 
 500 iterations 
 ************************************************ 
 > 
@@ -590,20 +591,20 @@ Start = 1
 End = 7 
 Thinning interval = 1 
      Alpha_s[1] Alpha_s[2]
-[1,]  0.0800000    0.20000
-[2,]  0.1338874    1.07844
-[3,]  0.1878971    1.07844
-[4,]  0.0659928    1.07844
-[5,]  0.0659928    1.21184
-[6,]  0.1109606    1.21560
-[7,]  0.1109606    1.21560
+[1,]  0.0800000   0.200000
+[2,]  0.0921908   0.393152
+[3,]  0.0842770   0.502432
+[4,]  0.1428780   1.195509
+[5,]  0.0891341   1.237414
+[6,]  0.0891341   1.237414
+[7,]  0.0915133   1.650862
 
  log.likelihood : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] -57.9014 -37.3736 -39.7569 -38.0929 -37.0774 -35.9855 -35.9855
+[1] -57.9014 -48.5078 -45.7331 -36.8694 -35.9318 -35.9318 -34.1604
 
 Available components:
 [1] "compart.framework" "kernel.type"       "data.assumption"  
@@ -626,20 +627,20 @@ Start = 1
 End = 7 
 Thinning interval = 1 
      Alpha_s[1] Alpha_s[2]
-[1,]  0.0800000    0.20000
-[2,]  0.1338874    1.07844
-[3,]  0.1878971    1.07844
-[4,]  0.0659928    1.07844
-[5,]  0.0659928    1.21184
-[6,]  0.1109606    1.21560
-[7,]  0.1109606    1.21560
+[1,]  0.0800000   0.200000
+[2,]  0.0921908   0.393152
+[3,]  0.0842770   0.502432
+[4,]  0.1428780   1.195509
+[5,]  0.0891341   1.237414
+[6,]  0.0891341   1.237414
+[7,]  0.0915133   1.650862
 
  log.likelihood : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] -57.9014 -37.3736 -39.7569 -38.0929 -37.0774 -35.9855 -35.9855
+[1] -57.9014 -48.5078 -45.7331 -36.8694 -35.9318 -35.9318 -34.1604
 
 Available components:
 [1] "compart.framework" "kernel.type"       "data.assumption"  
@@ -660,42 +661,42 @@ number.parameter : 2 parameters
  1. Empirical mean and standard deviation for each variable,
 plus standard error of the mean:
                Mean        SD   Naive SE Time-series SE
-Alpha_s[1] 0.105302 0.0292938 0.00131006      0.0038001
-Alpha_s[2] 2.172038 0.5226053 0.02337162      0.0700345
+Alpha_s[1] 0.104391 0.0268505 0.00120079     0.00241341
+Alpha_s[2] 2.255763 0.5584145 0.02497306     0.07358180
 
 
 
  2. Quantiles for each variable:
-                2.5%       25%      50%      75%    97.5%
-Alpha_s[1] 0.0559572 0.0826821 0.103488 0.122266 0.172071
-Alpha_s[2] 1.2232929 1.7914828 2.156877 2.477779 3.278725
+                2.5%       25%       50%      75%    97.5%
+Alpha_s[1] 0.0590052 0.0858674 0.0993167 0.121108 0.164175
+Alpha_s[2] 1.1914624 1.9126262 2.2150284 2.664166 3.362149
 
 
 
  3. Empirical mean, standard deviation, and quantiles for the log likelihood,
           Mean             SD       Naive SE Time-series SE 
-   -34.6600230      1.4539940      0.0650246      0.1404429 
+   -34.6860101      1.6608976      0.0742776      0.1557291 
 
     2.5%      25%      50%      75%    97.5% 
--37.2244 -35.0325 -34.2647 -33.8474 -33.5796 
+-37.4167 -35.0181 -34.2680 -33.8277 -33.5738 
 
 
 
  4. acceptance.rate : 
 Alpha_s[1] Alpha_s[2] 
-  0.531062   0.711423 
+  0.547094   0.699399 
 > 
 > suspar <- list(NULL)
-> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.05, 0.5), 
+> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.05, 0.5),
 + ncol = 4, nrow = 2))
 > suspar[[2]]<- NetworkDataSINR$cov
 > delta1<-list(1,2,c(4,2))
 > spark<-list(1,matrix(c("gamma", 1, 0.01, 0.05), ncol = 4, nrow = 1))
 > 
 > mcmcres5 <- epictmcmc(object = netSINR, datatype = "known removal",
-+ nsim = 500, control.sus = suspar, spark.par = spark, delta = delta1, seedval  =  524837)
++ nsim = 500, control.sus = suspar, spark.par = spark, delta = delta1)
 ************************************************ 
-* Start performing MCMC for the  known removal  SINR ILM for 
+Start performing MCMC for the  known removal  SINR ILM for 
 500 iterations 
 ************************************************ 
 > 
@@ -715,65 +716,65 @@ Start = 1
 End = 7 
 Thinning interval = 1 
      Alpha_s[1] Alpha_s[2]    Spark Incubation period rate
-[1,]  0.0800000   0.200000 1.000000               2.000000
-[2,]  0.0800000   0.200000 1.000000               0.642684
-[3,]  0.0690895   0.190890 1.000000               0.555553
-[4,]  0.0690895   0.483876 1.000000               0.606698
-[5,]  0.0690895   0.483876 1.000000               0.367409
-[6,]  0.0305489   0.483876 0.998811               0.421886
-[7,]  0.0300961   0.390110 0.998811               0.451194
+[1,] 0.08000000   0.200000 1.000000               2.000000
+[2,] 0.08000000   0.200000 1.000000               0.377508
+[3,] 0.06970123   0.147506 1.000000               0.609031
+[4,] 0.00265249   0.147506 0.996868               0.335893
+[5,] 0.00265249   0.147506 0.996868               0.560736
+[6,] 0.00265249   0.301711 0.996868               0.430007
+[7,] 0.00265249   0.297776 0.945972               0.361570
 
  log.likelihood : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] -424.604 -337.873 -331.517 -334.761 -313.155 -311.996 -311.029
+[1] -424.604 -318.368 -333.921 -302.660 -318.866 -304.719 -284.737
 
  infection.times.samples : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-     [,1]    [,2]     [,3]   [,4]    [,5]    [,6]    [,7]    [,8]    [,9]
-[1,]    0 0.79865 0.981407 1.1509 1.18876 1.40445 1.46577 1.55333 1.68081
-[2,]    0 0.79865 0.981407 1.1509 1.18876 1.40445 1.46577 1.55333 2.35438
-[3,]    0 0.79865 0.981407 0.8110 1.18876 1.40445 1.46577 1.55333 1.35497
-[4,]    0 0.79865 0.766807 0.8110 1.18876 1.53012 1.46577 1.55333 1.35497
-[5,]    0 0.79865 0.766807 0.8110 1.18876 1.53012 1.46577 2.38730 1.35497
-[6,]    0 0.79865 0.766807 0.8110 1.18876 1.53012 1.46577 2.38730 2.29052
-[7,]    0 0.79865 0.766807 0.8110 1.79709 1.38102 1.46577 2.38730 2.29052
-       [,10]   [,11]   [,12]    [,13]   [,14]    [,15]    [,16]   [,17]
-[1,] 1.69596 1.71176 1.83651 1.982638 2.34257 2.384676 2.507263 2.57691
-[2,] 3.35901 1.71176 1.13376 1.982638 1.99150 2.384676 2.507263 2.57691
-[3,] 4.18073 1.68879 1.13376 1.982638 1.98806 0.500415 0.913285 2.57691
-[4,] 3.03063 2.24493 1.23437 1.982638 1.98806 0.500415 0.913285 2.57691
-[5,] 2.86364 2.24493 2.18850 1.982638 1.98806 2.447493 0.913285 3.81154
-[6,] 2.86364 2.24493 2.43044 1.231780 1.82614 2.235378 0.913285 5.12998
-[7,] 2.84780 2.48722 2.43044 0.978136 2.50708 2.235378 1.478022 4.46684
-        [,18]   [,19]   [,20]   [,21]   [,22]    [,23]    [,24]   [,25]   [,26]
-[1,] 2.591592 2.67964 2.70830 2.78291 2.88363 3.002485 3.174230 3.56576 3.85920
-[2,] 2.958853 2.67964 1.99332 1.90717 2.88363 1.214710 3.533313 3.56576 3.85920
-[3,] 2.958853 2.67964 1.29432 1.90717 1.61299 2.485413 3.533313 3.56576 5.27562
-[4,] 0.666603 1.82015 1.29432 1.90717 1.61299 0.960069 2.920382 4.66476 3.62953
-[5,] 0.666603 2.46034 1.29432 1.90717 1.61299 0.960069 0.655764 4.77629 2.97222
-[6,] 0.666603 2.46034 1.29432 1.90717 1.26988 0.960069 0.655764 4.77629 2.97222
-[7,] 1.259770 2.46034 1.29432 1.90717 1.26988 0.960069 0.546143 1.76767 2.97222
-       [,27]   [,28]   [,29]   [,30]   [,31]   [,32]   [,33]   [,34]
-[1,] 4.03189 5.14651 5.74088 6.20128 6.39138 6.90974 7.88329 8.46363
-[2,] 4.03189 5.14651 6.30472 6.20128 6.34315 8.14862 7.03590 8.46363
-[3,] 5.05217 5.14651 6.30472 7.20518 6.34315 6.45002 7.03590 7.85724
-[4,] 5.51550 5.14651 4.77398 7.20518 6.34315 7.74865 7.03590 7.85724
-[5,] 4.49326 5.14651 6.06564 7.35551 6.34315 3.51511 7.03590 7.85724
-[6,] 4.47213 5.14651 6.06564 4.42529 7.28671 3.51511 6.20218 7.06210
-[7,] 5.61429 5.14651 6.06564 4.42529 4.96469 3.51511 6.94035 7.06210
+     [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]    [,8]
+[1,]    0 0.798650 0.981407 1.150897 1.188763 1.404446 1.465774 1.55333
+[2,]    0 0.499732 0.657686 0.480468 1.188763 2.530820 1.249633 1.55333
+[3,]    0 0.499732 1.130589 0.480468 0.103574 2.530820 1.249633 1.55333
+[4,]    0 0.499732 1.130589 0.480468 0.103574 2.530820 1.249633 1.55333
+[5,]    0 0.499732 1.130589 0.480468 0.103574 2.722829 0.215008 1.55333
+[6,]    0 0.223843 1.130589 0.748223 0.103574 0.427577 0.215008 1.55333
+[7,]    0 0.223843 1.130589 1.241965 0.103574 0.427577 0.215008 1.55333
+         [,9]   [,10]    [,11]    [,12]   [,13]    [,14]   [,15]    [,16]
+[1,] 1.680805 1.69596 1.711758 1.836505 1.98264 2.342569 2.38468 2.507263
+[2,] 0.697208 1.69596 1.711758 0.964088 2.65327 2.342569 2.38468 2.507263
+[3,] 0.697208 3.80069 1.514523 0.964088 2.05445 0.566992 3.08232 0.796542
+[4,] 2.267777 3.80069 1.851911 0.964088 2.05445 0.399615 3.08232 0.796542
+[5,] 3.811607 3.77140 1.851911 0.964088 2.05445 0.399615 0.32994 0.796542
+[6,] 1.619746 1.41366 1.283158 0.964088 2.05445 0.399615 0.32994 0.796542
+[7,] 2.990378 1.41366 0.894828 0.964088 2.05445 0.399615 0.32994 0.796542
+       [,17]   [,18]   [,19]   [,20]   [,21]   [,22]   [,23]   [,24]   [,25]
+[1,] 2.57691 2.59159 2.67964 2.70830 2.78291 2.88363 3.00249 3.17423 3.56576
+[2,] 2.57691 2.98036 2.67964 3.72241 1.60874 2.88363 3.00249 3.17423 3.56576
+[3,] 1.84042 2.69132 1.44105 3.72241 1.34286 2.95763 3.00249 3.17423 3.56576
+[4,] 1.84042 2.69132 1.44105 3.72241 1.43536 2.95763 2.10878 3.17423 3.56576
+[5,] 1.84042 2.69132 1.44105 3.43700 1.05330 2.88220 2.10878 2.50835 3.70938
+[6,] 1.84042 1.65894 1.44105 3.40244 3.01211 3.08337 2.10878 3.48962 4.79620
+[7,] 2.94762 1.65894 3.87147 3.40244 3.01211 2.26047 2.10878 2.41854 5.38670
+        [,26]   [,27]   [,28]   [,29]   [,30]   [,31]   [,32]   [,33]   [,34]
+[1,] 3.859196 4.03189 5.14651 5.74088 6.20128 6.39138 6.90974 7.88329 8.46363
+[2,] 2.381537 4.03189 5.14651 5.74088 4.98871 6.39138 7.57937 7.51476 8.46363
+[3,] 2.381537 4.03189 5.14651 5.74088 7.50633 1.79678 6.54359 6.35593 8.46363
+[4,] 1.415022 2.97226 5.14651 5.74088 7.86739 1.79678 6.54359 6.35593 8.46363
+[5,] 1.415022 2.97226 5.14651 5.74088 5.84400 1.79678 6.54359 8.15245 8.46363
+[6,] 0.818126 3.42523 5.14651 4.33559 7.29166 1.79678 6.52771 3.94196 8.46363
+[7,] 0.818126 2.28125 5.14651 4.33559 5.76639 1.79678 5.48353 3.94196 7.14591
 
  Average.incubation.periods : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] 2.07371 1.91132 2.19276 2.19879 2.40951 2.31025 2.54366
+[1] 2.07371 2.00740 2.44279 2.28815 2.56920 2.64582 2.86066
 
 Available components:
  [1] "compart.framework"          "kernel.type"               
@@ -798,50 +799,50 @@ number.parameter : 4 parameters
  1. Empirical mean and standard deviation for each variable,
 plus standard error of the mean:
                             Mean        SD   Naive SE Time-series SE
-Alpha_s[1]             0.1007853 0.0475778 0.00212774     0.00762285
-Alpha_s[2]             1.4173653 0.5347657 0.02391545     0.09056903
-Spark                  0.0659964 0.1869312 0.00835982     0.07108152
-Incubation period rate 0.6910695 0.1830659 0.00818696     0.03810184
+Alpha_s[1]             0.0901432 0.0422878 0.00189117     0.00905739
+Alpha_s[2]             1.3426357 0.6300286 0.02817573     0.15872823
+Spark                  0.0690621 0.1865990 0.00834496     0.07118797
+Incubation period rate 0.6516658 0.1765595 0.00789598     0.04514386
 
 
 
  2. Quantiles for each variable:
                               2.5%        25%       50%       75%    97.5%
-Alpha_s[1]             0.000209879 0.07168282 0.1000492 0.1346807 0.192265
-Alpha_s[2]             0.396051745 1.06667928 1.4553177 1.7768639 2.377769
-Spark                  0.001233203 0.00541658 0.0113421 0.0212823 0.762615
-Incubation period rate 0.349034186 0.57961544 0.6819155 0.8029411 1.054176
+Alpha_s[1]             0.002244012 0.06257701 0.0962865 0.1181139 0.166238
+Alpha_s[2]             0.200000000 0.87965838 1.2523315 1.7607854 2.671738
+Spark                  0.000442772 0.00765814 0.0156120 0.0272933 0.834310
+Incubation period rate 0.274160713 0.54931130 0.6589894 0.7488295 0.978796
 
 
 
  3. Empirical mean, standard deviation, and quantiles for the log likelihood,
           Mean             SD       Naive SE Time-series SE 
-      -96.9551        43.0979         1.9274        11.9837 
+     -98.25200       39.60211        1.77106       10.46456 
 
      2.5%       25%       50%       75%     97.5% 
--240.2514  -93.3149  -85.8320  -79.9584  -70.1831 
+-235.8996  -98.0788  -89.0247  -81.4148  -70.1543 
 
 
 
  4. Empirical mean, standard deviation, and quantiles for the average incubation periods,
           Mean             SD       Naive SE Time-series SE 
-     1.6581579      0.4526819      0.0202445      0.1261518 
+     1.7626573      0.5845258      0.0261408      0.1583242 
 
    2.5%     25%     50%     75%   97.5% 
-1.07412 1.38407 1.56979 1.79580 3.18033 
+1.21330 1.45875 1.60276 1.80631 3.82202 
 
 
 
  5. acceptance.rate : 
             Alpha_s[1]             Alpha_s[2]                  Spark 
-              0.555110               0.609218               0.256513 
+              0.507014               0.575150               0.306613 
 Incubation period rate 
               1.000000 
 > #plot(mcmcres5, plottype = "parameter")
 > #plot(mcmcres5, plottype = "inf.times")
 > 
 > suspar <- list(NULL)
-> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.05, 0.5), 
+> suspar[[1]]<-list(c(0.08,0.2),matrix(c("gamma", "gamma", 1, 1, 0.01, 0.01, 0.05, 0.5),
 + ncol = 4, nrow = 2))
 > suspar[[2]]<- NetworkDataSINR$cov
 > delta1<-list(NULL)
@@ -850,10 +851,10 @@ Incubation period rate
 > delta1[[3]]<-matrix(c(4,4,2,2),ncol=2,nrow=2)
 > spark<-list(1,matrix(c("gamma", 1, 0.01, 0.05), ncol = 4, nrow = 1))
 > 
-> mcmcres5 <- epictmcmc(object = netSINR, datatype = "unknown removal", 
-+ nsim = 500, control.sus = suspar, spark.par = spark, delta = delta1,seedval  =  524837)
+> mcmcres5 <- epictmcmc(object = netSINR, datatype = "unknown removal",
++ nsim = 500, control.sus = suspar, spark.par = spark, delta = delta1)
 ************************************************ 
-* Start performing MCMC for the  unknown removal  SINR ILM for 
+Start performing MCMC for the  unknown removal  SINR ILM for 
 500 iterations 
 ************************************************ 
 > 
@@ -873,65 +874,65 @@ Start = 1
 End = 7 
 Thinning interval = 1 
      Alpha_s[1] Alpha_s[2]    Spark Incubation period rate Delay period rate
-[1,]  0.0800000 0.20000000 1.000000               2.000000           2.00000
-[2,]  0.0580715 0.03549486 1.000000               0.642684           2.35035
-[3,]  0.0500416 0.00416761 1.000811               0.494247           1.87766
-[4,]  0.0500416 0.00416761 0.964706               0.517611           1.46004
-[5,]  0.0438842 0.00416761 0.964706               0.498878           1.63800
-[6,]  0.0438842 0.06384768 0.964706               0.475524           1.38107
-[7,]  0.0438842 0.06384768 0.964706               0.577423           1.62723
+[1,]  0.0800000  0.2000000 1.000000               2.000000           2.00000
+[2,]  0.0631093  0.2000000 1.000000               0.463754           2.11551
+[3,]  0.0631093  0.2000000 0.926837               0.508486           2.91697
+[4,]  0.0631093  0.2000000 0.926837               0.465738           2.81587
+[5,]  0.0631093  0.2000000 0.926837               0.425564           3.04722
+[6,]  0.0617764  0.0863188 0.926837               0.487198           2.34059
+[7,]  0.0100152  0.1809111 0.926837               0.407987           1.96173
 
  log.likelihood : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] -462.735 -382.515 -366.724 -342.037 -350.363 -333.784 -347.635
+[1] -462.735 -346.151 -339.682 -331.641 -339.933 -333.702 -319.883
 
  infection.times.samples : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-     [,1]      [,2]     [,3]     [,4]    [,5]       [,6]     [,7]    [,8]
-[1,]    0 0.7986502 0.981407 1.150897 1.18876 1.40444631 1.465774 1.55333
-[2,]    0 0.3398683 0.981407 0.484628 1.18876 0.00389207 1.465774 1.55333
-[3,]    0 1.7011800 0.981407 0.484628 1.18876 0.00389207 1.465774 1.55333
-[4,]    0 1.8912916 2.407800 0.484628 1.18876 0.00389207 1.465774 1.44179
-[5,]    0 0.0794877 2.407800 0.484628 1.18876 0.02059933 1.396262 1.44179
-[6,]    0 0.0794877 2.407800 1.956827 1.18876 0.02059933 1.396262 1.44179
-[7,]    0 0.8285764 2.584022 0.625039 1.18876 0.02059933 0.571483 1.44179
-         [,9]    [,10]    [,11]    [,12]   [,13]    [,14]    [,15]   [,16]
-[1,] 1.680805 1.695957 1.711758 1.836505 1.98264 2.342569 2.384676 2.50726
-[2,] 1.680805 1.695957 1.711758 1.836505 1.98264 2.342569 2.384676 2.50726
-[3,] 0.129088 0.633513 1.711758 1.641355 2.06318 3.010180 2.384676 3.04187
-[4,] 0.129088 0.633513 1.711758 0.779452 2.06318 0.206794 0.208020 3.59219
-[5,] 0.129088 0.633513 1.118180 0.779452 1.10283 0.458607 0.208020 2.46043
-[6,] 1.107198 0.633513 1.906378 0.779452 1.10283 0.458607 0.151427 3.37739
-[7,] 1.107198 3.667633 0.119399 0.779452 1.10283 1.392759 0.151427 1.95211
-       [,17]    [,18]   [,19]   [,20]   [,21]   [,22]   [,23]   [,24]   [,25]
-[1,] 2.57691 2.591592 2.67964 2.70830 2.78291 2.88363 3.00249 3.17423 3.56576
-[2,] 5.62033 2.357652 2.67964 2.70830 1.21832 2.89010 3.50013 3.32770 3.56576
-[3,] 3.83091 2.357652 2.67964 2.57158 1.21832 2.89010 3.09953 3.32770 4.64685
-[4,] 1.96563 2.966608 1.74481 2.57158 1.21832 3.20844 2.36507 0.97511 4.64685
-[5,] 1.96563 2.966608 1.74481 2.57158 1.21832 2.97615 2.36507 0.97511 4.64685
-[6,] 1.96563 1.471869 1.74481 2.57158 1.56451 3.40857 2.36507 0.97511 4.64685
-[7,] 1.96563 0.922773 1.74481 2.57158 1.56451 2.21860 2.36507 0.97511 5.01696
-       [,26]   [,27]   [,28]   [,29]   [,30]   [,31]   [,32]   [,33]   [,34]
-[1,] 3.85920 4.03189 5.14651 5.74088 6.20128 6.39138 6.90974 7.88329 8.46363
-[2,] 5.14453 4.03189 5.14651 5.74088 6.20128 6.39138 6.90974 6.88489 8.46363
-[3,] 5.84210 4.03189 5.14651 5.74088 2.12442 6.39138 7.11983 7.25992 8.46363
-[4,] 1.28232 4.03189 5.14651 5.74088 2.12442 8.06608 6.64694 7.25992 9.40020
-[5,] 1.28232 3.62122 8.27050 5.74088 2.12442 7.53255 6.95601 7.25992 9.40020
-[6,] 1.28232 4.86582 8.24055 5.74088 2.12442 4.15016 5.42576 6.88110 9.44589
-[7,] 1.28232 4.86582 8.24055 5.74088 2.12442 4.15016 5.42576 7.14785 8.64910
+     [,1]     [,2]     [,3]    [,4]    [,5]     [,6]    [,7]     [,8]     [,9]
+[1,]    0 0.798650 0.981407 1.15090 1.18876 1.404446 1.46577 1.553328 1.680805
+[2,]    0 0.798650 0.609762 1.15090 1.69215 1.404446 1.25781 1.931474 1.644585
+[3,]    0 0.962407 0.609762 1.67894 1.69215 1.404446 2.25760 0.082044 1.644585
+[4,]    0 1.031230 0.446182 1.27479 1.69215 1.404446 2.20787 2.721110 1.091716
+[5,]    0 1.031230 0.446182 1.09108 1.69215 1.404446 2.20787 2.721110 3.579887
+[6,]    0 1.337644 2.381303 1.09108 1.69215 1.404446 2.20787 2.721110 2.931319
+[7,]    0 1.337644 2.656687 2.18727 3.32539 0.921639 2.83233 3.134041 0.870639
+        [,10]   [,11]   [,12]   [,13]   [,14]    [,15]    [,16]   [,17]
+[1,] 1.695957 1.71176 1.83651 1.98264 2.34257 2.384676 2.507263 2.57691
+[2,] 1.953689 1.71176 1.83651 3.15612 2.28773 2.384676 2.507263 2.57691
+[3,] 1.953689 1.72029 3.36629 3.15612 2.47253 1.402250 2.507263 3.71029
+[4,] 0.956114 2.72288 3.36629 3.15612 1.07158 0.539254 1.684692 3.83622
+[5,] 0.956114 2.72288 3.22510 3.22896 1.07158 3.465129 0.239833 3.83622
+[6,] 0.956114 1.61113 3.22637 2.55302 1.07158 3.465129 0.239833 5.19614
+[7,] 1.421447 1.89511 3.16870 2.84106 1.17156 3.465129 0.239833 5.19614
+        [,18]   [,19]   [,20]    [,21]   [,22]   [,23]   [,24]   [,25]   [,26]
+[1,] 2.591592 2.67964 2.70830 2.782910 2.88363 3.00249 3.17423 3.56576 3.85920
+[2,] 2.591592 2.67964 3.03162 2.084053 2.30065 2.41378 2.86030 3.56576 3.90135
+[3,] 0.824271 2.33634 3.03162 1.426486 2.50337 2.36822 4.02787 2.57131 3.39042
+[4,] 0.824271 1.34319 3.03162 1.020939 2.24953 2.36822 4.02787 2.57131 3.39042
+[5,] 0.824271 2.69053 3.03162 1.020939 2.24953 3.50079 4.02787 2.57131 2.02577
+[6,] 0.201719 1.30044 3.03162 1.020939 2.63805 3.71934 2.19472 2.57131 2.02577
+[7,] 0.201719 1.30044 2.57715 0.262596 2.63805 3.90713 2.19472 2.57131 2.02577
+       [,27]   [,28]   [,29]   [,30]   [,31]    [,32]   [,33]   [,34]
+[1,] 4.03189 5.14651 5.74088 6.20128 6.39138 6.909738 7.88329 8.46363
+[2,] 3.57070 5.14651 5.74088 5.16583 6.39138 0.706856 7.46777 8.46363
+[3,] 3.57070 4.51889 5.74088 5.16583 1.69278 0.706856 6.30382 8.46363
+[4,] 3.57070 4.51889 5.74088 5.16583 1.69278 0.706856 7.90897 8.46363
+[5,] 3.57070 8.45256 5.74088 5.16583 1.69278 0.706856 4.66720 8.46363
+[6,] 3.57070 8.14775 5.74088 5.60772 1.69278 0.706856 2.06022 8.46363
+[7,] 3.57070 8.32478 5.74088 5.60772 1.69278 0.706856 2.06022 8.46363
 
  Average.incubation.periods : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] 2.07371 1.90762 2.20728 2.35976 2.59580 2.43889 2.68470
+[1] 2.07371 2.14161 2.54474 2.41185 2.42536 2.38297 2.50805
 
  removal.times.samples : 
 Markov Chain Monte Carlo (MCMC) output:
@@ -940,43 +941,43 @@ End = 7
 Thinning interval = 1 
         [,1]    [,2]    [,3]    [,4]    [,5]    [,6]    [,7]    [,8]    [,9]
 [1,] 4.50490 2.29471 3.70100 2.27570 6.94112 3.09950 4.35899 4.00825 4.70701
-[2,] 1.83991 2.42269 3.70100 5.11709 6.94112 2.86840 4.35899 4.00825 4.70701
-[3,] 2.28530 3.39505 3.70100 5.11709 6.94112 2.86840 4.35899 4.00825 4.40265
-[4,] 1.85082 2.92247 3.90926 5.11709 6.94112 2.86840 4.35899 4.04768 4.40265
-[5,] 2.15584 2.52851 3.90926 5.11709 6.94112 4.33995 4.26483 4.04768 4.40265
-[6,] 1.69873 2.52851 3.90926 2.64627 6.94112 4.33995 4.26483 4.04768 4.57942
-[7,] 2.49186 2.96031 3.69154 2.40340 6.94112 4.33995 4.24377 4.04768 4.57942
+[2,] 2.41519 2.29471 3.88444 2.27570 5.88941 3.09950 4.95810 3.93696 4.44331
+[3,] 2.21610 3.34211 3.88444 2.36352 5.88941 3.09950 5.21841 4.12833 4.44331
+[4,] 2.03101 2.32819 3.55542 2.56197 5.88941 3.09950 4.88689 3.85544 4.72153
+[5,] 2.70881 2.32819 3.55542 3.03617 5.88941 3.09950 4.88689 3.85544 5.04278
+[6,] 1.90641 2.67777 3.62883 3.03617 5.88941 3.09950 4.88689 3.85544 4.58645
+[7,] 1.77673 2.67777 5.19275 2.68625 6.34543 2.90739 4.15495 4.20396 5.48281
        [,10]   [,11]   [,12]   [,13]   [,14]   [,15]   [,16]   [,17]   [,18]
 [1,] 4.74021 3.15956 3.53135 5.08073 4.36785 4.60618 3.63237 6.09532 3.23545
-[2,] 4.74021 3.15956 3.53135 5.08073 4.36785 4.60618 3.63237 6.40330 3.24057
-[3,] 4.74989 3.15956 3.46169 5.74402 3.70137 4.60618 3.77308 5.93708 3.24057
-[4,] 4.74989 3.15956 4.21936 5.74402 3.34913 4.78079 3.78233 5.93938 3.88690
-[5,] 4.74989 4.07565 4.21936 7.38027 3.34273 4.78079 5.04869 5.93938 3.88690
-[6,] 4.74989 3.28944 4.21936 7.38027 3.34273 4.62183 3.90077 5.93938 3.25757
-[7,] 4.88175 3.17678 4.21936 7.38027 4.39962 4.62183 4.27718 5.93938 3.49535
+[2,] 5.53037 3.15956 3.53135 4.64449 4.67583 4.60618 3.63237 6.09532 3.23545
+[3,] 5.53037 3.49333 3.37837 4.64449 3.71486 4.56704 3.63237 6.08600 3.71692
+[4,] 5.60290 3.42949 3.37837 4.64449 3.33725 4.83103 4.06271 6.02694 3.71692
+[5,] 5.60290 3.42949 3.55667 4.57998 3.33725 4.87355 3.88993 6.02694 3.71692
+[6,] 5.60290 3.38442 3.51111 4.87619 3.33725 4.87355 3.88993 6.48035 3.72279
+[7,] 4.73409 3.86058 3.38885 5.22635 3.77899 4.87355 3.88993 6.48035 3.72279
        [,19]   [,20]   [,21]   [,22]   [,23]   [,24]   [,25]   [,26]   [,27]
 [1,] 4.91063 4.00842 4.16219 5.97581 4.14633 5.40700 6.47184 6.24091 7.59606
-[2,] 4.91063 4.00842 5.15843 4.08160 4.11414 4.90466 6.47184 6.99839 7.59606
-[3,] 4.91063 4.27680 5.15843 4.08160 6.61940 4.90466 6.54379 7.68988 7.59606
-[4,] 4.29043 4.27680 5.15843 4.32877 4.80225 5.10516 6.54379 6.40688 7.59606
-[5,] 4.29043 4.27680 5.15843 4.68549 4.80225 5.10516 6.54379 6.40688 6.70190
-[6,] 4.29043 4.27680 4.32222 6.34221 4.80225 5.10516 6.54379 6.40688 6.76616
-[7,] 4.29043 4.27680 4.32222 4.23926 4.80225 5.10516 6.62941 6.40688 6.76616
-       [,28]   [,29]    [,30]   [,31]   [,32]   [,33]   [,34]
-[1,] 9.85260 9.79913 11.43192 8.28133 9.17592 8.61186 11.4464
-[2,] 9.85260 9.79913 11.43192 8.28133 9.17592 9.08049 11.4464
-[3,] 9.85260 9.79913  8.99639 8.28133 9.29442 9.65360 11.4464
-[4,] 9.85260 9.79913  8.99639 8.66525 8.61376 9.65360 11.4520
-[5,] 9.74410 9.79913  8.99639 8.47408 9.55444 9.65360 11.4520
-[6,] 9.60141 9.79913  8.99639 9.02418 9.02998 8.56719 11.4577
-[7,] 9.60141 9.79913  8.99639 9.02418 9.02998 8.80948 11.4878
+[2,] 4.91063 4.23561 4.57990 4.30346 4.19099 5.29137 6.47184 6.14466 6.99496
+[3,] 4.07798 4.23561 4.24590 4.14833 4.54416 4.78023 6.49301 6.23139 6.99496
+[4,] 4.11839 4.23561 4.28167 4.36789 4.54416 4.78023 6.49301 6.23139 6.99496
+[5,] 4.22924 4.23561 4.28167 4.36789 4.39038 4.78023 6.49301 6.24538 6.99496
+[6,] 4.31540 4.23561 4.28167 4.11968 4.97525 4.81242 6.49301 6.24538 6.99496
+[7,] 4.31540 3.98216 4.71975 4.11968 4.24019 4.81242 6.49301 6.24538 6.99496
+        [,28]   [,29]    [,30]   [,31]   [,32]   [,33]   [,34]
+[1,]  9.85260 9.79913 11.43192 8.28133 9.17592 8.61186 11.4464
+[2,]  9.85260 9.79913  8.20512 8.28133 8.77855 9.19164 11.4464
+[3,]  9.56259 9.79913  8.20512 8.51514 8.77855 8.81332 11.4464
+[4,]  9.56259 9.79913  8.20512 8.51514 8.77855 8.72112 11.4464
+[5,] 10.24497 9.79913  8.20512 8.51514 8.77855 9.03137 11.4464
+[6,]  9.67143 9.79913  8.40749 8.51514 8.77855 9.10841 11.4464
+[7,]  9.79480 9.79913  8.40749 8.51514 8.77855 9.10841 11.4464
 
  Average.delay.periods : 
 Markov Chain Monte Carlo (MCMC) output:
 Start = 1 
 End = 7 
 Thinning interval = 1 
-[1] 0.472753 0.654030 0.552101 0.640283 0.617368 0.623157 0.467431
+[1] 0.472753 0.446615 0.248111 0.389215 0.284422 0.460111 0.334455
 
 Available components:
  [1] "compart.framework"          "kernel.type"               
@@ -1001,63 +1002,61 @@ number.parameter : 5 parameters
 
  1. Empirical mean and standard deviation for each variable,
 plus standard error of the mean:
-                            Mean        SD   Naive SE Time-series SE
-Alpha_s[1]             0.0903732 0.0387532 0.00173310     0.00748029
-Alpha_s[2]             1.7960668 0.8838174 0.03952552     0.28163103
-Spark                  0.0718212 0.1960762 0.00876879     0.07898392
-Incubation period rate 0.7815554 0.2213126 0.00989740     0.04365287
-Delay period rate      1.7540724 1.1498445 0.05142261     0.76090574
+                            Mean       SD   Naive SE Time-series SE
+Alpha_s[1]             0.0906850 0.035796 0.00160084     0.00552482
+Alpha_s[2]             1.9264352 0.770483 0.03445704     0.25045562
+Spark                  0.0475757 0.161995 0.00724462     0.05230526
+Incubation period rate 0.8131876 0.203314 0.00909250     0.02769249
+Delay period rate      1.1895168 0.634408 0.02837160     0.27874133
 
 
 
  2. Quantiles for each variable:
-                              2.5%        25%       50%      75%    97.5%
-Alpha_s[1]             0.010264754 0.06821725 0.0945400 0.115804 0.158331
-Alpha_s[2]             0.099246002 1.17084310 1.8434466 2.511223 3.314815
-Spark                  0.000819373 0.00577558 0.0124955 0.025231 0.851070
-Incubation period rate 0.330868061 0.63914816 0.7849012 0.908065 1.229919
-Delay period rate      0.406014068 0.95464853 1.3853204 2.314959 4.778543
+                              2.5%        25%        50%       75%    97.5%
+Alpha_s[1]             0.002478839 0.06816303 0.09021533 0.1142395 0.151443
+Alpha_s[2]             0.217856373 1.44259630 1.91260662 2.4290290 3.431349
+Spark                  0.000565167 0.00343653 0.00661801 0.0138649 0.674608
+Incubation period rate 0.398069175 0.69175877 0.79999615 0.9435593 1.211758
+Delay period rate      0.399093948 0.71843162 1.02470640 1.4876172 2.697205
 
 
 
  3. Empirical mean, standard deviation, and quantiles for the log likelihood,
           Mean             SD       Naive SE Time-series SE 
-    -129.56932       46.03720        2.05885       14.50868 
+    -122.50923       39.82169        1.78088       10.83528 
 
      2.5%       25%       50%       75%     97.5% 
--290.3544 -126.9515 -117.0445 -108.8746  -98.3852 
+-258.3478 -121.9456 -114.2149 -106.1493  -94.0826 
 
 
 
  4. Empirical mean, standard deviation, and quantiles for the average incubation periods,
           Mean             SD       Naive SE Time-series SE 
-     1.4904845      0.5313996      0.0237649      0.2167580 
+     1.3811755      0.4054302      0.0181314      0.0951797 
 
     2.5%      25%      50%      75%    97.5% 
-0.940363 1.192915 1.377392 1.563478 3.234577 
+0.969978 1.155928 1.294316 1.453665 2.881035 
 
 
 
  5. Empirical mean, standard deviation, and quantiles for the average delay periods,
           Mean             SD       Naive SE Time-series SE 
-     0.8681573      0.5871320      0.0262573      0.2200689 
+     1.1222098      0.5685896      0.0254281      0.2430022 
 
     2.5%      25%      50%      75%    97.5% 
-0.133256 0.446139 0.753013 1.088266 2.545538 
+0.311357 0.674145 1.050419 1.420156 2.385745 
 
 
 
  6. acceptance.rate : 
             Alpha_s[1]             Alpha_s[2]                  Spark 
-              0.595190               0.645291               0.286573 
+              0.521042               0.653307               0.252505 
 Incubation period rate      Delay period rate 
               1.000000               1.000000 
 > #plot(mcmcres5, plottype = "parameter")
 > #plot(mcmcres5, plottype = "inf.times")
 > #plot(mcmcres5, plottype = "rem.times")
 > 
-> 
-> 
 > proc.time()
    user  system elapsed 
-  2.628   0.103   2.741 
+  3.547   0.332   3.913 
