@@ -97,14 +97,12 @@ plot(epi, plottype = "propagation", time.index = seq_len(6))
 plot(epi, plottype = "history")
 ```
 <p align="center">
-<img src="https://user-images.githubusercontent.com/18523406/64774791-8c0f5280-d55d-11e9-8375-6e253fb303ac.jpg"> 
+<img src="https://user-images.githubusercontent.com/18523406/72845059-df817200-3cae-11ea-99f6-bbd7e7082c6d.jpeg"> 
 </p>
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/18523406/64774792-8c0f5280-d55d-11e9-9f51-ddea23907fb4.jpg"> 
+<img src="https://user-images.githubusercontent.com/18523406/72845058-df817200-3cae-11ea-8d49-6b40b312ab82.jpeg"> 
 </p>
-
-
 
 ### Analyzing
 
