@@ -1,28 +1,28 @@
 !######################################################################
 !# MODULE: datsimsinr
-!# AUTHORS: 
-!#     Waleed Almutiry <walmutir@uoguelph.ca>,  
+!# AUTHORS:
+!#     Waleed Almutiry <walmutir@uoguelph.ca>,
 !#     Vineetha Warriyar. K. V. <vineethawarriyar.kod@ucalgary.ca> and
-!#     Rob Deardon <robert.deardon@ucalgary.ca> 
-!# 
+!#     Rob Deardon <robert.deardon@ucalgary.ca>
+!#
 !# DESCRIPTION:
 !#
 !#     To simulate epidemic from the SINR continuous-time ILMs:
 !#
 !#     This program is free software; you can redistribute it and/or
-!#     modify it under the terms of the GNU General Public License, 
+!#     modify it under the terms of the GNU General Public License,
 !#     version 3,  as published by the Free Software Foundation.
-!# 
-!#     This program is distributed in the hope that it will be useful, 
+!#
+!#     This program is distributed in the hope that it will be useful,
 !#     but without any warranty; without even the implied warranty of
 !#     merchantability or fitness for a particular purpose.  See the GNU
 !#     General Public License,  version 3,  for more details.
-!# 
+!#
 !#     A copy of the GNU General Public License,  version 3,  is available
 !#     at http://www.r-project.org/Licenses/GPL-3
-!# 
+!#
 !# Part of the R/EpiILMCT package
-!# Contains: 
+!# Contains:
 !#           datasimulationsinr ........... subroutine
 !#           rateSINR ..................... subroutine
 !#           randnormal22 ................. function
@@ -32,7 +32,7 @@
 !######################################################################
 
 module datsimsinr
-    use ISO_C_BINDING
+    use, intrinsic :: iso_c_binding
     implicit none
     public :: datasimulationsinr_f
 
@@ -47,13 +47,16 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    subroutine datasimulationsinr_f(n, anum, num, observednum, observedepi, tmax, temp, suspar, nsuspar, powersus, &
+    subroutine datasimulationsinr_f(n, anum, num, observednum, observedepi, tmax, suspar, nsuspar, powersus, &
     & transpar, ntranspar, powertrans, kernelpar, spark, gamma, deltain1, deltain2, deltanr1, deltanr2, &
     & suscov, transcov, cc, d3, epidat)  bind(C,  name="datasimulationsinr_f_")
 
     external infinity_value
+    external seedin
+    external seedout
+    external randomnumber
 
-    integer (C_INT), intent(in) :: n, nsuspar, ntranspar, num, anum, observednum, temp   ! integers
+    integer (C_INT), intent(in) :: n, nsuspar, ntranspar, num, anum, observednum   ! integers
     real (C_DOUBLE), intent(in), dimension(n, nsuspar) :: suscov               ! susceptibility covariates
     real (C_DOUBLE), intent(in), dimension(n, ntranspar) :: transcov           ! transmissibility covariates
     real (C_DOUBLE), intent(in), dimension(n, n) :: d3, cc                       ! network & distance matrices
@@ -73,14 +76,10 @@ contains
     integer (C_INT) :: ctr, i, j, sdg, mg
     integer (C_INT), allocatable, dimension(:) :: mmg
 
-if (temp .ne. 0) then
-    call initrandomseedsinr(temp)
-end if
-
-!    call initrandomseed22()
 
 ! defining Infinity
     call infinity_value(Inf)
+    call seedin()
 
     SELECT CASE (anum)
 
@@ -102,7 +101,7 @@ end if
 ! initial observed epidemic:
         if (observednum .eq. 1) then
             if (observedepi1(1,1) .eq. 0) then
-                call random_number(u)
+                call randomnumber(u)
                 observedepi1(1,1) = int(u*n) + 1
             end if
         end if
@@ -250,7 +249,7 @@ end if
 ! initial observed epidemic:
         if (observednum .eq. 1) then
             if (observedepi1(1,1) .eq. 0) then
-                call random_number(u)
+                call randomnumber(u)
                 observedepi1(1,1) = int(u*n) + 1
             end if
         end if
@@ -388,6 +387,7 @@ end if
         end do
 
     END SELECT
+    call seedout()
 
     end subroutine datasimulationsinr_f
 
@@ -409,21 +409,21 @@ end if
 
     integer, intent(in) :: n, nsuspar, ntranspar, num           !integers
     integer, intent(in), dimension(n, 2) :: xx
-    double precision, intent(in), dimension(n, nsuspar) :: suscov      ! susceptibility covariates
-    double precision, intent(in), dimension(n, ntranspar) :: transcov  ! transmissibility covariates
-    double precision, intent(in), dimension(n, n) :: d3, cc              ! network and distance matrices
-    double precision, intent(in), dimension(nsuspar) :: suspar, powersus! susceptibility parameters
-    double precision, intent(in), dimension(ntranspar) :: transpar, powertrans ! transmissibility parameters
-    double precision, intent(in) :: spark, gamma                       ! spark & notification effec parameters
-    double precision, intent(in), dimension(2) :: kernelpar            ! parameters of the kernel function
-    double precision, dimension(nsuspar) :: suscov1                   ! suseptible covar. for one individual
-    double precision, dimension(ntranspar) :: transcov1, transcov2     ! transmissibilty covar. for one individual
-    double precision :: Inf
-    double precision, dimension(1, 2) :: mms
+    real(kind = C_DOUBLE), intent(in), dimension(n, nsuspar) :: suscov      ! susceptibility covariates
+    real(kind = C_DOUBLE), intent(in), dimension(n, ntranspar) :: transcov  ! transmissibility covariates
+    real(kind = C_DOUBLE), intent(in), dimension(n, n) :: d3, cc              ! network and distance matrices
+    real(kind = C_DOUBLE), intent(in), dimension(nsuspar) :: suspar, powersus! susceptibility parameters
+    real(kind = C_DOUBLE), intent(in), dimension(ntranspar) :: transpar, powertrans ! transmissibility parameters
+    real(kind = C_DOUBLE), intent(in) :: spark, gamma                       ! spark & notification effec parameters
+    real(kind = C_DOUBLE), intent(in), dimension(2) :: kernelpar            ! parameters of the kernel function
+    real(kind = C_DOUBLE), dimension(nsuspar) :: suscov1                   ! suseptible covar. for one individual
+    real(kind = C_DOUBLE), dimension(ntranspar) :: transcov1, transcov2     ! transmissibilty covar. for one individual
+    real(kind = C_DOUBLE) :: Inf
+    real(kind = C_DOUBLE), dimension(1, 2) :: mms
 
     integer, allocatable, dimension(:) :: mmg, mmg1, mmg2
-    double precision, allocatable, dimension(:, :) :: rr
-    double precision, allocatable, dimension(:) :: hg, hg2
+    real(kind = C_DOUBLE), allocatable, dimension(:, :) :: rr
+    real(kind = C_DOUBLE), allocatable, dimension(:) :: hg, hg2
 
     call infinity_value(Inf)
 
@@ -434,19 +434,19 @@ end if
 ! Calculating the infectivity rateSINR of contact network-based ILM with spark term.
 ! defining infectious individuals:
 
-        mg  = size( pack(xx(:, 1), xx(:, 2).eq. 1.0d0 ) )
+        mg  = size( pack(xx(:, 1), xx(:, 2).eq. 1.0_c_double ) )
         allocate(mmg(mg))
-        mmg = pack(xx(:, 1), xx(:, 2).eq. 1.0d0 )
+        mmg = pack(xx(:, 1), xx(:, 2).eq. 1.0_c_double )
 
 ! defining susceptible individuals:
-        mg1 = size( pack(xx(:, 1), xx(:, 2).eq. 0.0d0 ) )
+        mg1 = size( pack(xx(:, 1), xx(:, 2).eq. 0.0_c_double ) )
         allocate(mmg1(mg1))
-        mmg1 = pack(xx(:, 1), xx(:, 2).eq. 0.0d0 )
+        mmg1 = pack(xx(:, 1), xx(:, 2).eq. 0.0_c_double )
 
 ! defining notified individuals:
-        mg2 = size( pack(xx(:, 1), xx(:, 2).eq. 2.0d0 ) )
+        mg2 = size( pack(xx(:, 1), xx(:, 2).eq. 2.0_c_double ) )
         allocate(mmg2(mg2))
-        mmg2 = pack(xx(:, 1), xx(:, 2).eq. 2.0d0 )
+        mmg2 = pack(xx(:, 1), xx(:, 2).eq. 2.0_c_double )
 
 
 ! declaring a variable with size equal to the number of susceptible individuals
@@ -485,16 +485,16 @@ end if
 
 ! assigning waiting time to infection for each susceptible individual:
         do i = 1, mg1
-            if (rr(i, 2) .eq. 0.0d0) then
+            if (rr(i, 2) .eq. 0.0_c_double) then
                 rr(i, 2) = Inf
             else
-                rr(i, 2) = randgamma22(1.0d0, 1.0d0/rr(i, 2))
+                rr(i, 2) = randgamma22(1.0_c_double, 1.0_c_double/rr(i, 2))
             end if
         end do
 
 ! choose the one with minmum waiting time as the newly infected individual:
         if (all(rr(:, 2) .eq. Inf).eqv. .true.) then
-            mms(1, 1)  = 0.0d0
+            mms(1, 1)  = 0.0_c_double
             mms(1, 2)  = Inf
         else
             mms(1, 1:2)  = rr(int(minloc(rr(:, 2), 1)), :)
@@ -510,19 +510,19 @@ end if
 ! "powerlaw" kernel.
 
 ! defining infectious individuals:
-        mg  = size( pack(xx(:, 1), xx(:, 2).eq. 1.0d0 ) )
+        mg  = size( pack(xx(:, 1), xx(:, 2).eq. 1.0_c_double ) )
         allocate(mmg(mg))
-        mmg = pack(xx(:, 1), xx(:, 2).eq. 1.0d0 )
+        mmg = pack(xx(:, 1), xx(:, 2).eq. 1.0_c_double )
 
 ! defining susceptible individuals:
-        mg1 = size( pack(xx(:, 1), xx(:, 2).eq. 0.0d0 ) )
+        mg1 = size( pack(xx(:, 1), xx(:, 2).eq. 0.0_c_double ) )
         allocate(mmg1(mg1))
-        mmg1 = pack(xx(:, 1), xx(:, 2).eq. 0.0d0 )
+        mmg1 = pack(xx(:, 1), xx(:, 2).eq. 0.0_c_double )
 
 ! defining notified individuals:
-        mg2 = size( pack(xx(:, 1), xx(:, 2).eq. 2.0d0 ) )
+        mg2 = size( pack(xx(:, 1), xx(:, 2).eq. 2.0_c_double ) )
         allocate(mmg2(mg2))
-        mmg2 = pack(xx(:, 1), xx(:, 2).eq. 2.0d0 )
+        mmg2 = pack(xx(:, 1), xx(:, 2).eq. 2.0_c_double )
 
 ! declaring a variable with size equal to the number of susceptible individuals
 ! the first column is the id number of the susceptible individuals
@@ -561,16 +561,16 @@ end if
 
 ! assigning waiting time to infection for each susceptible individual:
         do i = 1, mg1
-            if (rr(i, 2) .eq. 0.0d0) then
+            if (rr(i, 2) .eq. 0.0_c_double) then
                 rr(i, 2) = Inf
             else
-                rr(i, 2) = randgamma22(1.0d0, 1.0d0/rr(i, 2))
+                rr(i, 2) = randgamma22(1.0_c_double, 1.0_c_double/rr(i, 2))
             end if
         end do
 
 ! choose the one with minmum waiting time as the newly infected individual:
         if (all(rr(:, 2) .eq. Inf).eqv. .true.) then
-            mms(1, 1)  = 0.0d0
+            mms(1, 1)  = 0.0_c_double
             mms(1, 2)  = Inf
         else
             mms(1, 1:2)  = rr(int(minloc(rr(:, 2), 1)), :)
@@ -586,19 +586,19 @@ end if
 ! "Cauchy" kernel.
 
 ! defining infectious individuals:
-        mg  = size( pack(xx(:, 1), xx(:, 2).eq. 1.0d0 ) )
+        mg  = size( pack(xx(:, 1), xx(:, 2).eq. 1.0_c_double ) )
         allocate(mmg(mg))
-        mmg = pack(xx(:, 1), xx(:, 2).eq. 1.0d0 )
+        mmg = pack(xx(:, 1), xx(:, 2).eq. 1.0_c_double )
 
 ! defining susceptible individuals:
-        mg1 = size( pack(xx(:, 1), xx(:, 2).eq. 0.0d0 ) )
+        mg1 = size( pack(xx(:, 1), xx(:, 2).eq. 0.0_c_double ) )
         allocate(mmg1(mg1))
-        mmg1 = pack(xx(:, 1), xx(:, 2).eq. 0.0d0 )
+        mmg1 = pack(xx(:, 1), xx(:, 2).eq. 0.0_c_double )
 
 ! defining notified individuals:
-        mg2 = size( pack(xx(:, 1), xx(:, 2).eq. 2.0d0 ) )
+        mg2 = size( pack(xx(:, 1), xx(:, 2).eq. 2.0_c_double ) )
         allocate(mmg2(mg2))
-        mmg2 = pack(xx(:, 1), xx(:, 2).eq. 2.0d0 )
+        mmg2 = pack(xx(:, 1), xx(:, 2).eq. 2.0_c_double )
 
 
 ! declaring a variable with size equal to the number of susceptible individuals
@@ -614,8 +614,8 @@ end if
                     transcov1(m) = transcov(mmg(j), m)**powertrans(m)
                 end do
                 hg(j) = dot_product(transpar, transcov1) * &
-                & (kernelpar(1)/((d3(mmg(j), mmg1(i))**(2.0d0)) + &
-                & (kernelpar(1)**(2.0d0))))
+                & (kernelpar(1)/((d3(mmg(j), mmg1(i))**(2.0_c_double)) + &
+                & (kernelpar(1)**(2.0_c_double))))
             end do
 
             allocate(hg2(mg2))
@@ -624,8 +624,8 @@ end if
                     transcov2(m) = transcov(mmg2(j), m)**powertrans(m)
                 end do
                 hg2(j) = gamma * dot_product(transpar, transcov2) * &
-                & (kernelpar(1)/((d3(mmg2(j), mmg1(i))**(2.0d0)) + &
-                & (kernelpar(1)**(2.0d0))))
+                & (kernelpar(1)/((d3(mmg2(j), mmg1(i))**(2.0_c_double)) + &
+                & (kernelpar(1)**(2.0_c_double))))
             end do
 
             do m = 1,  nsuspar
@@ -641,16 +641,16 @@ end if
 
 ! assigning waiting time to infection for each susceptible individual:
         do i = 1, mg1
-            if (rr(i, 2) .eq. 0.0d0) then
+            if (rr(i, 2) .eq. 0.0_c_double) then
                 rr(i, 2) = Inf
             else
-                rr(i, 2) = randgamma22(1.0d0, 1.0d0/rr(i, 2))
+                rr(i, 2) = randgamma22(1.0_c_double, 1.0_c_double/rr(i, 2))
             end if
         end do
 
 ! choose the one with minmum waiting time as the newly infected individual:
         if (all(rr(:, 2) .eq. Inf).eqv. .true.) then
-            mms(1, 1)  = 0.0d0
+            mms(1, 1)  = 0.0_c_double
             mms(1, 2)  = Inf
         else
             mms(1, 1:2)  = rr(int(minloc(rr(:, 2), 1)), :)
@@ -666,19 +666,19 @@ end if
 ! spark term with "powerlaw" distance kernel.
 
 ! defining infectious individuals:
-        mg  = size( pack(xx(:, 1), xx(:, 2).eq. 1.0d0 ) )
+        mg  = size( pack(xx(:, 1), xx(:, 2).eq. 1.0_c_double ) )
         allocate(mmg(mg))
-        mmg = pack(xx(:, 1), xx(:, 2).eq. 1.0d0 )
+        mmg = pack(xx(:, 1), xx(:, 2).eq. 1.0_c_double )
 
 ! defining susceptible individuals:
-        mg1 = size( pack(xx(:, 1), xx(:, 2).eq. 0.0d0 ) )
+        mg1 = size( pack(xx(:, 1), xx(:, 2).eq. 0.0_c_double ) )
         allocate(mmg1(mg1))
-        mmg1 = pack(xx(:, 1), xx(:, 2).eq. 0.0d0 )
+        mmg1 = pack(xx(:, 1), xx(:, 2).eq. 0.0_c_double )
 
 ! defining notified individuals:
-        mg2 = size( pack(xx(:, 1), xx(:, 2).eq. 2.0d0 ) )
+        mg2 = size( pack(xx(:, 1), xx(:, 2).eq. 2.0_c_double ) )
         allocate(mmg2(mg2))
-        mmg2 = pack(xx(:, 1), xx(:, 2).eq. 2.0d0 )
+        mmg2 = pack(xx(:, 1), xx(:, 2).eq. 2.0_c_double )
 
 ! declaring a variable with size equal to the number of susceptible individuals
 ! the first column is the id number of the susceptible individuals
@@ -720,16 +720,16 @@ end if
 
 ! assigning waiting time to infection for each susceptible individual:
         do i = 1, mg1
-            if (rr(i, 2) .eq. 0.0d0) then
+            if (rr(i, 2) .eq. 0.0_c_double) then
                 rr(i, 2) = Inf
             else
-                rr(i, 2) = randgamma22(1.0d0, 1.0d0/rr(i, 2))
+                rr(i, 2) = randgamma22(1.0_c_double, 1.0_c_double/rr(i, 2))
             end if
         end do
 
 ! choose the one with minmum waiting time as the newly infected individual:
         if (all(rr(:, 2) .eq. Inf).eqv. .true.) then
-            mms(1, 1)  = 0.0d0
+            mms(1, 1)  = 0.0_c_double
             mms(1, 2)  = Inf
         else
             mms(1, 1:2)  = rr(int(minloc(rr(:, 2), 1)), :)
@@ -745,19 +745,19 @@ end if
 ! spark term with "Cauchy" distance kernel.
 
 ! defining infectious individuals:
-        mg  = size( pack(xx(:, 1), xx(:, 2).eq. 1.0d0 ) )
+        mg  = size( pack(xx(:, 1), xx(:, 2).eq. 1.0_c_double ) )
         allocate(mmg(mg))
-        mmg = pack(xx(:, 1), xx(:, 2).eq. 1.0d0 )
+        mmg = pack(xx(:, 1), xx(:, 2).eq. 1.0_c_double )
 
 ! defining susceptible individuals:
-        mg1 = size( pack(xx(:, 1), xx(:, 2).eq. 0.0d0 ) )
+        mg1 = size( pack(xx(:, 1), xx(:, 2).eq. 0.0_c_double ) )
         allocate(mmg1(mg1))
-        mmg1 = pack(xx(:, 1), xx(:, 2).eq. 0.0d0 )
+        mmg1 = pack(xx(:, 1), xx(:, 2).eq. 0.0_c_double )
 
 ! defining notified individuals:
-        mg2 = size( pack(xx(:, 1), xx(:, 2).eq. 2.0d0 ) )
+        mg2 = size( pack(xx(:, 1), xx(:, 2).eq. 2.0_c_double ) )
         allocate(mmg2(mg2))
-        mmg2 = pack(xx(:, 1), xx(:, 2).eq. 2.0d0 )
+        mmg2 = pack(xx(:, 1), xx(:, 2).eq. 2.0_c_double )
 
 ! declaring a variable with size equal to the number of susceptible individuals
 ! the first column is the id number of the susceptible individuals
@@ -772,8 +772,8 @@ end if
                     transcov1(m) = transcov(mmg(j), m)**powertrans(m)
                 end do
                 hg(j) = dot_product(transpar, transcov1) * &
-                & ((kernelpar(1)/((d3(mmg(j), mmg1(i))**(2.0d0)) + &
-                & (kernelpar(1)**(2.0d0)))) + &
+                & ((kernelpar(1)/((d3(mmg(j), mmg1(i))**(2.0_c_double)) + &
+                & (kernelpar(1)**(2.0_c_double)))) + &
                 & (kernelpar(2)*cc(mmg(j), mmg1(i))))
             end do
 
@@ -783,8 +783,8 @@ end if
                     transcov2(m) = transcov(mmg2(j), m)**powertrans(m)
                 end do
                 hg2(j) = gamma * dot_product(transpar, transcov2) * &
-                & ( (kernelpar(1)/((d3(mmg2(j), mmg1(i))**(2.0d0)) + &
-                & (kernelpar(1)**(2.0d0)))) + &
+                & ( (kernelpar(1)/((d3(mmg2(j), mmg1(i))**(2.0_c_double)) + &
+                & (kernelpar(1)**(2.0_c_double)))) + &
                 & (kernelpar(2)*cc(mmg2(j), mmg1(i))) )
             end do
 
@@ -801,16 +801,16 @@ end if
 
 ! assigning waiting time to infection for each susceptible individual:
         do i = 1, mg1
-            if (rr(i, 2) .eq. 0.0d0) then
+            if (rr(i, 2) .eq. 0.0_c_double) then
                 rr(i, 2) = Inf
             else
-                rr(i, 2) = randgamma22(1.0d0, 1.0d0/rr(i, 2))
+                rr(i, 2) = randgamma22(1.0_c_double, 1.0_c_double/rr(i, 2))
             end if
         end do
 
 ! choose the one with minmum waiting time as the newly infected individual:
         if (all(rr(:, 2) .eq. Inf).eqv. .true.) then
-            mms(1, 1)  = 0.0d0
+            mms(1, 1)  = 0.0_c_double
             mms(1, 2)  = Inf
         else
             mms(1, 1:2)  = rr(int(minloc(rr(:, 2), 1)), :)
@@ -837,15 +837,15 @@ end if
 !####################  NORMAL distribution ######################
 
     FUNCTION randnormal22(mean, stdev) RESULT(c)
-
     implicit none
 
-    double precision :: mean, stdev, c, temp(2), r, theta
-    double precision,  PARAMETER :: PI=3.141592653589793238462d0
+    real(kind = C_DOUBLE) :: mean, stdev, c, temp(2), r, theta
+    real(kind = C_DOUBLE),  PARAMETER :: PI=3.141592653589793238462_c_double
 
-        CALL RANDOM_NUMBER(temp)
-        r=(-2.0d0*log(temp(1)))**0.5d0
-        theta = 2.0d0*PI*temp(2)
+    CALL randomnumber(temp(1))
+    CALL randomnumber(temp(2))
+        r=(-2.0_c_double*log(temp(1)))**0.5_c_double
+        theta = 2.0_c_double*PI*temp(2)
         c= mean+stdev*r*sin(theta)
 
     END FUNCTION randnormal22
@@ -853,77 +853,42 @@ end if
 !#################### GAMMA distribution ######################
 
     RECURSIVE FUNCTION randgamma22(shape,  SCALE) RESULT(ans)
-    double precision :: SHAPE, scale, u, w, d, c, x, xsq, g, ans, v
+
+    real(kind = C_DOUBLE) :: SHAPE, scale, u, w, d, c, x, xsq, g, ans, v
 
 ! DESCRIPTION: Implementation based on "A Simple Method for Generating Gamma Variables"
 ! by George Marsaglia and Wai Wan Tsang.
 ! ACM Transactions on Mathematical Software and released in public domain.
 ! ## Vol 26,  No 3,  September 2000,  pages 363-372.
 
-        IF (shape >= 1.0d0) THEN
-            d = SHAPE - (1.0d0/3.0d0)
-            c = 1.0d0/((9.0d0 * d)**0.5)
+        IF (shape >= 1.0_c_double) THEN
+            d = SHAPE - (1.0_c_double/3.0_c_double)
+            c = 1.0_c_double/((9.0_c_double * d)**0.5_c_double)
             DO while (.true.)
-                x = randnormal22(0.0d0,  1.0d0)
+                x = randnormal22(0.0_c_double,  1.0_c_double)
                 v = 1.0 + c*x
-                DO while (v <= 0.0d0)
-                    x = randnormal22(0.0d0,  1.0d0)
-                    v = 1.0d0 + c*x
+                DO while (v <= 0.0_c_double)
+                    x = randnormal22(0.0_c_double,  1.0_c_double)
+                    v = 1.0_c_double + c*x
                 END DO
                 v = v*v*v
-                CALL RANDOM_NUMBER(u)
+                CALL randomnumber(u)
                 xsq = x*x
-                IF ((u < 1.0d0 -.0331d0*xsq*xsq) .OR.  &
-                (log(u) < 0.5d0*xsq + d*(1.0d0 - v + log(v))) ) then
+                IF ((u < 1.0_c_double -.0331_c_double*xsq*xsq) .OR.  &
+                (log(u) < 0.5_c_double*xsq + d*(1.0_c_double - v + log(v))) ) then
                     ans=scale*d*v
                     RETURN
                 END IF
 
             END DO
         ELSE
-            g = randgamma22(shape+1.0d0,  1.0d0)
-            CALL RANDOM_NUMBER(w)
-            ans=scale*g*(w**(1.0d0/shape))
+            g = randgamma22(shape+1.0_c_double,  1.0_c_double)
+            CALL randomnumber(w)
+            ans=scale*g*(w**(1.0_c_double/shape))
             RETURN
         END IF
 
     END FUNCTION randgamma22
-
-
-!#################### RANDOM SEED ######################
-
-    subroutine initrandomseed22()
-!The seed for the random number generation method random_number() has been reset
-
-    implicit none
-
-    integer :: i
-    integer :: n
-    integer :: clock
-    integer,  dimension(:),  allocatable :: seed
-
-        call random_seed(size = n)
-        allocate(seed(n))
-        call system_clock(COUNT=clock)
-        seed = clock + 37 * (/ (i - 1,  i = 1,  n) /)
-        call random_seed(PUT = seed)
-        deallocate(seed)
-
-    end subroutine initrandomseed22
-
-    subroutine initrandomseedsinr(temp)
-    implicit none
-    integer :: n
-    integer, intent(in):: temp
-    integer, dimension(:), allocatable :: seed
-
-    call random_seed(size = n)
-    allocate(seed(n))
-    seed = temp
-    call random_seed(PUT = seed)
-    deallocate(seed)
-
-    end subroutine initrandomseedsinr
 
 
 
