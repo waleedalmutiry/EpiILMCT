@@ -1,4 +1,4 @@
-epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nchains, sus, suspower, trans, transpower, kernel, spark, delta, periodproposal, parallel, temp1, n, ni, net, dis, num, nsuspar, ntranspar) {
+epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nchains, sus, suspower, trans, transpower, kernel, spark, delta, periodproposal, parallel, n, ni, net, dis, num, nsuspar, ntranspar) {
 
         initial <- list(NULL)
         infperiodproposal  <-  vector(mode="double", length = 2)
@@ -124,12 +124,10 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
         priorpar1powertrans <-  transpower[[3]][[1]]
         priorpar2powertrans <-  transpower[[3]][[2]]
 
-        initial[[8]] <- temp1
-
         anum2  <-  c(anum11, anum22, anum33, anum44, anum55, anum66, anum77)
 
         cat("************************************************","\n")
-        cat("* Start performing MCMC for the ", datatype," SIR ILM for","\n")
+        cat("Start performing MCMC for the ", datatype," SIR ILM for","\n")
         cat(nsim, "iterations", "\n")
         cat("************************************************","\n")
 
@@ -140,7 +138,7 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
             ni=as.integer(ni);
             num=as.integer(num);
             anum2=as.vector(anum2, mode="integer");
-            temp = as.integer(temp1);
+            temp = as.integer(0);
             nsuspar=as.integer(nsuspar);
             ntranspar=as.integer(ntranspar);
             net=matrix(as.double(net), ncol=n, nrow=n);
@@ -205,7 +203,6 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                 n=  sirmcmc[[1]], nsim = sirmcmc[[2]],
                 ni= sirmcmc[[3]],
                 num= sirmcmc[[4]], anum2= sirmcmc[[5]],
-                temp = as.integer(initial[[8]][i]),
                 nsuspar= sirmcmc[[7]], ntranspar= sirmcmc[[8]], net= sirmcmc[[9]],
                 dis= sirmcmc[[10]], epidat= sirmcmc[[11]], blockupdate= sirmcmc[[12]],
                 priordistsuspar= sirmcmc[[13]], priordisttranspar= sirmcmc[[14]],
@@ -254,6 +251,7 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
                 clusterExport(cl, varlist=varlist, envir=environment())
                 wd <- getwd()
                 clusterExport(cl, varlist="wd", envir=environment())
+                clusterSetRNGStream(cl = cl)
                 datmcmc22 <- parLapply(cl=cl, X=1:no_cores, fun=parallel.function)
                 stopCluster(cl)
             } else {
@@ -270,7 +268,6 @@ epictmcmcsir <- function(object, distancekernel, datatype, blockupdate, nsim, nc
             ni=as.integer(ni),
             num=as.integer(num),
             anum2=as.vector(anum2, mode="integer"),
-            temp = as.integer(initial[[8]][1]),
             nsuspar=as.integer(nsuspar),
             ntranspar=as.integer(ntranspar),
             net=matrix(as.double(net), ncol=n, nrow=n),

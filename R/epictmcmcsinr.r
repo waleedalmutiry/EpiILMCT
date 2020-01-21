@@ -1,4 +1,4 @@
-epictmcmcsinr <- function(object, distancekernel, datatype, blockupdate, nsim, nchains, sus, suspower, trans, transpower, kernel, spark, delta, gamma.par, periodproposal, parallel, temp1, n, ni, net, dis, num, nsuspar, ntranspar) {
+epictmcmcsinr <- function(object, distancekernel, datatype, blockupdate, nsim, nchains, sus, suspower, trans, transpower, kernel, spark, delta, gamma.par, periodproposal, parallel, n, ni, net, dis, num, nsuspar, ntranspar) {
 
         initial <- list(NULL)
         infperiodproposalin  <-  vector(mode="double", length = 2)
@@ -250,12 +250,10 @@ epictmcmcsinr <- function(object, distancekernel, datatype, blockupdate, nsim, n
         priorpar1powertrans <-  transpower[[3]][[1]]
         priorpar2powertrans <-  transpower[[3]][[2]]
 
-        initial[[9]] <- temp1
-
         anum2  <-  c(anum11, anum22, anum33, anum44, anum55, anum66, anum77, anum88)
 
         cat("************************************************","\n")
-        cat("* Start performing MCMC for the ", datatype," SINR ILM for","\n")
+        cat("Start performing MCMC for the ", datatype," SINR ILM for","\n")
         cat(nsim, "iterations", "\n")
         cat("************************************************","\n")
 
@@ -263,7 +261,7 @@ epictmcmcsinr <- function(object, distancekernel, datatype, blockupdate, nsim, n
         n=as.integer(n);
         nsim=as.integer(nsim);
         ni=as.integer(ni);
-        temp = as.integer(initial[[9]][1]);
+        temp = as.integer(0);
         num=as.integer(num);
         anum2=as.vector(anum2, mode="integer");
         nsuspar=as.integer(nsuspar);
@@ -339,7 +337,7 @@ epictmcmcsinr <- function(object, distancekernel, datatype, blockupdate, nsim, n
         parallel.function <- function(i) {
             .Fortran("mcmcsinr_f",
             n=sinrmcmc[[1]], nsim=sinrmcmc[[2]], ni=sinrmcmc[[3]],
-            temp = as.integer(initial[[9]][i]), num=sinrmcmc[[5]], anum2=sinrmcmc[[6]],
+            num=sinrmcmc[[5]], anum2=sinrmcmc[[6]],
             nsuspar=sinrmcmc[[7]], ntranspar=sinrmcmc[[8]], net=sinrmcmc[[9]],
             dis=sinrmcmc[[10]], epidat=sinrmcmc[[11]], blockupdate=sinrmcmc[[12]],
             priordistsuspar=sinrmcmc[[13]],
@@ -408,6 +406,7 @@ epictmcmcsinr <- function(object, distancekernel, datatype, blockupdate, nsim, n
                 clusterExport(cl, varlist=varlist, envir=environment())
                 wd <- getwd()
                 clusterExport(cl, varlist="wd", envir=environment())
+                clusterSetRNGStream(cl = cl)
                 datmcmc22 <- parLapply(cl=cl, X=1:no_cores, fun=parallel.function)
                 stopCluster(cl)
 

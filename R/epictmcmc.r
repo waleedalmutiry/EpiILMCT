@@ -1,4 +1,4 @@
-epictmcmc <- function(object, distancekernel = NULL, datatype, blockupdate = NULL, nsim, nchains = NULL, control.sus = NULL, control.trans = NULL, kernel.par = NULL, spark.par = NULL, delta = NULL, gamma.par = NULL, periodproposal = NULL, parallel = FALSE, seedval = NULL) {
+epictmcmc <- function(object, distancekernel = NULL, datatype, blockupdate = NULL, nsim, nchains = NULL, control.sus = NULL, control.trans = NULL, kernel.par = NULL, spark.par = NULL, delta = NULL, gamma.par = NULL, periodproposal = NULL, parallel = FALSE) {
 
 
     if (!is(object, "datagen")) {
@@ -9,21 +9,6 @@ epictmcmc <- function(object, distancekernel = NULL, datatype, blockupdate = NUL
             nchains <- 1
         } else {
             nchains <- nchains
-        }
-
-        # Set seed value for Fortran random number generator
-        if (is.null(seedval)){
-            if (nchains == 1) {
-                temp1 <- 0
-            } else {
-                temp1 <- sample(seq(100001, 999999), size = nchains, replace = FALSE)
-            }
-        } else {
-            if (nchains == length(seedval)) {
-                temp1 <- seedval
-            } else {
-                stop("The number of seeds is not equal to the number of chains", call. = FALSE)
-            }
         }
 
         spark <- list(NULL)
@@ -787,11 +772,11 @@ epictmcmc <- function(object, distancekernel = NULL, datatype, blockupdate = NUL
 
         if (object$type == "SIR") {
 
-            out <- epictmcmcsir(object, distancekernel, datatype, blockupdate, nsim, nchains, sus, suspower, trans, transpower, kernel, spark, delta, periodproposal, parallel, temp1, n, ni, net, dis, num, nsuspar, ntranspar)
+            out <- epictmcmcsir(object, distancekernel, datatype, blockupdate, nsim, nchains, sus, suspower, trans, transpower, kernel, spark, delta, periodproposal, parallel, n, ni, net, dis, num, nsuspar, ntranspar)
 
         } else if (object$type == "SINR") {
 
-            out <- epictmcmcsinr(object, distancekernel, datatype, blockupdate, nsim, nchains, sus, suspower, trans, transpower, kernel, spark, delta, gamma.par, periodproposal, parallel, temp1, n, ni, net, dis, num, nsuspar, ntranspar)
+            out <- epictmcmcsinr(object, distancekernel, datatype, blockupdate, nsim, nchains, sus, suspower, trans, transpower, kernel, spark, delta, gamma.par, periodproposal, parallel, n, ni, net, dis, num, nsuspar, ntranspar)
 
         } else {
             stop("Error in specifying the compartmental framework of the model: type", call. = FALSE)

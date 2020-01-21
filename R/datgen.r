@@ -1,14 +1,8 @@
-datagen <- function(type, kerneltype, kernelmatrix, distancekernel=NULL, initialepi=NULL, tmax=NULL, suspar=NULL, transpar=NULL, powersus=NULL, powertrans=NULL, kernel.par=NULL, spark=NULL, gamma=NULL, delta, suscov=NULL, transcov=NULL, seedval = NULL) {
+datagen <- function(type, kerneltype, kernelmatrix, distancekernel=NULL, initialepi=NULL, tmax=NULL, suspar=NULL, transpar=NULL, powersus=NULL, powertrans=NULL, kernel.par=NULL, spark=NULL, gamma=NULL, delta, suscov=NULL, transcov=NULL) {
 
     if (type == "SIR") {
 
         ####### For SIR ILMs:
-
-        if (is.null(seedval)) {
-            temp <- 0
-        } else {
-            temp <- seedval
-        }
 
         kernelpar <- vector(mode="double", length=2)
 
@@ -220,7 +214,7 @@ datagen <- function(type, kerneltype, kernelmatrix, distancekernel=NULL, initial
         datgg<-.Fortran("datasimulation_f",
         n=as.integer(n),anum=as.integer(anum),num=as.integer(num),observednum=as.integer(observednum),
         observedepi=as.matrix(as.double(observedepi),ncol=4,nrow=observednum),
-        tmax=as.double(tmax), temp = as.integer(temp),
+        tmax=as.double(tmax),
         suspar=as.vector(suspar,mode="double"),nsuspar=as.integer(nsuspar),
         powersus=as.vector(powersus,mode="double"),
         transpar=as.vector(transpar,mode="double"),ntranspar=as.integer(ntranspar),
@@ -242,12 +236,6 @@ datagen <- function(type, kerneltype, kernelmatrix, distancekernel=NULL, initial
     } else if (type == "SINR") {
 
         ####### For the SINR ILMs:
-
-        if (is.null(seedval)) {
-            temp <- 0
-        } else {
-            temp <- seedval
-        }
 
         kernelpar <- vector(mode="double", length=2)
 
@@ -469,7 +457,7 @@ datagen <- function(type, kerneltype, kernelmatrix, distancekernel=NULL, initial
         datgg<-.Fortran("datasimulationsinr_f",
         n=as.integer(n),anum=as.integer(anum),num=as.integer(num),observednum=as.integer(observednum),
         observedepi=as.matrix(as.double(observedepi),ncol=6,nrow=observednum),
-        tmax=as.double(tmax), temp = as.integer(temp),
+        tmax=as.double(tmax),
         suspar=as.vector(suspar,mode="double"),nsuspar=as.integer(nsuspar),
         powersus=as.vector(powersus,mode="double"),
         transpar=as.vector(transpar,mode="double"),ntranspar=as.integer(ntranspar),
