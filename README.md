@@ -81,8 +81,7 @@ net <- contactnet(type = "powerlaw", location = loc, beta = 1.8, nu = 1)
 
 # To simulate the epidemic:
 epi <- datagen(type = "SIR", kerneltype = "network", kernelmatrix = net, suspar = c(0.08, 0.5), delta = c(4, 2), 
-   suscov = cov, seedval =  498643)
-epi
+   suscov = cov)
 ```
 The output of the **_datagen_** function is stored as an _datagen_ object which takes a list of:
 1. type
@@ -137,8 +136,7 @@ The following commands are to perform the MCMC for analyzing the above epidemic 
 suscov <- list(NULL)
 suscov[[1]] <- list(c(0.01, 0.1), matrix(c("gamma", "gamma", 1, 1, 0.1, 0.1, 0.5, 1), ncol = 4, nrow = 2))
 suscov[[2]] <- cov
-mcmc1 <- epictmcmc(object = epi, datatype = "known epidemic", nsim = 150000, control.sus = suscov, 
-seedval = 524837)
+mcmc1 <- epictmcmc(object = epi, datatype = "known epidemic", nsim = 150000, control.sus = suscov)
 ```
 The estimates of the model parameters can be then obtained either through using S3 **_summary_** function of the **_epictmcmc_** for the _mcmc1_, or using the **_summary_** function of **coda** package for _mcmc1$parameter.samples_, for example. The posterior means and 95% credible intervals of the model parameters using the former **_summary_** can be obtained via the following command:
 
@@ -155,20 +153,20 @@ number.parameter : 2 parameters
  1. Empirical mean and standard deviation for each variable,
 plus standard error of the mean:
                 Mean        SD    Naive SE Time-series SE
-Alpha_s[1] 0.0973068 0.0325623 8.70262e-05    0.000320181
-Alpha_s[2] 0.5335298 0.1295704 3.46290e-04    0.000986805
+Alpha_s[1] 0.0851393 0.0268787 7.18362e-05    0.000279848
+Alpha_s[2] 0.5090538 0.1284466 3.43287e-04    0.000936706
  2. Quantiles for each variable:
                 2.5%       25%       50%      75%    97.5%
-Alpha_s[1] 0.0445579 0.0735079 0.0936119 0.117225 0.170676
-Alpha_s[2] 0.3020837 0.4428192 0.5257345 0.617407 0.806669
+Alpha_s[1] 0.0409208 0.0656406 0.0825226 0.101275 0.144555
+Alpha_s[2] 0.2820138 0.4187457 0.4997392 0.590065 0.783330
  3. Empirical mean, standard deviation, and quantiles for the log likelihood,
           Mean             SD       Naive SE Time-series SE 
-  -48.45599501     1.02806188     0.00274760     0.00963328 
+  -55.80474998     1.01640137     0.00271644     0.00958428 
     2.5%      25%      50%      75%    97.5% 
--51.2095 -48.8603 -48.1447 -47.7187 -47.4439 
+-58.5354 -56.1984 -55.4910 -55.0804 -54.8096 
  4. acceptance.rate : 
 Alpha_s[1] Alpha_s[2] 
-  0.131621   0.219375 
+  0.112127   0.223155 
 ```
 
 The MCMC trace plots for the model parameters can be produced using the S3 method **_plot.epictmcmc_** as follows:
